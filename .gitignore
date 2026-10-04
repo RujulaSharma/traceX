@@ -43,3 +43,8 @@ logs/
 
 # Docker
 *.pid
+
+# Node.js / Frontend
+node_modules/
+frontend/dist/
+.vite/
