@@ -210,9 +210,15 @@ def get_detection_engine() -> DetectionEngine:
 def _register_default_rules(engine: DetectionEngine) -> None:
     """Register built-in detection rules."""
     from app.detection.rules.brute_force import BruteForceDetectionRule
+    from app.detection.rules.port_scan import PortScanDetectionRule
+    from app.detection.rules.privilege_escalation import PrivilegeEscalationRule
     from app.detection.rules.successful_login_after_failures import (
         SuccessfulLoginAfterFailuresRule,
     )
+    from app.detection.rules.suspicious_login import SuspiciousLoginRule
 
     engine.register_rule(BruteForceDetectionRule())
     engine.register_rule(SuccessfulLoginAfterFailuresRule())
+    engine.register_rule(PortScanDetectionRule())
+    engine.register_rule(PrivilegeEscalationRule())
+    engine.register_rule(SuspiciousLoginRule())
