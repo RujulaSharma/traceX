@@ -157,26 +157,51 @@ class DetectionEngine:
             logger.info("Persisted detection findings | count=%d", len(stored_findings))
 
         # Build response findings
-        response_findings = [
-            DetectionFindingResponse(
-                id=sf.id,
-                rule_id=sf.rule_id,
-                rule_name=sf.rule_name,
-                detection_type=sf.detection_type,
-                severity=sf.severity,
-                confidence=sf.confidence,
-                source_ip=sf.source_ip,
-                username=sf.username,
-                timestamp=sf.timestamp,
-                first_seen=sf.first_seen,
-                last_seen=sf.last_seen,
-                description=sf.description,
-                evidence_event_ids=sf.evidence_event_ids,
-                metadata=sf.metadata_,
-                created_at=sf.created_at,
-            )
-            for sf in stored_findings
-        ]
+        if stored_findings:
+            response_findings = [
+                DetectionFindingResponse(
+                    id=sf.id,
+                    rule_id=sf.rule_id,
+                    rule_name=sf.rule_name,
+                    detection_type=sf.detection_type,
+                    severity=sf.severity,
+                    confidence=sf.confidence,
+                    source_ip=sf.source_ip,
+                    username=sf.username,
+                    timestamp=sf.timestamp,
+                    first_seen=sf.first_seen,
+                    last_seen=sf.last_seen,
+                    description=sf.description,
+                    evidence_event_ids=sf.evidence_event_ids,
+                    metadata=sf.metadata_,
+                    created_at=sf.created_at,
+                )
+                for sf in stored_findings
+            ]
+        else:
+            from datetime import datetime, timezone
+
+            now_utc = datetime.now(timezone.utc)
+            response_findings = [
+                DetectionFindingResponse(
+                    id=idx + 1,
+                    rule_id=f.rule_id,
+                    rule_name=f.rule_name,
+                    detection_type=f.detection_type,
+                    severity=f.severity,
+                    confidence=f.confidence,
+                    source_ip=f.source_ip,
+                    username=f.username,
+                    timestamp=f.timestamp,
+                    first_seen=f.first_seen,
+                    last_seen=f.last_seen,
+                    description=f.description,
+                    evidence_event_ids=f.evidence_event_ids,
+                    metadata=f.metadata,
+                    created_at=now_utc,
+                )
+                for idx, f in enumerate(findings_created)
+            ]
 
         rules_executed_names = [
             r.rule_id for r in self.get_rules()
