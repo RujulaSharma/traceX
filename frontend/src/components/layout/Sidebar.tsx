@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 
 const navigation = [
-  { name: 'SOC Overview', href: '/', icon: LayoutDashboard },
+  { name: 'SOC Overview', href: '/soc', icon: LayoutDashboard },
   { name: 'Log Ingestion', href: '/ingestion', icon: UploadCloud },
   { name: 'Event Explorer', href: '/events', icon: ListFilter },
   { name: 'Detections', href: '/detections', icon: AlertTriangle },
