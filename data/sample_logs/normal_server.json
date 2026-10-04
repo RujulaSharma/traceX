@@ -1,0 +1,112 @@
+[
+  {
+    "timestamp": "2026-10-04T07:00:00Z",
+    "event_type": "PROCESS_EXECUTION",
+    "source": "server",
+    "username": "system",
+    "source_ip": "10.0.0.5",
+    "destination_ip": null,
+    "severity": "info",
+    "action": "start",
+    "metadata": {"process": "nginx", "pid": 1024}
+  },
+  {
+    "timestamp": "2026-10-04T07:00:05Z",
+    "event_type": "PROCESS_EXECUTION",
+    "source": "server",
+    "username": "system",
+    "source_ip": "10.0.0.5",
+    "destination_ip": null,
+    "severity": "info",
+    "action": "start",
+    "metadata": {"process": "postgresql", "pid": 1056}
+  },
+  {
+    "timestamp": "2026-10-04T07:01:00Z",
+    "event_type": "DATABASE_ACCESS",
+    "source": "server",
+    "username": "app_service",
+    "source_ip": "10.0.0.10",
+    "destination_ip": "10.0.0.50",
+    "severity": "info",
+    "action": "query",
+    "metadata": {"database": "app_db", "query_type": "SELECT"}
+  },
+  {
+    "timestamp": "2026-10-04T07:05:30Z",
+    "event_type": "FILE_ACCESS",
+    "source": "server",
+    "username": "app_service",
+    "source_ip": "10.0.0.10",
+    "destination_ip": "10.0.0.20",
+    "severity": "info",
+    "action": "read",
+    "metadata": {"file": "/var/log/app.log", "size_bytes": 4096}
+  },
+  {
+    "timestamp": "2026-10-04T07:10:00Z",
+    "event_type": "FIREWALL_BLOCK",
+    "source": "server",
+    "username": null,
+    "source_ip": "203.0.113.50",
+    "destination_ip": "10.0.0.5",
+    "severity": "medium",
+    "action": "block",
+    "metadata": {"rule": "deny_external_ssh", "port": 22}
+  },
+  {
+    "timestamp": "2026-10-04T07:15:22Z",
+    "event_type": "VPN_LOGIN",
+    "source": "server",
+    "username": "jsmith",
+    "source_ip": "98.207.44.12",
+    "destination_ip": "10.0.0.1",
+    "severity": "info",
+    "action": "connect",
+    "metadata": {"vpn_type": "OpenVPN", "tunnel_ip": "192.168.1.10"}
+  },
+  {
+    "timestamp": "2026-10-04T07:20:00Z",
+    "event_type": "PROCESS_EXECUTION",
+    "source": "server",
+    "username": "system",
+    "source_ip": "10.0.0.5",
+    "destination_ip": null,
+    "severity": "info",
+    "action": "cron",
+    "metadata": {"process": "logrotate", "pid": 2048}
+  },
+  {
+    "timestamp": "2026-10-04T07:25:10Z",
+    "event_type": "DATABASE_ACCESS",
+    "source": "server",
+    "username": "backup_agent",
+    "source_ip": "10.0.0.10",
+    "destination_ip": "10.0.0.50",
+    "severity": "info",
+    "action": "backup",
+    "metadata": {"database": "app_db", "type": "incremental"}
+  },
+  {
+    "timestamp": "2026-10-04T07:30:00Z",
+    "event_type": "OUTBOUND_TRANSFER",
+    "source": "server",
+    "username": "backup_agent",
+    "source_ip": "10.0.0.10",
+    "destination_ip": "10.0.1.100",
+    "severity": "info",
+    "action": "upload",
+    "metadata": {"destination": "backup_server", "size_mb": 256}
+  },
+  {
+    "timestamp": "2026-10-04T07:35:45Z",
+    "event_type": "FILE_ACCESS",
+    "source": "server",
+    "username": "app_service",
+    "source_ip": "10.0.0.10",
+    "destination_ip": "10.0.0.20",
+    "severity": "info",
+    "action": "write",
+    "metadata": {"file": "/var/data/cache.tmp", "size_bytes": 1024}
+  }
+]
