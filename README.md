@@ -2,105 +2,181 @@
 
 **Autonomous Cybersecurity Investigation & Attack Reconstruction Platform** that detects, correlates, and explains multi-stage cyber intrusions from authentication, network, and server logs.
 
-> **Hackathon Problem: ALG-CYBER-01 — Find the Intruder**
+> **Hackathon Problem: ALG-CYBER-01 — Find the Intruder**  
 > Analyze authentication, network, and server logs to identify suspicious users/IPs, connect related events, create an incident timeline, provide evidence, and explain the likely attack sequence.
 
 ---
 
-## System Architecture
+## 🌐 Live Demo & Deployment
+
+| Component | Target Platform | Live URL |
+|---|---|---|
+| **Frontend Web App** | Vercel (React + Vite) | `COMING SOON (e.g. https://tracex.vercel.app)` |
+| **Backend REST API** | Render Web Service (FastAPI) | `COMING SOON (e.g. https://tracex-backend.onrender.com)` |
+| **API Documentation** | Swagger / OpenAPI UI | `COMING SOON (e.g. https://tracex-backend.onrender.com/docs)` |
+
+---
+
+## 🏗️ Production Architecture
 
 ```text
-[ Multi-Format Security Telemetry ]
-  (CSV / JSON / NDJSON / Syslog)
-                 │
-                 ▼
-     ┌───────────────────────┐
-     │ Log Ingestion Engine  │ (FastAPI, Pandas, Pydantic v2)
-     └───────────┬───────────┘
-                 │ Normalized Events
-                 ▼
-     ┌───────────────────────┐
-     │ Security Data Store   │ (PostgreSQL / SQLite, SQLAlchemy 2.0)
-     └───────────┬───────────┘
-                 │
-                 ▼
-     ┌───────────────────────┐
-     │ Detection Rule Engine │ (Deterministic MITRE ATT&CK Rules)
-     └───────────┬───────────┘
-                 │ Security Findings
-                 ▼
-     ┌───────────────────────┐
-     │ Correlation Engine    │ (Causal Entity Graph Clustering,
-     │ & Risk Scorer         │  Kill-Chain Reconstruction 0-100)
-     └───────────┬───────────┘
-                 │ Incidents, Timelines & Graphs
-                 ▼
-     ┌───────────────────────┐
-     │ Modern SOC Dashboard  │ (React 18, Vite, TypeScript, Tailwind, Recharts)
-     └───────────────────────┘
+       ┌────────────────────────────────────────────────────────┐
+       │                 Vercel CDN Edge Network                │
+       │           TraceX Frontend (React 18 + Vite)            │
+       │    • Dynamic API routing via VITE_API_URL              │
+       │    • Client-side SPA routing rewrites (vercel.json)     │
+       └───────────────────────────┬────────────────────────────┘
+                                   │
+                                   │ HTTPS JSON & Multipart
+                                   │ (CORS configured for Vercel domain)
+                                   ▼
+       ┌────────────────────────────────────────────────────────┐
+       │                   Render Web Service                   │
+       │            TraceX Backend (FastAPI + Uvicorn)          │
+       │    • Auto-adapting dynamic port ($PORT)                │
+       │    • Automatic postgres:// to postgresql:// dialect    │
+       │    • Deterministic MITRE ATT&CK detection engine       │
+       │    • Graph correlation & kill-chain reconstruction     │
+       └───────────────────────────┬────────────────────────────┘
+                                   │
+                                   │ Managed PostgreSQL Connection
+                                   │ (Connection pooling & pre-ping)
+                                   ▼
+       ┌────────────────────────────────────────────────────────┐
+       │                Render Managed Database                 │
+       │                  PostgreSQL 16 Engine                  │
+       │    • Normalized Security Events table with JSON/JSONB  │
+       │    • Composite query indexes for user, IP, and time    │
+       │    • Forensic findings, incidents, and attack graphs   │
+       └────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Key Features
+## 🚀 Deployment Instructions
 
-1. **Multi-Format Ingestion**: Ingests CSV, JSON arrays, JSON objects, and NDJSON logs with UTC normalization and malformed line fault-tolerance.
-2. **Deterministic Detection Rules**:
-   - `RULE_BRUTE_FORCE`: Identifies password spraying & repeated authentication failures.
-   - `RULE_SUCCESS_AFTER_BRUTE_FORCE`: Detects account takeover following multiple failures.
-   - `RULE_PORT_SCAN`: Uncovers port scanning and firewall probe reconnaissance.
-   - `RULE_PRIVILEGE_ESCALATION`: Catches administrative privilege elevation (sudo/su) after access.
-   - `RULE_SUSPICIOUS_LOGIN`: Flags impossible travel and multi-IP simultaneous logins.
-3. **Causal Incident Correlation**: Clusters findings by shared IP addresses and compromised accounts into cohesive multi-stage kill chains.
-4. **MITRE-Aligned Attack Stages**: Maps activity across 5 stages: Reconnaissance, Credential Access, Initial Access, Privilege Escalation, and Data Access & Impact.
-5. **Mathematical Risk Scoring (0–100)**: Transparent, factor-based scoring calculated with verifiable weights (severity, stage depth, compromised accounts).
-6. **Zero-Hallucination Threat Narratives**: Deterministic, structured 5-part explanations detailing what happened, why it's suspicious, next progression, evidence proof, and immediate containment steps.
-7. **Interactive SOC Dashboard**:
-   - 4-Tier Interactive Attack Graph (Entrypoint IP $\rightarrow$ Compromised Identity $\rightarrow$ Detection Signal $\rightarrow$ Stage & Asset)
-   - Unified Chronological Milestone Timeline
-   - Forensic Evidence Drawer with Raw Payload Inspector
-   - One-Click Demo Scenario Loader
+### 1. Backend & Database Deployment (Render)
+
+#### Option A: Infrastructure as Code (Render Blueprint)
+1. Push this repository to GitHub.
+2. In the Render Dashboard, click **New** $\rightarrow$ **Blueprint**.
+3. Connect your repository. Render will automatically detect [`render.yaml`](render.yaml) and configure both the Web Service and PostgreSQL database.
+4. Set the `FRONTEND_URL` environment variable to your deployed Vercel URL.
+
+#### Option B: Manual Setup
+1. **Create Managed Database**:
+   - In Render Dashboard, click **New +** $\rightarrow$ **PostgreSQL**.
+   - Name: `tracex-postgres`
+   - Database: `tracex`
+   - User: `tracex`
+   - Region: Choose closest to your users.
+   - Plan: Free.
+   - Click **Create Database**. Copy the **Internal Database URL** (or External URL if deploying across platforms).
+
+2. **Create Web Service**:
+   - Click **New +** $\rightarrow$ **Web Service**.
+   - Connect your GitHub repository.
+   - **Root Directory**: `backend`
+   - **Runtime**: `Python`
+   - **Build Command**: `pip install -r requirements.txt`
+   - **Start Command**: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+   - **Plan**: Free.
+
+3. **Configure Environment Variables**:
+   Add the following in the Render Web Service settings:
+   | Key | Value | Notes |
+   |---|---|---|
+   | `APP_ENV` | `production` | Enables production mode |
+   | `LOG_LEVEL` | `INFO` | Standard structured logging |
+   | `DATABASE_URL` | `<Your Render PostgreSQL URL>` | TraceX automatically normalizes `postgres://` to `postgresql://` |
+   | `CORS_ORIGINS` | `https://<your-app>.vercel.app,http://localhost:5173` | Comma-separated list of allowed origins |
+   | `FRONTEND_URL` | `https://<your-app>.vercel.app` | Dedicated frontend origin |
+
+4. **Verify Health**:
+   Once deployed, navigate to `https://<your-service>.onrender.com/api/health` to confirm `{"status":"healthy","database":"healthy"}`.
 
 ---
 
-## Quick Start Guide
+### 2. Frontend Deployment (Vercel)
 
-### 1. Start Backend (FastAPI)
+1. Push this repository to GitHub.
+2. Log in to [Vercel](https://vercel.com) and click **Add New** $\rightarrow$ **Project**.
+3. Import your GitHub repository.
+4. **Project Settings**:
+   - **Root Directory**: Click edit and select `frontend`.
+   - **Framework Preset**: `Vite`
+   - **Build Command**: `npm run build`
+   - **Output Directory**: `dist`
+5. **Environment Variables**:
+   - Key: `VITE_API_URL`
+   - Value: `https://<your-render-backend>.onrender.com` (do not include trailing slash)
+6. Click **Deploy**.
+7. Vercel will build the frontend and serve it globally. The provided [`frontend/vercel.json`](frontend/vercel.json) automatically handles SPA routes (e.g. `/soc`, `/dashboard`, `/incidents`) without 404 errors.
+
+---
+
+## ⚙️ Environment Variables Reference
+
+### Backend (`backend/.env` / Render)
+
+| Variable | Type | Default | Description |
+|---|---|---|---|
+| `APP_ENV` | String | `development` | Environment name: `development`, `staging`, `production`. |
+| `LOG_LEVEL` | String | `INFO` | Logging level: `DEBUG`, `INFO`, `WARNING`, `ERROR`. |
+| `APP_HOST` | String | `0.0.0.0` | Bind host address. |
+| `APP_PORT` | Integer | `8000` | Local port (overridden by `PORT` on Render/cloud). |
+| `PORT` | Integer | `None` | Dynamically provided by Render. |
+| `DATABASE_URL` | String | `sqlite:///./tracex.db` | PostgreSQL or SQLite connection string. |
+| `CORS_ORIGINS` | String | `http://localhost:5173,http://localhost:3000` | Comma-separated list of allowed CORS origins. |
+| `FRONTEND_URL` | String | `None` | Production frontend domain for CORS whitelist. |
+| `BRUTE_FORCE_THRESHOLD` | Integer | `5` | Failed logins threshold to trigger brute-force rule. |
+| `BRUTE_FORCE_WINDOW_MINUTES` | Integer | `5` | Sliding window for brute-force detection. |
+| `LOGIN_AFTER_FAILURES_THRESHOLD`| Integer | `3` | Failures required before successful login triggers takeover alert. |
+| `PORT_SCAN_THRESHOLD` | Integer | `5` | Port scan probe count threshold. |
+
+### Frontend (`frontend/.env` / Vercel)
+
+| Variable | Type | Default | Description |
+|---|---|---|---|
+| `VITE_API_URL` | String | `""` | Render backend base URL (e.g. `https://tracex-backend.onrender.com`). If empty, proxies to `/api` locally. |
+
+---
+
+## 🛠️ Local Development & Docker
+
+### Option 1: Docker Compose (Full Stack with PostgreSQL)
 
 ```bash
-# Navigate to backend directory
+# Clone the repository
+git clone https://github.com/RujulaSharma/traceX.git
+cd traceX
+
+# Spin up PostgreSQL and Backend containers
+docker-compose up --build
+```
+
+### Option 2: Run Locally (FastAPI + Vite)
+
+#### 1. Backend (FastAPI + SQLite/PostgreSQL)
+```bash
 cd backend
-
-# Create & activate virtual environment
 python -m venv venv
-venv\Scripts\activate      # Windows
-# source venv/bin/activate    # Linux/Mac
-
-# Install dependencies
+venv\Scripts\activate      # Windows (or: source venv/bin/activate on Linux/macOS)
 pip install -r requirements.txt
-
-# Start backend API server (runs on port 8000)
 uvicorn app.main:app --reload --port 8000
 ```
 
-### 2. Start Frontend (React + Vite)
-
+#### 2. Frontend (React + Vite)
 ```bash
-# Navigate to frontend directory
 cd frontend
-
-# Install npm dependencies
 npm install
-
-# Start Vite dev server (runs on port 5173)
 npm run dev
 ```
-
 Open `http://localhost:5173` in your browser.
 
 ---
 
-## Live Hackathon Demo Walkthrough (3-Minute Script)
+## 🎬 Live Hackathon Demo Walkthrough (3-Minute Script)
 
 1. **Load Telemetry**:
    - Navigate to **Log Ingestion** (`/ingestion`).
@@ -121,11 +197,11 @@ Open `http://localhost:5173` in your browser.
 
 ---
 
-## REST API Reference
+## 📡 REST API Reference
 
 | Method | Endpoint | Description |
 |---|---|---|
-| `GET` | `/api/health` | System health check (DB connectivity) |
+| `GET` | `/api/health` | System health check & database connectivity probe |
 | `POST` | `/api/logs/upload` | Ingest CSV, JSON, or NDJSON file |
 | `GET` | `/api/events` | Query and filter normalized security events |
 | `GET` | `/api/events/{id}` | Get event details and raw payload |
@@ -143,17 +219,20 @@ Open `http://localhost:5173` in your browser.
 
 ---
 
-## Test Suite & Verification
+## 🧪 Test Suite & Quality Verification
 
 All 95 unit, integration, and rule tests pass with zero errors:
 
 ```bash
+# Run backend test suite
 cd backend
 python -m pytest
-```
 
-Static analysis & linting:
-```bash
+# Static type analysis and linting
 ruff check app tests
 mypy app
+
+# Frontend build & type check
+cd ../frontend
+npm run build
 ```

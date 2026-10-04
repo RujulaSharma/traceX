@@ -39,8 +39,8 @@ def get_engine():
     """Create and return a SQLAlchemy engine."""
     settings = get_settings()
     engine_args = _build_engine_args()
-    engine = create_engine(settings.database_url, **engine_args)
-    logger.info("Database engine created | url=%s", _mask_url(settings.database_url))
+    engine = create_engine(settings.normalized_database_url, **engine_args)
+    logger.info("Database engine created | url=%s", _mask_url(settings.normalized_database_url))
     return engine
 
 
