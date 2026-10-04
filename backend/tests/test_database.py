@@ -3,11 +3,13 @@
 Tests:
 - Database connection
 - Event insertion and retrieval
+- DetectionFinding insertion and retrieval
 - Model field types and constraints
 """
 
 from datetime import datetime, timezone
 
+from app.models.detection import DetectionFinding
 from app.models.event import SecurityEvent
 
 
@@ -32,6 +34,7 @@ class TestDatabaseConnection:
         assert "security_events" in tables
         assert "users" in tables
         assert "ip_addresses" in tables
+        assert "detection_findings" in tables
 
 
 class TestEventInsertion:
@@ -176,3 +179,38 @@ class TestEventInsertion:
         )
         assert len(external) == 1
         assert external[0].event_type == "LOGIN_FAILED"
+
+
+class TestDetectionFindingInsertion:
+    """Test inserting and querying DetectionFinding records."""
+
+    def test_insert_detection_finding(self, db_session):
+        """Insert a detection finding with evidence and metadata."""
+        now = datetime.now(timezone.utc)
+        finding = DetectionFinding(
+            rule_id="RULE_BRUTE_FORCE",
+            rule_name="Brute Force Authentication",
+            detection_type="brute_force",
+            severity="high",
+            confidence=0.9,
+            source_ip="192.168.1.50",
+            username="admin",
+            timestamp=now,
+            first_seen=now,
+            last_seen=now,
+            description='Detected 6 failed login attempts for user "admin"',
+            evidence_event_ids=[101, 102, 103, 104, 105, 106],
+            metadata_={"failed_attempts": 6, "window_minutes": 5},
+        )
+        db_session.add(finding)
+        db_session.commit()
+
+        stored = db_session.query(DetectionFinding).first()
+        assert stored is not None
+        assert stored.rule_id == "RULE_BRUTE_FORCE"
+        assert stored.severity == "high"
+        assert stored.confidence == 0.9
+        assert stored.username == "admin"
+        assert stored.source_ip == "192.168.1.50"
+        assert stored.evidence_event_ids == [101, 102, 103, 104, 105, 106]
+        assert stored.metadata_["failed_attempts"] == 6
