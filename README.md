@@ -11,9 +11,9 @@
 
 | Component | Target Platform | Live URL |
 |---|---|---|
-| **Frontend Web App** | Vercel (React + Vite) | `COMING SOON (e.g. https://tracex.vercel.app)` |
-| **Backend REST API** | Render Web Service (FastAPI) | `COMING SOON (e.g. https://tracex-backend.onrender.com)` |
-| **API Documentation** | Swagger / OpenAPI UI | `COMING SOON (e.g. https://tracex-backend.onrender.com/docs)` |
+| **Frontend Web App** | Vercel (React + Vite) | [https://trace-x-tau.vercel.app](https://trace-x-tau.vercel.app) |
+| **Backend REST API** | Render Web Service (FastAPI) | [https://tracex-backend-lcy5.onrender.com](https://tracex-backend-lcy5.onrender.com) |
+| **API Documentation** | Swagger / OpenAPI UI | [https://tracex-backend-lcy5.onrender.com/docs](https://tracex-backend-lcy5.onrender.com/docs) |
 
 ---
 

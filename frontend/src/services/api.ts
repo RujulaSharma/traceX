@@ -9,7 +9,9 @@ import {
   DashboardStats,
 } from '../types';
 
-const rawBase = (import.meta.env.VITE_API_URL as string | undefined)?.trim();
+const rawBase =
+  (import.meta.env.VITE_API_URL as string | undefined)?.trim() ||
+  (import.meta.env.PROD ? 'https://tracex-backend-lcy5.onrender.com' : '');
 const API_BASE = rawBase
   ? (rawBase.endsWith('/api') ? rawBase : `${rawBase.replace(/\/+$/, '')}/api`)
   : '/api';
