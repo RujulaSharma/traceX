@@ -19,7 +19,7 @@ export const App: React.FC = () => {
         {/* Operational Security Operations Center (SOC) Workspace */}
         <Route element={<SocLayout />}>
           <Route path="/soc" element={<Dashboard />} />
-          <Route path="/dashboard" element={<Navigate to="/soc" replace />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/ingestion" element={<LogIngestion />} />
           <Route path="/events" element={<EventExplorer />} />
           <Route path="/detections" element={<Detections />} />
