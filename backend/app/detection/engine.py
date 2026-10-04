@@ -209,5 +209,10 @@ def get_detection_engine() -> DetectionEngine:
 
 def _register_default_rules(engine: DetectionEngine) -> None:
     """Register built-in detection rules."""
-    # Placeholder: specific rules will be imported and registered in subsequent features
-    pass
+    from app.detection.rules.brute_force import BruteForceDetectionRule
+    from app.detection.rules.successful_login_after_failures import (
+        SuccessfulLoginAfterFailuresRule,
+    )
+
+    engine.register_rule(BruteForceDetectionRule())
+    engine.register_rule(SuccessfulLoginAfterFailuresRule())
