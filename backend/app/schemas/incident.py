@@ -158,14 +158,22 @@ class CorrelationRunResponse(BaseModel):
 class DashboardStatsResponse(BaseModel):
     """Aggregated SOC metrics for dashboard overview."""
 
-    total_events: int
-    suspicious_events: int
-    total_detections: int
-    active_incidents: int
-    critical_findings: int
-    high_findings: int
-    average_risk_score: float
-    top_suspicious_ips: list[dict[str, Any]]
-    top_targeted_users: list[dict[str, Any]]
-    event_distribution: list[dict[str, Any]]
-    recent_activity: list[dict[str, Any]]
+    total_events: int = 0
+    suspicious_events: int = 0
+    total_detections: int = 0
+    total_incidents: int = 0
+    active_incidents: int = 0
+    critical_incidents: int = 0
+    high_incidents: int = 0
+    critical_findings: int = 0
+    high_findings: int = 0
+    avg_risk_score: float = 0.0
+    average_risk_score: float = 0.0
+    events_by_type: list[dict[str, Any]] = Field(default_factory=list)
+    events_by_severity: list[dict[str, Any]] = Field(default_factory=list)
+    detections_by_rule: list[dict[str, Any]] = Field(default_factory=list)
+    top_suspicious_ips: list[dict[str, Any]] = Field(default_factory=list)
+    top_targeted_users: list[dict[str, Any]] = Field(default_factory=list)
+    event_distribution: list[dict[str, Any]] = Field(default_factory=list)
+    recent_activity: list[dict[str, Any]] = Field(default_factory=list)
+    recent_timeline: list[dict[str, Any]] = Field(default_factory=list)

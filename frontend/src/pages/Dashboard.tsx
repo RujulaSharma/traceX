@@ -39,7 +39,22 @@ export const Dashboard: React.FC = () => {
   const fetchStats = async () => {
     try {
       const data = await tracexApi.getDashboardStats();
-      setStats(data);
+      // Normalize: ensure all array fields have safe defaults in case of
+      // partial backend responses, so .length / .map never hit undefined.
+      setStats({
+        total_events: data.total_events ?? 0,
+        total_detections: data.total_detections ?? 0,
+        total_incidents: data.total_incidents ?? 0,
+        critical_incidents: data.critical_incidents ?? 0,
+        high_incidents: data.high_incidents ?? 0,
+        avg_risk_score: data.avg_risk_score ?? 0,
+        events_by_type: data.events_by_type ?? [],
+        events_by_severity: data.events_by_severity ?? [],
+        detections_by_rule: data.detections_by_rule ?? [],
+        top_suspicious_ips: data.top_suspicious_ips ?? [],
+        top_targeted_users: data.top_targeted_users ?? [],
+        recent_timeline: data.recent_timeline ?? [],
+      });
     } catch (err) {
       console.error('Failed to load dashboard stats', err);
     }
@@ -160,9 +175,9 @@ export const Dashboard: React.FC = () => {
           </div>
 
           <div className="h-64 w-full">
-            {stats && stats.events_by_type.length > 0 ? (
+            {(stats?.events_by_type?.length ?? 0) > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={stats.events_by_type}>
+                <BarChart data={stats!.events_by_type}>
                   <XAxis
                     dataKey="event_type"
                     stroke="#64748b"
@@ -205,11 +220,11 @@ export const Dashboard: React.FC = () => {
           </div>
 
           <div className="h-52 w-full flex items-center justify-center">
-            {stats && stats.events_by_severity.length > 0 ? (
+            {(stats?.events_by_severity?.length ?? 0) > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
-                    data={stats.events_by_severity}
+                    data={stats!.events_by_severity}
                     dataKey="count"
                     nameKey="severity"
                     cx="50%"
@@ -218,7 +233,7 @@ export const Dashboard: React.FC = () => {
                     innerRadius={45}
                     paddingAngle={3}
                   >
-                    {stats.events_by_severity.map((_, index) => (
+                    {stats!.events_by_severity.map((_, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
@@ -238,7 +253,7 @@ export const Dashboard: React.FC = () => {
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-2 pt-2 border-t border-slate-800">
-            {stats?.events_by_severity.map((s, idx) => (
+            {stats?.events_by_severity?.map((s, idx) => (
               <div key={idx} className="flex items-center gap-1 text-[11px] text-slate-400">
                 <span
                   className="w-2 h-2 rounded-full"
@@ -272,8 +287,8 @@ export const Dashboard: React.FC = () => {
           </div>
 
           <div className="space-y-2">
-            {stats?.top_suspicious_ips && stats.top_suspicious_ips.length > 0 ? (
-              stats.top_suspicious_ips.map((item, idx) => (
+            {(stats?.top_suspicious_ips?.length ?? 0) > 0 ? (
+              stats!.top_suspicious_ips.map((item, idx) => (
                 <div
                   key={idx}
                   className="flex items-center justify-between p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 hover:border-slate-700 transition"
@@ -314,8 +329,8 @@ export const Dashboard: React.FC = () => {
           </div>
 
           <div className="space-y-2">
-            {stats?.top_targeted_users && stats.top_targeted_users.length > 0 ? (
-              stats.top_targeted_users.map((item, idx) => (
+            {(stats?.top_targeted_users?.length ?? 0) > 0 ? (
+              stats!.top_targeted_users.map((item, idx) => (
                 <div
                   key={idx}
                   className="flex items-center justify-between p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 hover:border-slate-700 transition"
