@@ -26,10 +26,25 @@ class Settings(BaseSettings):
     app_host: str = "0.0.0.0"
     app_port: int = 8000
     app_name: str = "TraceX"
-    app_version: str = "0.1.0"
+    app_version: str = "0.2.0"
 
     # Database
     database_url: str = "sqlite:///./tracex.db"
+
+    # Phase 2: Detection Engine Thresholds & Windows
+    brute_force_threshold: int = 5
+    brute_force_window_minutes: int = 5
+
+    login_after_failures_threshold: int = 3
+    login_after_failures_window_minutes: int = 10
+
+    port_scan_threshold: int = 5
+    port_scan_window_minutes: int = 5
+
+    privilege_escalation_window_minutes: int = 15
+
+    suspicious_login_ip_threshold: int = 2
+    suspicious_login_window_hours: int = 24
 
     @property
     def is_sqlite(self) -> bool:
