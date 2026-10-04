@@ -1,6 +1,6 @@
 import React from 'react';
 import { LandingNavbar } from '../components/landing/LandingNavbar';
-import { LivingNetworkCanvas } from '../components/landing/LivingNetworkCanvas';
+import { NeonGalaxyNetworkCanvas } from '../components/landing/NeonGalaxyNetworkCanvas';
 import { HeroSection } from '../components/landing/HeroSection';
 import { StickyStorySection } from '../components/landing/StickyStorySection';
 import { OperationalPanels } from '../components/landing/OperationalPanels';
@@ -12,13 +12,18 @@ import { ShieldAlert, ArrowDown } from 'lucide-react';
 
 export const LandingPage: React.FC = () => {
   return (
-    <div className="min-h-screen bg-[#030706] text-slate-100 font-sans selection:bg-emerald-500 selection:text-black relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#020605] text-slate-100 font-sans selection:bg-[#00FF9C] selection:text-black relative overflow-x-hidden">
       {/* Top Fixed Navbar */}
       <LandingNavbar />
 
       {/* Hero Section with Dense Living Network Background */}
       <div className="relative min-h-screen flex flex-col justify-between overflow-hidden">
-        <LivingNetworkCanvas className="z-0 opacity-70" />
+        <NeonGalaxyNetworkCanvas
+          className="z-0 opacity-85"
+          progress={0.08}
+          stage={1}
+          showHorizon={true}
+        />
         <div className="relative z-10 flex-1 flex flex-col justify-center">
           <HeroSection />
         </div>

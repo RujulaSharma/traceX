@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ScrollNetworkEngine } from './ScrollNetworkEngine';
+import { NeonGalaxyNetworkCanvas } from './NeonGalaxyNetworkCanvas';
 import {
   Database,
   Search,
@@ -119,9 +119,9 @@ export const StickyStorySection: React.FC = () => {
       {/* Sticky Viewport pinned for the entire 500vh scroll track */}
       <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-between">
         {/* Layer 1: Living Interactive Network Canvas */}
-        <ScrollNetworkEngine
+        <NeonGalaxyNetworkCanvas
           progress={scrollProgress}
-          activeStage={currentStage}
+          stage={currentStage}
         />
 
         {/* Layer 2: Top Floating HUD Progress Bar */}
