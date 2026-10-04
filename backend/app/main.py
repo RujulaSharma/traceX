@@ -14,6 +14,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.api.detection_routes import router as detection_router
 from app.api.routes import router
 from app.core.config import get_settings
 from app.core.database import init_db
@@ -79,6 +80,7 @@ def create_app() -> FastAPI:
 
     # Register API routes
     app.include_router(router, prefix="/api")
+    app.include_router(detection_router, prefix="/api")
 
     return app
 
