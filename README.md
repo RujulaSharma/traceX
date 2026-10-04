@@ -1,221 +1,159 @@
 # TraceX: Find the Intruder
 
-**Security log analysis and threat detection platform** that detects, correlates, and explains attack sequences from authentication, network, and server logs.
+**Autonomous Cybersecurity Investigation & Attack Reconstruction Platform** that detects, correlates, and explains multi-stage cyber intrusions from authentication, network, and server logs.
 
-> Hackathon Problem: ALG-CYBER-01 — Analyze authentication, network, and server logs to identify suspicious users/IPs, connect related events, create an incident timeline, provide evidence, and explain the likely attack sequence.
-
----
-
-## Current Status: Phase 1 & Phase 2 Implemented
-
-- **Phase 1: Log Ingestion & Database Foundation** (Completed)
-- **Phase 2: Security Detection Engine & Rule Catalog** (Completed)
-- **Phase 3: Risk Scoring & Event Correlation** (Upcoming)
-- **Phase 4: Incident Creation & Attack Timelines** (Upcoming)
-- **Phase 5: Attack Reconstruction & Forensic Evidence** (Upcoming)
-- **Phase 6: Security Operations Center (SOC) Dashboard** (Upcoming)
+> **Hackathon Problem: ALG-CYBER-01 — Find the Intruder**
+> Analyze authentication, network, and server logs to identify suspicious users/IPs, connect related events, create an incident timeline, provide evidence, and explain the likely attack sequence.
 
 ---
 
-## Phase 2: Security Detection Engine
-
-The Detection Engine evaluates normalized security events against deterministic, explainable security rules to produce structured **Detection Findings** with forensic evidence links.
+## System Architecture
 
 ```text
-Normalized Security Events (Phase 1)
-                ↓
-    Detection Engine (engine.py)
-                ↓
-┌────────────────────────────────────────────────────────┐
-│ Registered Detection Rules:                            │
-│  1. RULE_BRUTE_FORCE                                   │
-│  2. RULE_SUCCESS_AFTER_BRUTE_FORCE                     │
-│  3. RULE_PORT_SCAN                                     │
-│  4. RULE_PRIVILEGE_ESCALATION                          │
-│  5. RULE_SUSPICIOUS_LOGIN                              │
-└────────────────────────────────────────────────────────┘
-                ↓
-    Detection Findings (detection_findings table)
-    (rule_id, severity, confidence, evidence_event_ids, metadata)
-                ↓
-    REST API (/api/detections/run, /api/detections)
+[ Multi-Format Security Telemetry ]
+  (CSV / JSON / NDJSON / Syslog)
+                 │
+                 ▼
+     ┌───────────────────────┐
+     │ Log Ingestion Engine  │ (FastAPI, Pandas, Pydantic v2)
+     └───────────┬───────────┘
+                 │ Normalized Events
+                 ▼
+     ┌───────────────────────┐
+     │ Security Data Store   │ (PostgreSQL / SQLite, SQLAlchemy 2.0)
+     └───────────┬───────────┘
+                 │
+                 ▼
+     ┌───────────────────────┐
+     │ Detection Rule Engine │ (Deterministic MITRE ATT&CK Rules)
+     └───────────┬───────────┘
+                 │ Security Findings
+                 ▼
+     ┌───────────────────────┐
+     │ Correlation Engine    │ (Causal Entity Graph Clustering,
+     │ & Risk Scorer         │  Kill-Chain Reconstruction 0-100)
+     └───────────┬───────────┘
+                 │ Incidents, Timelines & Graphs
+                 ▼
+     ┌───────────────────────┐
+     │ Modern SOC Dashboard  │ (React 18, Vite, TypeScript, Tailwind, Recharts)
+     └───────────────────────┘
 ```
-
-### Implemented Detection Rules
-
-| Rule ID | Rule Name | Detection Type | Default Severity | Default Threshold | Description |
-|---|---|---|---|---|---|
-| `RULE_BRUTE_FORCE` | Brute Force Authentication Attempt | `brute_force` | High | $\ge 5$ failures in 5 min | Identifies repeated failed logins against a user from an IP. |
-| `RULE_SUCCESS_AFTER_BRUTE_FORCE` | Successful Login Following Failures | `credential_access` | Critical | $\ge 3$ failures before success in 10 min | Detects account compromise or successful brute force breach. |
-| `RULE_PORT_SCAN` | Port Scan & Network Reconnaissance | `reconnaissance` | High | $\ge 5$ ports/probes in 5 min | Probes against multiple destination ports or firewall blocks. |
-| `RULE_PRIVILEGE_ESCALATION` | Suspicious Privilege Escalation | `privilege_escalation` | High | Sudo/su within 15 min of login | Unauthorized or suspicious administrative command elevation. |
-| `RULE_SUSPICIOUS_LOGIN` | Suspicious Login Activity | `unusual_access` | Medium | $\ge 2$ distinct IPs in 24 hrs | Account authenticating from multiple distinct geographic/IP locations. |
 
 ---
 
-## Setup & Quick Start
+## Key Features
 
-### Prerequisites
+1. **Multi-Format Ingestion**: Ingests CSV, JSON arrays, JSON objects, and NDJSON logs with UTC normalization and malformed line fault-tolerance.
+2. **Deterministic Detection Rules**:
+   - `RULE_BRUTE_FORCE`: Identifies password spraying & repeated authentication failures.
+   - `RULE_SUCCESS_AFTER_BRUTE_FORCE`: Detects account takeover following multiple failures.
+   - `RULE_PORT_SCAN`: Uncovers port scanning and firewall probe reconnaissance.
+   - `RULE_PRIVILEGE_ESCALATION`: Catches administrative privilege elevation (sudo/su) after access.
+   - `RULE_SUSPICIOUS_LOGIN`: Flags impossible travel and multi-IP simultaneous logins.
+3. **Causal Incident Correlation**: Clusters findings by shared IP addresses and compromised accounts into cohesive multi-stage kill chains.
+4. **MITRE-Aligned Attack Stages**: Maps activity across 5 stages: Reconnaissance, Credential Access, Initial Access, Privilege Escalation, and Data Access & Impact.
+5. **Mathematical Risk Scoring (0–100)**: Transparent, factor-based scoring calculated with verifiable weights (severity, stage depth, compromised accounts).
+6. **Zero-Hallucination Threat Narratives**: Deterministic, structured 5-part explanations detailing what happened, why it's suspicious, next progression, evidence proof, and immediate containment steps.
+7. **Interactive SOC Dashboard**:
+   - 4-Tier Interactive Attack Graph (Entrypoint IP $\rightarrow$ Compromised Identity $\rightarrow$ Detection Signal $\rightarrow$ Stage & Asset)
+   - Unified Chronological Milestone Timeline
+   - Forensic Evidence Drawer with Raw Payload Inspector
+   - One-Click Demo Scenario Loader
 
-- Python 3.12+
-- PostgreSQL 16+ (or automatic SQLite fallback for local development)
+---
 
-### Quick Start (Local Development)
+## Quick Start Guide
+
+### 1. Start Backend (FastAPI)
 
 ```bash
-# Navigate to backend
+# Navigate to backend directory
 cd backend
 
-# Create and activate virtual environment
+# Create & activate virtual environment
 python -m venv venv
-venv\Scripts\activate    # Windows
-# source venv/bin/activate  # Linux/Mac
+venv\Scripts\activate      # Windows
+# source venv/bin/activate    # Linux/Mac
 
 # Install dependencies
 pip install -r requirements.txt
 
-# Run the server
+# Start backend API server (runs on port 8000)
 uvicorn app.main:app --reload --port 8000
 ```
 
-### Quick Start with Docker Compose
+### 2. Start Frontend (React + Vite)
 
 ```bash
-# Start PostgreSQL container
-docker compose up -d db
+# Navigate to frontend directory
+cd frontend
 
-# Run full stack with Docker
-docker compose up -d
+# Install npm dependencies
+npm install
+
+# Start Vite dev server (runs on port 5173)
+npm run dev
 ```
+
+Open `http://localhost:5173` in your browser.
 
 ---
 
-## Environment & Configuration
+## Live Hackathon Demo Walkthrough (3-Minute Script)
 
-| Variable | Default | Description |
+1. **Load Telemetry**:
+   - Navigate to **Log Ingestion** (`/ingestion`).
+   - Click **"Load Full Attack Scenario"** (or upload `data/sample_logs/attack_scenario_full.csv`).
+   - Notice immediate format detection, validation, and sub-second ingestion.
+2. **Execute Detection Engine**:
+   - Click **"Proceed to Threat Detections"** (`/detections`).
+   - Click **"Execute Detection Engine"** to trigger deterministic rules. Review confidence scores and MITRE ATT&CK tags.
+3. **Reconstruct Attack Chain**:
+   - Go to **Incidents & Graph** (`/incidents`).
+   - Click **"Run Correlation Engine"** to aggregate signals into a unified threat incident.
+4. **Inspect Incident Cockpit**:
+   - Click on the generated incident (`/incidents/1`).
+   - **Attack Topology Graph**: Observe the visual flow from attacker IP `185.220.101.5` $\rightarrow$ compromised user `jsmith` $\rightarrow$ triggered signals $\rightarrow$ database target `10.0.0.50`.
+   - **Kill Chain Stages**: Review the 5-stage attack progression.
+   - **Attack Timeline**: Filter by milestones to see the exact minute-by-minute sequence.
+   - **Deterministic Narrative**: Review the explanation and immediate containment actions.
+
+---
+
+## REST API Reference
+
+| Method | Endpoint | Description |
 |---|---|---|
-| `DATABASE_URL` | `sqlite:///./tracex.db` | PostgreSQL connection string (or SQLite path) |
-| `APP_ENV` | `development` | Environment (`development`/`staging`/`production`) |
-| `LOG_LEVEL` | `INFO` | Logging level (`DEBUG`, `INFO`, `WARNING`, `ERROR`) |
-| `BRUTE_FORCE_THRESHOLD` | `5` | Failed attempts threshold for brute force rule |
-| `BRUTE_FORCE_WINDOW_MINUTES` | `5` | Sliding window in minutes for brute force |
-| `LOGIN_AFTER_FAILURES_THRESHOLD` | `3` | Preceding failures required before success |
-| `LOGIN_AFTER_FAILURES_WINDOW_MINUTES` | `10` | Lookback window in minutes for login after failures |
-| `PORT_SCAN_THRESHOLD` | `5` | Distinct ports / probe count threshold |
-| `PORT_SCAN_WINDOW_MINUTES` | `5` | Time window for port scan reconnaissance |
-| `PRIVILEGE_ESCALATION_WINDOW_MINUTES` | `15` | Lookback window correlating login to elevation |
-| `SUSPICIOUS_LOGIN_IP_THRESHOLD` | `2` | Distinct source IPs threshold for single user |
-| `SUSPICIOUS_LOGIN_WINDOW_HOURS` | `24` | Lookback window in hours for multi-IP logins |
-
-See [`.env.example`](.env.example) for all variables.
-
----
-
-## API Endpoints
-
-Once the application is running, visit **Swagger UI** at [http://localhost:8000/docs](http://localhost:8000/docs).
-
-### Ingestion APIs (Phase 1)
-- `POST /api/logs/upload` — Ingest CSV, JSON, or NDJSON logs with validation and normalization.
-- `GET /api/logs/events` — Query stored normalized events with filtering.
-- `GET /api/health` — Application and database connectivity health check.
-
-### Detection APIs (Phase 2)
-- `POST /api/detections/run` — Run detection engine against stored events (supports dry-run, time-range, and entity filters).
-- `GET /api/detections` — Query generated detection findings with filtering by `rule_id`, `severity`, `username`, `source_ip`.
-- `GET /api/detections/{id}` — Get single detection finding details and evidence IDs.
-- `GET /api/detections/rules` — List all registered detection rules with metadata and thresholds.
-
-### Example Detection Run Request
-
-```bash
-curl -X POST http://localhost:8000/api/detections/run \
-  -H "Content-Type: application/json" \
-  -d '{
-    "persist_findings": true
-  }'
-```
+| `GET` | `/api/health` | System health check (DB connectivity) |
+| `POST` | `/api/logs/upload` | Ingest CSV, JSON, or NDJSON file |
+| `GET` | `/api/events` | Query and filter normalized security events |
+| `GET` | `/api/events/{id}` | Get event details and raw payload |
+| `POST` | `/api/detections/run` | Execute detection rule engine |
+| `GET` | `/api/detections` | List security findings |
+| `GET` | `/api/detections/rules` | List registered detection rules |
+| `POST` | `/api/correlation/run` | Execute correlation engine to create incidents |
+| `GET` | `/api/incidents` | List correlated incidents |
+| `GET` | `/api/incidents/{id}` | Get detailed incident record |
+| `GET` | `/api/incidents/{id}/timeline` | Get unified chronological attack timeline |
+| `GET` | `/api/incidents/{id}/evidence` | Get forensic evidence findings and events |
+| `GET` | `/api/incidents/{id}/graph` | Get topological attack graph nodes and edges |
+| `PATCH`| `/api/incidents/{id}/status` | Update incident workflow status |
+| `GET` | `/api/stats/dashboard` | Aggregated metrics and telemetry charts |
 
 ---
 
-## Database Design
+## Test Suite & Verification
 
-### Tables
-- **`security_events`**: Canonical normalized security logs (timestamps in UTC, IPv4/IPv6 validated, indexed).
-- **`detection_findings`**: Generated detection findings referencing underlying event IDs with confidence, severity, and metadata.
-- **`users`**: Entity directory of observed user identities.
-- **`ip_addresses`**: Entity directory of observed source/destination IPs.
-
----
-
-## Testing & Quality Assurance
-
-Run the automated test suite (91 passing tests):
+All 95 unit, integration, and rule tests pass with zero errors:
 
 ```bash
 cd backend
-py -m pytest tests/ -v
+python -m pytest
 ```
 
-Linting and Type Checking:
-
+Static analysis & linting:
 ```bash
-cd backend
-py -m ruff check app tests
-py -m mypy app
-```
-
----
-
-## Project Structure
-
-```text
-traceX/
-├── backend/
-│   ├── app/
-│   │   ├── api/
-│   │   │   ├── routes.py                 # Ingestion & health endpoints
-│   │   │   └── detection_routes.py       # Detection engine run & query endpoints
-│   │   ├── core/
-│   │   │   ├── config.py                 # Pydantic Settings with detection thresholds
-│   │   │   ├── database.py               # SQLAlchemy engine & session management
-│   │   │   ├── errors.py                 # Centralized exception handling
-│   │   │   └── logging.py                # Structured logging
-│   │   ├── detection/
-│   │   │   ├── base.py                   # BaseDetectionRule abstract class
-│   │   │   ├── engine.py                 # DetectionEngine orchestrator
-│   │   │   └── rules/
-│   │   │       ├── brute_force.py        # Rule: Brute force login attempts
-│   │   │       ├── successful_login_after_failures.py # Rule: Success after failures
-│   │   │       ├── port_scan.py          # Rule: Port scanning & reconnaissance
-│   │   │       ├── privilege_escalation.py # Rule: Suspicious privilege escalation
-│   │   │       └── suspicious_login.py   # Rule: Multi-IP unusual logins
-│   │   ├── models/
-│   │   │   ├── event.py                  # SecurityEvent, User, IPAddress models
-│   │   │   └── detection.py              # DetectionFinding model
-│   │   ├── schemas/
-│   │   │   ├── event.py                  # Event validation schemas
-│   │   │   └── detection.py              # Detection finding schemas & API models
-│   │   ├── services/
-│   │   │   ├── ingestion.py              # Ingestion pipeline
-│   │   │   └── log_parser.py             # CSV, JSON, NDJSON parsers
-│   │   └── main.py                       # FastAPI application entry point
-│   ├── tests/
-│   │   ├── conftest.py                   # Pytest fixtures
-│   │   ├── test_database.py              # DB operation tests
-│   │   ├── test_validation.py            # Event schema validation tests
-│   │   ├── test_parsing.py               # Log parsing tests
-│   │   ├── test_ingestion.py             # Ingestion API tests
-│   │   ├── test_detection_rules.py       # Unit tests for all 5 detection rules
-│   │   ├── test_detection_engine.py      # Detection engine orchestration tests
-│   │   └── test_detection_api.py         # Detection API integration tests
-│   ├── requirements.txt
-│   ├── pyproject.toml
-│   └── Dockerfile
-├── data/
-│   └── sample_logs/                      # Realistic sample log files
-├── docker-compose.yml
-├── .env.example
-├── README.md
-└── ARCHITECTURE.md
+ruff check app tests
+mypy app
 ```
