@@ -1,0 +1,126 @@
+[
+  {
+    "timestamp": "2026-10-04T09:55:00Z",
+    "event_type": "LOGIN_SUCCESS",
+    "source": "authentication",
+    "username": "jsmith",
+    "source_ip": "192.168.1.10",
+    "destination_ip": "10.0.0.5",
+    "severity": "info",
+    "action": "login"
+  },
+  {
+    "timestamp": "2026-10-04T10:00:00Z",
+    "event_type": "PORT_SCAN",
+    "source": "network",
+    "username": null,
+    "source_ip": "185.23.91.44",
+    "destination_ip": "10.0.0.5",
+    "severity": "high",
+    "action": "scan",
+    "metadata": { "ports_scanned": [22, 80, 443, 3306, 5432] }
+  },
+  {
+    "timestamp": "2026-10-04T10:02:40Z",
+    "event_type": "LOGIN_FAILED",
+    "source": "authentication",
+    "username": "admin",
+    "source_ip": "185.23.91.44",
+    "destination_ip": "10.0.0.5",
+    "severity": "medium",
+    "action": "login"
+  },
+  {
+    "timestamp": "2026-10-04T10:02:55Z",
+    "event_type": "LOGIN_FAILED",
+    "source": "authentication",
+    "username": "admin",
+    "source_ip": "185.23.91.44",
+    "destination_ip": "10.0.0.5",
+    "severity": "medium",
+    "action": "login"
+  },
+  {
+    "timestamp": "2026-10-04T10:03:10Z",
+    "event_type": "LOGIN_FAILED",
+    "source": "authentication",
+    "username": "admin",
+    "source_ip": "185.23.91.44",
+    "destination_ip": "10.0.0.5",
+    "severity": "medium",
+    "action": "login"
+  },
+  {
+    "timestamp": "2026-10-04T10:03:25Z",
+    "event_type": "LOGIN_FAILED",
+    "source": "authentication",
+    "username": "admin",
+    "source_ip": "185.23.91.44",
+    "destination_ip": "10.0.0.5",
+    "severity": "medium",
+    "action": "login"
+  },
+  {
+    "timestamp": "2026-10-04T10:03:40Z",
+    "event_type": "LOGIN_FAILED",
+    "source": "authentication",
+    "username": "admin",
+    "source_ip": "185.23.91.44",
+    "destination_ip": "10.0.0.5",
+    "severity": "medium",
+    "action": "login"
+  },
+  {
+    "timestamp": "2026-10-04T10:03:55Z",
+    "event_type": "LOGIN_FAILED",
+    "source": "authentication",
+    "username": "admin",
+    "source_ip": "185.23.91.44",
+    "destination_ip": "10.0.0.5",
+    "severity": "medium",
+    "action": "login"
+  },
+  {
+    "timestamp": "2026-10-04T10:04:20Z",
+    "event_type": "LOGIN_SUCCESS",
+    "source": "authentication",
+    "username": "admin",
+    "source_ip": "185.23.91.44",
+    "destination_ip": "10.0.0.5",
+    "severity": "info",
+    "action": "login"
+  },
+  {
+    "timestamp": "2026-10-04T10:05:15Z",
+    "event_type": "PRIVILEGE_ESCALATION",
+    "source": "server",
+    "username": "admin",
+    "source_ip": "185.23.91.44",
+    "destination_ip": "10.0.0.5",
+    "severity": "high",
+    "action": "sudo",
+    "metadata": { "command": "cat /etc/shadow" }
+  },
+  {
+    "timestamp": "2026-10-04T10:06:30Z",
+    "event_type": "DATABASE_ACCESS",
+    "source": "server",
+    "username": "admin",
+    "source_ip": "185.23.91.44",
+    "destination_ip": "10.0.0.50",
+    "severity": "info",
+    "action": "query",
+    "metadata": { "table": "customers_credit_cards" }
+  },
+  {
+    "timestamp": "2026-10-04T10:07:45Z",
+    "event_type": "OUTBOUND_TRANSFER",
+    "source": "server",
+    "username": "admin",
+    "source_ip": "185.23.91.44",
+    "destination_ip": "198.51.100.99",
+    "severity": "critical",
+    "action": "upload",
+    "metadata": { "size_mb": 1024, "destination": "c2_server" }
+  }
+]

@@ -13,6 +13,21 @@ from app.schemas.event import (
     IngestionResponse,
     RejectedRecord,
 )
+from app.schemas.incident import (
+    AttackGraphResponse,
+    AttackStage,
+    AttackTimelineResponse,
+    CorrelationRunRequest,
+    CorrelationRunResponse,
+    DashboardStatsResponse,
+    GraphEdge,
+    GraphNode,
+    IncidentEvidenceResponse,
+    IncidentExplanation,
+    IncidentResponse,
+    RiskFactor,
+    TimelineItem,
+)
 
 __all__ = [
     "EventCreate",
@@ -24,4 +39,17 @@ __all__ = [
     "DetectionFindingResponse",
     "DetectionRunRequest",
     "DetectionRunResponse",
+    "RiskFactor",
+    "AttackStage",
+    "IncidentExplanation",
+    "IncidentResponse",
+    "TimelineItem",
+    "AttackTimelineResponse",
+    "IncidentEvidenceResponse",
+    "GraphNode",
+    "GraphEdge",
+    "AttackGraphResponse",
+    "CorrelationRunRequest",
+    "CorrelationRunResponse",
+    "DashboardStatsResponse",
 ]
