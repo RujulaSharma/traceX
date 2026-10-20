@@ -51,12 +51,25 @@ export const tracexApi = {
     limit?: number;
     offset?: number;
   }): Promise<{ total: number; events: SecurityEvent[] }> => {
-    const res = await api.get('/events', { params });
-    return res.data;
+    // Backend routes.py registers GET /api/logs/events with skip and limit
+    const queryParams: any = { ...params };
+    if (params?.offset !== undefined && queryParams.skip === undefined) {
+      queryParams.skip = params.offset;
+    }
+    const res = await api.get('/logs/events', { params: queryParams });
+    const data = res.data;
+    if (Array.isArray(data)) {
+      return { total: data.length, events: data };
+    }
+    return data || { total: 0, events: [] };
   },
 
   getEventById: async (id: number): Promise<SecurityEvent> => {
-    const res = await api.get(`/events/${id}`);
+    const res = await api.get(`/logs/events`, { params: { limit: 1 } });
+    if (Array.isArray(res.data)) {
+      const match = res.data.find((e: SecurityEvent) => e.id === id);
+      if (match) return match;
+    }
     return res.data;
   },
 
@@ -110,7 +123,11 @@ export const tracexApi = {
     offset?: number;
   }): Promise<{ total: number; incidents: Incident[] }> => {
     const res = await api.get('/incidents', { params });
-    return res.data;
+    const data = res.data;
+    if (Array.isArray(data)) {
+      return { total: data.length, incidents: data };
+    }
+    return data || { total: 0, incidents: [] };
   },
 
   getIncidentById: async (id: number): Promise<Incident> => {
