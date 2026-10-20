@@ -40,7 +40,7 @@ export const Detections: React.FC = () => {
       setActionNotice('Executing deterministic rule evaluation...');
       const res = await tracexApi.runDetections();
       setActionNotice(
-        `Analysis complete: Evaluated ${res.total_events_evaluated} events, found ${res.new_findings_count} new threat signals!`
+        `Analysis complete: Evaluated ${res.events_analyzed ?? res.total_events_evaluated ?? 0} events, found ${res.findings_generated ?? res.new_findings_count ?? 0} new threat signals!`
       );
       await fetchFindings();
       setTimeout(() => setActionNotice(null), 4000);

@@ -74,7 +74,21 @@ export const tracexApi = {
     offset?: number;
   }): Promise<{ total: number; findings: DetectionFinding[] }> => {
     const res = await api.get('/detections', { params });
-    return res.data;
+    const data = res.data;
+    const rawList: any[] = Array.isArray(data) ? data : data?.findings || [];
+    const findings: DetectionFinding[] = rawList.map((f: any) => ({
+      ...f,
+      title: f.title || f.rule_name || 'Threat Finding',
+      entity_type: f.entity_type || (f.username ? 'user' : f.source_ip ? 'ip' : 'entity'),
+      entity_value: f.entity_value || f.username || f.source_ip || 'N/A',
+      event_count: f.event_count ?? (Array.isArray(f.evidence_event_ids) ? f.evidence_event_ids.length : 1),
+      mitre_technique: f.mitre_technique || f.metadata?.mitre_technique || f.rule_id || 'T1110',
+      mitre_tactic: f.mitre_tactic || f.metadata?.mitre_tactic || f.detection_type || 'ATT&CK',
+    }));
+    return {
+      total: Array.isArray(data) ? data.length : (data?.total ?? findings.length),
+      findings,
+    };
   },
 
   getDetectionRules: async () => {
