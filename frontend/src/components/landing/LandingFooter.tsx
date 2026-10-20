@@ -1,81 +1,69 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Shield, CheckCircle2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Shield, Github } from 'lucide-react';
 
 export const LandingFooter: React.FC = () => {
+  const navigate = useNavigate();
+
   return (
-    <footer className="relative border-t border-emerald-950/40 bg-[#04060a] py-16 px-6 lg:px-12 z-10 text-slate-400 text-xs">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start justify-between gap-10">
-        {/* Brand */}
-        <div className="space-y-3 max-w-sm">
-          <Link to="/" className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
-              <Shield className="w-4 h-4" />
+    <footer className="border-t border-[#383438] bg-[#08090A] py-12 px-4 sm:px-6">
+      <div className="max-w-7xl mx-auto space-y-8">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          {/* Logo & description */}
+          <div className="space-y-2 max-w-sm">
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded border border-[#E7A1B5] bg-[#171719] flex items-center justify-center">
+                <Shield className="w-3.5 h-3.5 text-[#E7A1B5]" />
+              </div>
+              <span className="text-sm font-bold tracking-wider text-[#F4F2F3]">
+                Trace<span className="text-[#E7A1B5]">X</span>
+              </span>
             </div>
-            <span className="font-mono text-base font-extrabold text-white">
-              Trace<span className="text-emerald-400">X</span>
-            </span>
-          </Link>
-          <p className="text-slate-400 leading-relaxed font-light">
-            Autonomous cybersecurity investigation platform designed to reconstruct multi-stage cyber intrusions from authentication, network, and server telemetry.
-          </p>
-          <div className="flex items-center gap-2 text-[11px] font-mono text-emerald-400 pt-1">
-            <CheckCircle2 className="w-3.5 h-3.5" />
-            <span>Problem ALG-CYBER-01: Find the Intruder</span>
+            <p className="text-xs text-[#A5A3A7] leading-relaxed">
+              Autonomous cybersecurity investigation platform. Find the intruder. Reconstruct the story.
+            </p>
+          </div>
+
+          {/* Links */}
+          <div className="flex flex-wrap items-center gap-6 text-xs text-[#A5A3A7]">
+            <a href="#home" className="hover:text-[#F4F2F3] transition-colors">
+              Home
+            </a>
+            <a href="#features" className="hover:text-[#F4F2F3] transition-colors">
+              Features
+            </a>
+            <a href="#how-it-works" className="hover:text-[#F4F2F3] transition-colors">
+              How It Works
+            </a>
+            <button onClick={() => navigate('/detections')} className="hover:text-[#F4F2F3] transition-colors">
+              Detections
+            </button>
+            <button onClick={() => navigate('/incidents')} className="hover:text-[#F4F2F3] transition-colors">
+              Investigations
+            </button>
+            <a href="#dashboard-preview" className="hover:text-[#F4F2F3] transition-colors">
+              Documentation
+            </a>
+            <a
+              href="https://github.com/RujulaSharma/traceX"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 text-[#A5A3A7] hover:text-[#39FF6A] transition-colors"
+            >
+              <Github className="w-4 h-4" />
+              <span>GitHub</span>
+            </a>
           </div>
         </div>
 
-        {/* Quick Links */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-8">
-          <div className="space-y-2.5">
-            <div className="font-bold uppercase tracking-wider text-white text-[11px] font-mono">
-              Product
-            </div>
-            <div className="space-y-1.5 flex flex-col">
-              <a href="#how-it-works" className="hover:text-emerald-400 transition">How It Works</a>
-              <a href="#detections" className="hover:text-emerald-400 transition">Detection Rules</a>
-              <a href="#investigation" className="hover:text-emerald-400 transition">Investigation</a>
-              <a href="#preview" className="hover:text-emerald-400 transition">SOC Preview</a>
-            </div>
+        {/* Bottom bar */}
+        <div className="pt-6 border-t border-[#383438]/60 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-[#A5A3A7]">
+          <div>© {new Date().getFullYear()} TraceX. All rights reserved.</div>
+          <div className="flex items-center gap-4">
+            <span>Built for security investigations</span>
+            <span>•</span>
+            <span>Open Source</span>
           </div>
-
-          <div className="space-y-2.5">
-            <div className="font-bold uppercase tracking-wider text-white text-[11px] font-mono">
-              SOC Workspace
-            </div>
-            <div className="space-y-1.5 flex flex-col">
-              <Link to="/soc" className="hover:text-emerald-400 transition text-emerald-400 font-semibold">
-                Open SOC Console →
-              </Link>
-              <Link to="/ingestion" className="hover:text-emerald-400 transition">Log Ingestion</Link>
-              <Link to="/events" className="hover:text-emerald-400 transition">Event Explorer</Link>
-              <Link to="/detections" className="hover:text-emerald-400 transition">Threat Detections</Link>
-              <Link to="/incidents" className="hover:text-emerald-400 transition">Incidents & Graph</Link>
-            </div>
-          </div>
-
-          <div className="space-y-2.5">
-            <div className="font-bold uppercase tracking-wider text-white text-[11px] font-mono">
-              Technology
-            </div>
-            <div className="space-y-1.5 flex flex-col text-slate-400 font-mono text-[11px]">
-              <span>FastAPI / Python</span>
-              <span>SQLAlchemy 2.0</span>
-              <span>React 18 / Vite</span>
-              <span>MITRE ATT&CK</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto pt-10 mt-10 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-[11px]">
-        <span>© 2026 TraceX. Built for Cybersecurity Hackathon.</span>
-        <div className="flex items-center gap-4">
-          <span className="text-emerald-500">System Status: Operational</span>
-          <span>•</span>
-          <Link to="/soc" className="text-slate-300 hover:text-emerald-400 transition font-bold">
-            Launch SOC →
-          </Link>
         </div>
       </div>
     </footer>

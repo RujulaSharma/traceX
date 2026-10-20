@@ -1,87 +1,89 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Shield, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Search, Shield, ArrowRight } from 'lucide-react';
 
-export const LandingNavbar: React.FC = () => {
+interface LandingNavbarProps {
+  activeSection?: string;
+}
+
+export const LandingNavbar: React.FC<LandingNavbarProps> = ({ activeSection = 'home' }) => {
+  const navigate = useNavigate();
+
+  const navLinks = [
+    { label: 'Home', href: '#home', id: 'home' },
+    { label: 'Features', href: '#features', id: 'features' },
+    { label: 'How It Works', href: '#how-it-works', id: 'how-it-works' },
+    { label: 'Detections', href: '/detections', isRoute: true },
+    { label: 'Investigations', href: '/incidents', isRoute: true },
+    { label: 'Documentation', href: '#dashboard-preview', id: 'dashboard-preview' },
+  ];
+
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 h-20 border-b border-emerald-950/40 bg-[#05080d]/80 backdrop-blur-xl px-6 lg:px-12 flex items-center justify-between transition-all">
-      {/* Coordinates snippet like in collage */}
-      <div className="absolute top-2 left-6 text-[10px] font-mono text-emerald-500/40 hidden md:block">
-        [ 128.04, 86.16, 22.71 ]
-      </div>
-      <div className="absolute top-2 right-6 text-[10px] font-mono text-emerald-500/40 hidden md:block">
-        [ 97.22, 19.11, 08.44 ]
-      </div>
-
-      {/* Brand */}
-      <Link to="/" className="flex items-center gap-3 group">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 via-teal-500 to-cyan-500 flex items-center justify-center shadow-lg shadow-emerald-500/20 group-hover:shadow-emerald-500/40 transition">
-          <Shield className="w-5 h-5 text-white" />
-        </div>
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="text-xl font-extrabold tracking-tight text-white font-mono">
-              Trace<span className="text-emerald-400">X</span>
-            </span>
-            <span className="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-emerald-950/80 text-emerald-400 border border-emerald-800/60 hidden sm:inline-block">
-              AI Cyber Sec
-            </span>
+    <header className="fixed top-0 left-0 right-0 z-50 bg-[#08090A]/90 backdrop-blur-md border-b border-[#383438] h-14">
+      <div className="max-w-7xl mx-auto h-full px-4 sm:px-6 flex items-center justify-between">
+        {/* Brand Logo */}
+        <a href="#home" className="flex items-center gap-2.5 group">
+          <div className="w-7 h-7 rounded-lg border border-[#E7A1B5] bg-[#171719] flex items-center justify-center transition-transform group-hover:scale-105">
+            <Shield className="w-4 h-4 text-[#E7A1B5]" />
           </div>
-          <span className="text-[10px] tracking-widest text-emerald-500/70 uppercase font-semibold block -mt-1 font-mono">
-            FIND THE INTRUDER
+          <span className="text-base font-bold tracking-wider text-[#F4F2F3] flex items-center gap-0.5">
+            Trace<span className="text-[#E7A1B5]">X</span>
           </span>
+        </a>
+
+        {/* Center Nav */}
+        <nav className="hidden md:flex items-center gap-7">
+          {navLinks.map((link) => {
+            const isActive = activeSection === link.id;
+            if (link.isRoute) {
+              return (
+                <button
+                  key={link.label}
+                  onClick={() => navigate(link.href)}
+                  className="text-xs font-medium text-[#A5A3A7] hover:text-[#F4F2F3] transition-colors"
+                >
+                  {link.label}
+                </button>
+              );
+            }
+            return (
+              <a
+                key={link.label}
+                href={link.href}
+                className={`text-xs font-medium transition-all relative py-1 ${
+                  isActive
+                    ? 'text-[#39FF6A]'
+                    : 'text-[#A5A3A7] hover:text-[#F4F2F3]'
+                }`}
+              >
+                {link.label}
+                {isActive && (
+                  <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#39FF6A] rounded-full" />
+                )}
+              </a>
+            );
+          })}
+        </nav>
+
+        {/* Right Actions */}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => navigate('/events')}
+            className="w-8 h-8 rounded-lg border border-[#383438] bg-[#171719] flex items-center justify-center text-[#A5A3A7] hover:text-[#F4F2F3] hover:border-[#E7A1B5]/50 transition-colors"
+            title="Search logs & events"
+            aria-label="Search"
+          >
+            <Search className="w-3.5 h-3.5" />
+          </button>
+
+          <button
+            onClick={() => navigate('/soc')}
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-[#39FF6A] hover:bg-[#25E653] text-[#08090A] text-xs font-semibold tracking-wide shadow-[0_0_15px_rgba(57,255,106,0.25)] transition-all active:scale-95"
+          >
+            <span>Get Started</span>
+            <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
+          </button>
         </div>
-      </Link>
-
-      {/* Nav Links */}
-      <nav className="hidden lg:flex items-center gap-8 text-xs font-semibold text-slate-300">
-        <a
-          href="#product"
-          className="hover:text-emerald-400 transition tracking-wide"
-        >
-          Product
-        </a>
-        <a
-          href="#how-it-works"
-          className="text-emerald-400 font-bold border-b border-emerald-400/40 pb-0.5 tracking-wide"
-        >
-          How It Works
-        </a>
-        <a
-          href="#detections"
-          className="hover:text-emerald-400 transition tracking-wide"
-        >
-          Detection
-        </a>
-        <a
-          href="#investigation"
-          className="hover:text-emerald-400 transition tracking-wide"
-        >
-          Investigation
-        </a>
-        <a
-          href="#preview"
-          className="hover:text-emerald-400 transition tracking-wide"
-        >
-          SOC Dashboard
-        </a>
-      </nav>
-
-      {/* Action Buttons */}
-      <div className="flex items-center gap-3">
-        <Link
-          to="/soc"
-          className="text-xs font-semibold text-slate-300 hover:text-white px-3 py-2 rounded-lg transition hidden sm:block"
-        >
-          Sign In
-        </Link>
-        <Link
-          to="/soc"
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-extrabold shadow-[0_0_20px_rgba(16,185,129,0.35)] hover:shadow-[0_0_30px_rgba(16,185,129,0.5)] transition active:scale-95"
-        >
-          <span>Open SOC</span>
-          <ArrowRight className="w-3.5 h-3.5 stroke-[3]" />
-        </Link>
       </div>
     </header>
   );
