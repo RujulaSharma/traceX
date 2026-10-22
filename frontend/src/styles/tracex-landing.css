@@ -551,7 +551,7 @@
 }
 
 .tracex-landing .num {
-  font:600 110px/1 Geist;letter-spacing:-.05em;color:transparent;-webkit-text-stroke:1px rgba(247,191,206,.35);text-shadow:0 0 24px rgba(247,191,206,.15)
+  font:600 110px/1 Geist;letter-spacing:-.05em;color:var(--r2);-webkit-text-stroke:1.5px var(--n);paint-order:stroke fill;text-shadow:0 0 20px rgba(61,255,134,.45), 0 0 35px rgba(247,191,206,.3)
 }
 
 .tracex-landing .tx h3 {
@@ -824,52 +824,456 @@
 
 @media (max-width:860px){
 
+.tracex-landing nav {
+  padding: 0 4vw;
+  height: 58px;
+}
+
 .tracex-landing nav .m a {
   display: none;
+}
+
+.tracex-landing nav .btn {
+  padding: 8px 16px;
+  font-size: 13px;
 }
 
 .tracex-landing .ch {
   display: none;
 }
 
-.tracex-landing .pg {
-  grid-template-columns:1fr
-}
-
-.tracex-landing .fg {
-  grid-template-columns:1fr 1fr
-}
-
 .tracex-landing #fg {
-  opacity:.55
+  opacity:.4;
+  max-width:100vw;
+}
+
+.tracex-landing #sk {
+  padding-top: 60px;
+  padding-bottom: 20px;
+  justify-content: flex-start;
+}
+
+.tracex-landing #hd {
+  height: 90px;
+  margin-top: 10px;
+}
+
+.tracex-landing #hd h2 {
+  padding: 0 4vw;
+  font-size: clamp(20px, 4.8vw, 32px);
+  line-height: 1.15;
 }
 
 .tracex-landing #steps {
   display:none
 }
 
+.tracex-landing .win {
+  width: min(720px, 94vw);
+  height: clamp(360px, 54vh, 440px);
+}
+
+.tracex-landing #hint {
+  position: relative;
+  right: auto;
+  bottom: auto;
+  margin: 14px auto 0;
+  justify-content: center;
+  width: min(720px, 94vw);
+  font-size: 10px;
+  letter-spacing: .14em;
+  gap: 12px;
+}
+
+.tracex-landing #hint a {
+  padding: 6px 12px;
+}
+
+.tracex-landing #caps {
+  padding: 6vh 5vw 2vh;
+}
+
+.tracex-landing #caps h2 {
+  font-size: clamp(26px, 5.5vw, 42px);
+  max-width: 100%;
+}
+
+.tracex-landing #caps .ld {
+  font-size: 15px;
+  max-width: 100%;
+  margin: 0 0 3vh;
+}
+
 .tracex-landing .row {
-  grid-template-columns:1fr
+  grid-template-columns:1fr;
+  gap: 22px;
+  padding: 4vh 0;
 }
 
 .tracex-landing .row:nth-child(even) .tx {
   order:0
 }
 
+.tracex-landing .row .win {
+  width: 100%;
+  transform: none !important;
 }
 
-@media (max-width:560px){
+.tracex-landing #pricing {
+  padding: 6vh 5vw;
+}
+
+.tracex-landing #pricing h2 {
+  font-size: clamp(26px, 5.5vw, 42px);
+  max-width: 100%;
+}
+
+.tracex-landing #pricing .ld {
+  font-size: 15px;
+  max-width: 100%;
+  margin: 0 0 3vh;
+}
+
+.tracex-landing .pg {
+  grid-template-columns:1fr;
+  gap: 20px;
+}
 
 .tracex-landing .fg {
-  grid-template-columns:1fr
+  grid-template-columns:1fr 1fr;
+  gap: 30px;
+}
+
+}
+
+@media (max-width:640px){
+
+.tracex-landing nav {
+  padding: 0 4vw;
+  height: 54px;
+}
+
+.tracex-landing nav .btn {
+  padding: 7px 12px;
+  font-size: 12px;
+}
+
+.tracex-landing #hs {
+  padding: 54px 5vw 0;
+  min-height: 100svh;
+}
+
+.tracex-landing #hs .tag {
+  font-size: 10px;
+  letter-spacing: .12em;
+  line-height: 1.4;
 }
 
 .tracex-landing #hs h1 {
-  font-size: clamp(38px, 11vw, 64px);
+  font-size: clamp(32px, 10vw, 50px);
+  line-height: 0.98;
+  margin: 12px 0 16px;
+  word-break: break-word;
 }
 
-.tracex-landing .win {
-  height: 400px;
+.tracex-landing #hs p {
+  font-size: 14.5px;
+  line-height: 1.5;
+  margin: 0 0 22px;
+  max-width: 100%;
+}
+
+.tracex-landing #hs .cta {
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 320px;
+}
+
+.tracex-landing #hs .cta .btn {
+  width: 100%;
+  text-align: center;
+  padding: 12px 16px;
+}
+
+.tracex-landing .tb {
+  height: 34px;
+  padding: 0 10px;
+  font-size: 10px;
+  gap: 4px;
+}
+
+.tracex-landing .tb span {
+  font-size: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tracex-landing .tb em {
+  font-size: 9px;
+  padding: 1px 6px;
+}
+
+.tracex-landing .bd {
+  height: calc(100% - 34px);
+}
+
+.tracex-landing .pn {
+  padding: 10px 12px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tracex-landing .hrow {
+  font-size: 13px;
+}
+
+.tracex-landing .hrow em {
+  font-size: 9px;
+}
+
+.tracex-landing .cnt {
+  font-size: 8.5px;
+  right: 10px;
+  top: 10px;
+}
+
+.tracex-landing .lg {
+  font-size: 9.5px;
+  padding: 3px 6px;
+}
+
+.tracex-landing .st {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+  margin: 8px 0;
+}
+
+.tracex-landing .st div {
+  padding: 6px 8px;
+}
+
+.tracex-landing .st b {
+  font-size: 18px;
+}
+
+.tracex-landing .g2 {
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.tracex-landing .cx {
+  height: 120px;
+  padding: 8px;
+}
+
+.tracex-landing .dr {
+  padding: 6px 8px;
+  margin-bottom: 5px;
+}
+
+.tracex-landing .dr b {
+  font-size: 11px;
+}
+
+.tracex-landing .dr small {
+  font-size: 9px;
+}
+
+.tracex-landing .tg {
+  font-size: 8px;
+  padding: 2px 5px;
+}
+
+.tracex-landing .rl {
+  margin: 16px 0 12px;
+}
+
+.tracex-landing .tl {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+.tracex-landing .tl b {
+  font-size: 10.5px;
+}
+
+.tracex-landing .tl em {
+  font-size: 9px;
+}
+
+.tracex-landing .tl small {
+  font-size: 7.5px;
+}
+
+.tracex-landing .tl p {
+  display: none;
+}
+
+.tracex-landing .ev {
+  padding: 6px 8px;
+  margin-bottom: 5px;
+}
+
+.tracex-landing .ev b {
+  font-size: 11px;
+}
+
+.tracex-landing .nar {
+  font-size: 11px;
+  line-height: 1.45;
+  min-height: 70px;
+  padding: 8px 10px;
+  margin-top: 6px;
+}
+
+.tracex-landing .cps {
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.tracex-landing .cps span {
+  font-size: 8.5px;
+  padding: 2px 5px;
+}
+
+.tracex-landing .si {
+  padding: 56px 5vw 0;
+}
+
+.tracex-landing #st p {
+  font-size: clamp(20px, 5.8vw, 28px);
+  line-height: 1.28;
+  margin: 0 0 3.5vh;
+}
+
+.tracex-landing #sts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.tracex-landing #sts div:last-child {
+  grid-column: span 2;
+}
+
+.tracex-landing #sts b {
+  font-size: clamp(28px, 7.5vw, 40px);
+}
+
+.tracex-landing .num {
+  font-size: clamp(56px, 16vw, 76px);
+  -webkit-text-stroke: 1.2px var(--n);
+}
+
+.tracex-landing .tx h3 {
+  font-size: 22px;
+  margin: 6px 0 8px;
+}
+
+.tracex-landing .tx p {
+  font-size: 13.5px;
+  margin-bottom: 14px;
+  max-width: 100%;
+}
+
+.tracex-landing .tx li {
+  font-size: 12.5px;
+  padding: 3px 0;
+}
+
+.tracex-landing .pc {
+  padding: 22px 18px;
+}
+
+.tracex-landing .pc h3 {
+  font-size: 20px;
+}
+
+.tracex-landing .pc .pr {
+  font-size: 38px;
+  margin: 12px 0 2px;
+}
+
+.tracex-landing .pc li {
+  font-size: 12.5px;
+  padding: 5px 0;
+}
+
+.tracex-landing #end {
+  padding: 7vh 5vw;
+}
+
+.tracex-landing #end h2 {
+  font-size: clamp(26px, 7vw, 36px);
+  max-width: 100%;
+}
+
+.tracex-landing #end p {
+  font-size: 14.5px;
+  max-width: 100%;
+}
+
+.tracex-landing #end .acts {
+  flex-direction: column;
+  gap: 10px;
+  max-width: 300px;
+  margin: 20px auto 14px;
+}
+
+.tracex-landing #end .acts .btn {
+  width: 100%;
+  text-align: center;
+  padding: 12px 16px;
+}
+
+.tracex-landing #end .nt {
+  font-size: 10.5px;
+  line-height: 1.4;
+}
+
+.tracex-landing .ft {
+  padding: 5vh 5vw 3.5vh;
+}
+
+.tracex-landing .fg {
+  grid-template-columns: 1fr;
+  gap: 22px;
+}
+
+.tracex-landing .fb {
+  flex-direction: column;
+  text-align: center;
+  gap: 8px;
+  margin-top: 3.5vh;
+  font-size: 10px;
+}
+
+}
+
+@media (max-width:380px){
+
+.tracex-landing nav {
+  padding: 0 3vw;
+}
+
+.tracex-landing nav b {
+  font-size: 16px;
+}
+
+.tracex-landing nav .btn {
+  padding: 6px 10px;
+  font-size: 11px;
+}
+
+.tracex-landing #hs h1 {
+  font-size: 30px;
+}
+
+.tracex-landing .num {
+  font-size: 48px;
+  -webkit-text-stroke: 1px var(--n);
 }
 
 }

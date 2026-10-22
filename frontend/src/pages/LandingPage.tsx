@@ -443,13 +443,14 @@ export const LandingPage: React.FC = () => {
 
     // GSAP ScrollTrigger Orchestration
     const ctx = gsap.context(() => {
+      const isMobile = window.innerWidth <= 860;
       // 1. HERO ENTRANCE & PARALLAX
       const rt = $('#rt');
       const sw = $('#sw');
 
       gsap.fromTo(
         ['#hs .tag', '#hs h1', '#hs p', '#hs .cta'],
-        { x: -50, opacity: 0 },
+        { x: isMobile ? -20 : -50, opacity: 0 },
         {
           x: 0,
           opacity: 1,
@@ -588,7 +589,7 @@ export const LandingPage: React.FC = () => {
         if (tx) {
           gsap.fromTo(
             tx,
-            { opacity: 0, x: isEven ? 60 : -60 },
+            { opacity: 0, x: isMobile ? (isEven ? 24 : -24) : (isEven ? 60 : -60) },
             {
               opacity: 1,
               x: 0,
@@ -606,7 +607,7 @@ export const LandingPage: React.FC = () => {
         if (win) {
           gsap.fromTo(
             win,
-            { opacity: 0, x: isEven ? -60 : 60 },
+            { opacity: 0, x: isMobile ? (isEven ? -24 : 24) : (isEven ? -60 : 60) },
             {
               opacity: 1,
               x: 0,
@@ -641,7 +642,7 @@ export const LandingPage: React.FC = () => {
       if (pc.length === 3) {
         gsap.fromTo(
           pc[0],
-          { opacity: 0, x: -50 },
+          { opacity: 0, x: isMobile ? -20 : -50 },
           {
             opacity: 1,
             x: 0,
@@ -656,7 +657,7 @@ export const LandingPage: React.FC = () => {
         );
         gsap.fromTo(
           pc[1],
-          { opacity: 0, y: 35, scale: 0.95 },
+          { opacity: 0, y: isMobile ? 20 : 35, scale: isMobile ? 0.98 : 0.95 },
           {
             opacity: 1,
             y: 0,
@@ -673,7 +674,7 @@ export const LandingPage: React.FC = () => {
         );
         gsap.fromTo(
           pc[2],
-          { opacity: 0, x: 50 },
+          { opacity: 0, x: isMobile ? 20 : 50 },
           {
             opacity: 1,
             x: 0,
