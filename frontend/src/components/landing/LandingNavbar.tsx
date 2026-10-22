@@ -1,46 +1,73 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Shield, ArrowRight } from 'lucide-react';
+import { Shield, ArrowRight, Terminal } from 'lucide-react';
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
 
 interface LandingNavbarProps {
   activeSection?: string;
 }
 
-export const LandingNavbar: React.FC<LandingNavbarProps> = ({ activeSection = 'home' }) => {
+export const LandingNavbar: React.FC<LandingNavbarProps> = () => {
   const navigate = useNavigate();
+  const navRef = useRef<HTMLElement>(null);
+
+  useGSAP(
+    () => {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        return;
+      }
+      gsap.from(navRef.current, {
+        y: -16,
+        opacity: 0,
+        duration: 0.5,
+        ease: 'power2.out',
+      });
+    },
+    { scope: navRef }
+  );
 
   const navLinks = [
-    { label: 'Home', href: '#home', id: 'home' },
-    { label: 'Features', href: '#features', id: 'features' },
-    { label: 'How It Works', href: '#how-it-works', id: 'how-it-works' },
+    { label: 'Workspace', href: '#workspace' },
+    { label: 'Storyline', href: '#storyline' },
+    { label: 'Attack Graph', href: '#attack-graph' },
+    { label: 'Capabilities', href: '#capabilities' },
     { label: 'Detections', href: '/detections', isRoute: true },
     { label: 'Investigations', href: '/incidents', isRoute: true },
-    { label: 'Documentation', href: '#dashboard-preview', id: 'dashboard-preview' },
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-[#08090A]/90 backdrop-blur-md border-b border-[#383438] h-14">
+    <header
+      ref={navRef}
+      className="fixed top-0 left-0 right-0 z-50 bg-[#08090A]/92 backdrop-blur-md border-b border-[#3A3F46]/80 h-14"
+    >
       <div className="max-w-7xl mx-auto h-full px-4 sm:px-6 flex items-center justify-between">
-        {/* Brand Logo */}
+        {/* Brand */}
         <a href="#home" className="flex items-center gap-2.5 group">
-          <div className="w-7 h-7 rounded-lg border border-[#E7A1B5] bg-[#171719] flex items-center justify-center transition-transform group-hover:scale-105">
-            <Shield className="w-4 h-4 text-[#E7A1B5]" />
+          <div className="w-8 h-8 rounded-lg p-[1px] bg-gradient-to-br from-[#F1F3F5] via-[#8D949D] to-[#22252A] shadow-sm group-hover:scale-105 transition-transform">
+            <div className="w-full h-full rounded-[7px] bg-[#101113] flex items-center justify-center">
+              <Shield className="w-4 h-4 text-[#F1F3F5]" />
+            </div>
           </div>
-          <span className="text-base font-bold tracking-wider text-[#F4F2F3] flex items-center gap-0.5">
-            Trace<span className="text-[#E7A1B5]">X</span>
-          </span>
+          <div className="flex items-baseline gap-1">
+            <span className="text-base font-black tracking-wider text-[#F4F5F6]">
+              TRACE<span className="text-liquid-silver">X</span>
+            </span>
+            <span className="text-[10px] font-mono text-[#39FF6A] font-medium hidden sm:inline">
+              [AUTONOMOUS SOC]
+            </span>
+          </div>
         </a>
 
-        {/* Center Nav */}
-        <nav className="hidden md:flex items-center gap-7">
+        {/* Navigation items */}
+        <nav className="hidden lg:flex items-center gap-6">
           {navLinks.map((link) => {
-            const isActive = activeSection === link.id;
             if (link.isRoute) {
               return (
                 <button
                   key={link.label}
                   onClick={() => navigate(link.href)}
-                  className="text-xs font-medium text-[#A5A3A7] hover:text-[#F4F2F3] transition-colors"
+                  className="text-xs font-mono font-medium text-[#A4AAB2] hover:text-[#F1F3F5] transition-colors"
                 >
                   {link.label}
                 </button>
@@ -50,37 +77,30 @@ export const LandingNavbar: React.FC<LandingNavbarProps> = ({ activeSection = 'h
               <a
                 key={link.label}
                 href={link.href}
-                className={`text-xs font-medium transition-all relative py-1 ${
-                  isActive
-                    ? 'text-[#39FF6A]'
-                    : 'text-[#A5A3A7] hover:text-[#F4F2F3]'
-                }`}
+                className="text-xs font-mono font-medium text-[#A4AAB2] hover:text-[#F1F3F5] transition-colors"
               >
                 {link.label}
-                {isActive && (
-                  <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#39FF6A] rounded-full" />
-                )}
               </a>
             );
           })}
         </nav>
 
-        {/* Right Actions */}
+        {/* Right Action buttons */}
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate('/events')}
-            className="w-8 h-8 rounded-lg border border-[#383438] bg-[#171719] flex items-center justify-center text-[#A5A3A7] hover:text-[#F4F2F3] hover:border-[#E7A1B5]/50 transition-colors"
-            title="Search logs & events"
-            aria-label="Search"
+            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#3A3F46] bg-[#101113] hover:bg-[#17191C] text-[#A4AAB2] hover:text-[#F1F3F5] text-xs font-mono transition-all"
+            title="Browse raw ingested events"
           >
-            <Search className="w-3.5 h-3.5" />
+            <Terminal className="w-3.5 h-3.5 text-[#C6CBD1]" />
+            <span>Raw Logs</span>
           </button>
 
           <button
             onClick={() => navigate('/soc')}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-[#39FF6A] hover:bg-[#25E653] text-[#08090A] text-xs font-semibold tracking-wide shadow-[0_0_15px_rgba(57,255,106,0.25)] transition-all active:scale-95"
+            className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-[#39FF6A] hover:bg-[#25E653] text-[#08090A] text-xs font-bold tracking-wide shadow-[0_0_16px_rgba(57,255,106,0.25)] transition-all active:scale-95"
           >
-            <span>Get Started</span>
+            <span>Launch Console</span>
             <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
           </button>
         </div>

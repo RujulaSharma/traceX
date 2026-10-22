@@ -1,7 +1,52 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Clock, BarChart3, FileCheck } from 'lucide-react';
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export const InvestigationBenefits: React.FC = () => {
+  const containerRef = useRef<HTMLElement>(null);
+
+  useGSAP(
+    () => {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        return;
+      }
+
+      // Editorial reveal
+      gsap.from('.benefits-header', {
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top 85%',
+          toggleActions: 'play none none none',
+          once: true,
+        },
+        opacity: 0,
+        x: -20,
+        duration: 0.6,
+        ease: 'power2.out',
+      });
+
+      // Staggered cards reveal
+      gsap.from('.benefit-card', {
+        scrollTrigger: {
+          trigger: '.benefits-grid',
+          start: 'top 85%',
+          toggleActions: 'play none none none',
+          once: true,
+        },
+        opacity: 0,
+        y: 20,
+        stagger: 0.1,
+        duration: 0.6,
+        ease: 'power2.out',
+      });
+    },
+    { scope: containerRef }
+  );
+
   const benefits = [
     {
       title: 'FASTER INVESTIGATIONS',
@@ -21,35 +66,35 @@ export const InvestigationBenefits: React.FC = () => {
   ];
 
   return (
-    <section className="py-16 px-4 sm:px-6 max-w-7xl mx-auto border-t border-[#383438]/50">
+    <section ref={containerRef} className="py-16 px-4 sm:px-6 max-w-7xl mx-auto border-t border-[#3A3F46]/50">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Left Column: Heading & Description */}
-        <div className="lg:col-span-4 space-y-3">
-          <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-[#F4F2F3]">
+        <div className="benefits-header lg:col-span-4 space-y-3">
+          <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-[#F4F5F6]">
             INVESTIGATE <br />
-            WITH <span className="text-[#E7A1B5]">CONTEXT.</span>
+            WITH <span className="text-liquid-silver">CONTEXT.</span>
           </h2>
-          <p className="text-sm text-[#A5A3A7] leading-relaxed">
+          <p className="text-sm text-[#A4AAB2] leading-relaxed">
             Turn complex security data into clear, actionable investigation insights.
           </p>
         </div>
 
-        {/* Right Column: 3 Feature Cards */}
-        <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {/* Right Column: 3 Feature Cards in Brushed Steel Aesthetic */}
+        <div className="benefits-grid lg:col-span-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
           {benefits.map((benefit, idx) => {
             const Icon = benefit.icon;
             return (
               <div
                 key={idx}
-                className="p-5 rounded-xl bg-[#171719] border border-[#383438] space-y-3 hover:border-[#E7A1B5]/50 transition-colors"
+                className="benefit-card p-5 rounded-xl bg-gradient-to-b from-[#1C1F24] to-[#121417] border border-[#3A3F46] space-y-3 hover:border-[#C6CBD1]/70 transition-all shadow-sm hover:-translate-y-1"
               >
-                <div className="w-9 h-9 rounded-lg bg-[#08090A] border border-[#383438] flex items-center justify-center text-[#E7A1B5]">
+                <div className="w-9 h-9 rounded-lg bg-[#08090A] border border-[#3A3F46] flex items-center justify-center text-[#C6CBD1] shadow-inner">
                   <Icon className="w-4 h-4" />
                 </div>
-                <h3 className="text-xs font-bold text-[#F4F2F3] uppercase tracking-wide">
+                <h3 className="text-xs font-bold text-[#F4F5F6] uppercase tracking-wide">
                   {benefit.title}
                 </h3>
-                <p className="text-xs text-[#A5A3A7] leading-relaxed">
+                <p className="text-xs text-[#A4AAB2] leading-relaxed">
                   {benefit.description}
                 </p>
               </div>

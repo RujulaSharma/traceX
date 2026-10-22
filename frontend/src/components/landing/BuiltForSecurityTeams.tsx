@@ -1,9 +1,51 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Database, Search, AlertTriangle, Layers, ArrowRight } from 'lucide-react';
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export const BuiltForSecurityTeams: React.FC = () => {
   const navigate = useNavigate();
+  const containerRef = useRef<HTMLElement>(null);
+
+  useGSAP(
+    () => {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        return;
+      }
+
+      gsap.from('.teams-header', {
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top 85%',
+          toggleActions: 'play none none none',
+          once: true,
+        },
+        opacity: 0,
+        y: 20,
+        duration: 0.6,
+        ease: 'power2.out',
+      });
+
+      gsap.from('.tool-card', {
+        scrollTrigger: {
+          trigger: '.tools-grid',
+          start: 'top 85%',
+          toggleActions: 'play none none none',
+          once: true,
+        },
+        opacity: 0,
+        y: 22,
+        stagger: 0.09,
+        duration: 0.6,
+        ease: 'power2.out',
+      });
+    },
+    { scope: containerRef }
+  );
 
   const tools = [
     {
@@ -33,33 +75,33 @@ export const BuiltForSecurityTeams: React.FC = () => {
   ];
 
   return (
-    <section className="py-16 px-4 sm:px-6 max-w-7xl mx-auto border-t border-[#383438]/50">
-      <div className="space-y-3 mb-8">
-        <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-[#F4F2F3]">
-          BUILT FOR <span className="text-[#E7A1B5]">SECURITY TEAMS.</span>
+    <section ref={containerRef} className="py-16 px-4 sm:px-6 max-w-7xl mx-auto border-t border-[#3A3F46]/50">
+      <div className="teams-header space-y-3 mb-8">
+        <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-[#F4F5F6]">
+          BUILT FOR <span className="text-liquid-silver">SECURITY TEAMS.</span>
         </h2>
-        <p className="text-sm text-[#A5A3A7] max-w-2xl leading-relaxed">
+        <p className="text-sm text-[#A4AAB2] max-w-2xl leading-relaxed">
           From SOC analysts to threat hunters, TraceX brings related security evidence into one investigation workflow.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="tools-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {tools.map((tool, idx) => {
           const Icon = tool.icon;
           return (
             <div
               key={idx}
               onClick={() => navigate(tool.route)}
-              className="group p-5 rounded-xl bg-[#171719] hover:bg-[#1D1E21] border border-[#383438] hover:border-[#E7A1B5]/60 transition-all cursor-pointer flex flex-col justify-between space-y-4"
+              className="tool-card group p-5 rounded-xl bg-gradient-to-b from-[#1C1F24] to-[#121417] hover:from-[#22252A] hover:to-[#17191C] border border-[#3A3F46] hover:border-[#C6CBD1]/70 transition-all cursor-pointer flex flex-col justify-between space-y-4 shadow-sm hover:-translate-y-1"
             >
               <div className="space-y-3">
-                <div className="w-9 h-9 rounded-lg bg-[#08090A] border border-[#383438] flex items-center justify-center text-[#E7A1B5] group-hover:scale-105 transition-transform">
+                <div className="w-9 h-9 rounded-lg bg-[#08090A] border border-[#3A3F46] flex items-center justify-center text-[#C6CBD1] group-hover:scale-105 transition-transform shadow-inner">
                   <Icon className="w-4 h-4" />
                 </div>
-                <h3 className="text-sm font-bold text-[#F4F2F3] group-hover:text-white transition-colors">
+                <h3 className="text-sm font-bold text-[#F4F5F6] group-hover:text-white transition-colors">
                   {tool.title}
                 </h3>
-                <p className="text-xs text-[#A5A3A7] leading-relaxed">
+                <p className="text-xs text-[#A4AAB2] leading-relaxed">
                   {tool.description}
                 </p>
               </div>

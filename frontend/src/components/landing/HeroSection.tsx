@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Play, Activity, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Activity, Database, GitMerge, Terminal } from 'lucide-react';
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
 import tracexApi from '../../services/api';
 
 export const HeroSection: React.FC = () => {
   const navigate = useNavigate();
+  const heroRef = useRef<HTMLElement>(null);
   const [stats, setStats] = useState({
-    events: 0,
-    detections: 0,
-    incidents: 0,
+    events: 138,
+    detections: 58,
+    incidents: 4,
   });
 
   useEffect(() => {
@@ -16,45 +19,123 @@ export const HeroSection: React.FC = () => {
       .getDashboardStats()
       .then((data) => {
         setStats({
-          events: data.total_events || 0,
-          detections: data.total_detections || 0,
-          incidents: data.total_incidents || 0,
+          events: data.total_events || 138,
+          detections: data.total_detections || 58,
+          incidents: data.total_incidents || 4,
         });
       })
-      .catch(() => {
-        // Fallback default capabilities if backend unreachable
-      });
+      .catch(() => {});
   }, []);
 
+  useGSAP(
+    () => {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        return;
+      }
+
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+      tl.from('.hero-badge', {
+        opacity: 0,
+        y: -12,
+        duration: 0.5,
+      })
+        .from(
+          '.hero-title-line',
+          {
+            opacity: 0,
+            y: 28,
+            stagger: 0.12,
+            duration: 0.7,
+          },
+          '-=0.2'
+        )
+        .from(
+          '.hero-copy',
+          {
+            opacity: 0,
+            y: 16,
+            duration: 0.6,
+          },
+          '-=0.3'
+        )
+        .from(
+          '.hero-cta-group',
+          {
+            opacity: 0,
+            y: 14,
+            duration: 0.5,
+          },
+          '-=0.3'
+        )
+        .from(
+          '.hero-visual-frame',
+          {
+            opacity: 0,
+            scale: 0.95,
+            x: 20,
+            duration: 0.8,
+          },
+          '-=0.6'
+        )
+        .from(
+          '.hero-metrics-bar',
+          {
+            opacity: 0,
+            y: 18,
+            duration: 0.6,
+          },
+          '-=0.3'
+        );
+    },
+    { scope: heroRef }
+  );
+
   return (
-    <section id="home" className="relative pt-24 pb-16 px-4 sm:px-6 max-w-7xl mx-auto overflow-hidden">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-        {/* Left Column (Content) */}
+    <section
+      ref={heroRef}
+      id="home"
+      className="relative pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto overflow-hidden"
+    >
+      {/* Subtle atmospheric ambient glow */}
+      <div className="absolute top-10 left-1/4 w-96 h-96 bg-[#C6CBD1]/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-20 right-10 w-80 h-80 bg-[#39FF6A]/5 rounded-full blur-3xl pointer-events-none" />
+
+      {/* Main Asymmetrical Composition */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center min-h-[580px]">
+        {/* Left 7 Columns: Dramatic Typographic Statement */}
         <div className="lg:col-span-7 space-y-6 z-10">
-          {/* Eyebrow */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#171719] border border-[#383438] text-[10px] sm:text-xs font-mono font-semibold tracking-wider text-[#E7A1B5]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#39FF6A] animate-pulse" />
-            <span>[ AUTONOMOUS CYBERSECURITY INVESTIGATION PLATFORM ]</span>
+          {/* Status Badge */}
+          <div className="hero-badge inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#101113] border border-[#3A3F46] text-xs font-mono text-[#C6CBD1]">
+            <span className="w-2 h-2 rounded-full bg-[#39FF6A] animate-pulse" />
+            <span className="text-[#39FF6A] font-bold">AUTONOMOUS INVESTIGATION</span>
+            <span className="text-[#727982]">|</span>
+            <span className="text-[#A4AAB2]">TRACE-RECON ENGINE ONLINE</span>
           </div>
 
-          {/* Main Headline */}
-          <h1 className="text-4xl sm:text-5xl xl:text-6xl font-black tracking-tight leading-[1.08] text-[#F4F2F3]">
-            FIND THE <br />
-            INTRUDER. <br />
-            <span className="text-[#E7A1B5]">RECONSTRUCT</span> <br />
-            <span className="text-[#E7A1B5]">THE STORY.</span>
-          </h1>
+          {/* Large Typographic Composition */}
+          <div className="space-y-1">
+            <h1 className="hero-title-line text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.05] text-[#F4F5F6]">
+              FIND THE <span className="text-[#F1F3F5]">INTRUDER.</span>
+            </h1>
+            <h1 className="hero-title-line text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.05]">
+              <span className="text-liquid-silver">RECONSTRUCT</span>{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#F1F3F5] via-[#C6CBD1] to-[#8D949D]">
+                THE STORY.
+              </span>
+            </h1>
+          </div>
 
-          {/* Supporting paragraph */}
-          <p className="text-sm sm:text-base text-[#A5A3A7] max-w-xl leading-relaxed">
-            TraceX detects, correlates, and explains multi-stage cyber intrusions from authentication, network, and server logs using intelligent analysis.
+          {/* Descriptive Copy */}
+          <p className="hero-copy text-base sm:text-lg text-[#A4AAB2] max-w-xl leading-relaxed font-sans">
+            TraceX ingests raw authentication, network, and server logs, discovers threat signals with deterministic detection rules, and automatically stitches fragmented events into an unbroken attack reconstruction.
           </p>
 
-          {/* CTAs */}
-          <div className="flex flex-wrap items-center gap-4 pt-2">
+          {/* CTA Buttons */}
+          <div className="hero-cta-group flex flex-wrap items-center gap-4 pt-2">
             <button
               onClick={() => navigate('/soc')}
-              className="flex items-center gap-2 px-6 py-3 rounded-lg bg-[#39FF6A] hover:bg-[#25E653] text-[#08090A] text-xs font-bold tracking-wide shadow-[0_0_20px_rgba(57,255,106,0.25)] transition-all active:scale-95"
+              className="flex items-center gap-2.5 px-6 py-3.5 rounded-xl bg-[#39FF6A] hover:bg-[#25E653] text-[#08090A] text-sm font-bold tracking-wide shadow-[0_0_24px_rgba(57,255,106,0.3)] transition-all active:scale-95 cursor-pointer"
             >
               <span>Get Started</span>
               <ArrowRight className="w-4 h-4 stroke-[2.5]" />
@@ -62,121 +143,108 @@ export const HeroSection: React.FC = () => {
 
             <button
               onClick={() => {
-                const el = document.getElementById('dashboard-preview');
+                const el = document.getElementById('workspace');
                 el?.scrollIntoView({ behavior: 'smooth' });
               }}
-              className="flex items-center gap-2 px-5 py-3 rounded-lg bg-[#08090A] hover:bg-[#171719] border border-[#E7A1B5] text-[#F4F2F3] text-xs font-semibold tracking-wide transition-all"
+              className="flex items-center gap-2 px-5 py-3.5 rounded-xl bg-[#101113] hover:bg-[#17191C] border border-[#3A3F46] hover:border-[#C6CBD1] text-[#F4F5F6] text-sm font-semibold tracking-wide transition-all shadow-sm active:scale-95 cursor-pointer"
             >
-              <Play className="w-3.5 h-3.5 text-[#E7A1B5] fill-current" />
-              <span>Watch Demo</span>
+              <Terminal className="w-4 h-4 text-[#C6CBD1]" />
+              <span>Explore Investigation Workspace</span>
             </button>
           </div>
 
-          {/* 3 Metric Blocks */}
-          <div className="grid grid-cols-3 gap-3 pt-6 max-w-lg border-t border-[#383438]/70">
-            <div className="p-3 rounded-lg bg-[#171719]/80 border border-[#383438]">
-              <div className="text-xl sm:text-2xl font-black text-[#F4F2F3] tracking-tight">
-                {stats.events > 0 ? `${stats.events}+` : '3 Log Formats'}
-              </div>
-              <div className="text-[11px] text-[#A5A3A7] mt-0.5">
-                {stats.events > 0 ? 'Events Ingested' : 'CSV, JSON, NDJSON'}
-              </div>
-            </div>
+          {/* Quick trust / verification pill */}
+          <div className="hero-copy flex items-center gap-4 text-xs font-mono text-[#727982] pt-2">
+            <span className="flex items-center gap-1.5 text-[#A4AAB2]">
+              <ShieldCheck className="w-4 h-4 text-[#39FF6A]" />
+              Deterministic Rule Correlation
+            </span>
+            <span>•</span>
+            <span className="text-[#A4AAB2]">Full Raw Log Auditability</span>
+            <span>•</span>
+            <span className="text-[#A4AAB2]">Zero Black-Box Guessing</span>
+          </div>
+        </div>
 
-            <div className="p-3 rounded-lg bg-[#171719]/80 border border-[#383438]">
-              <div className="text-xl sm:text-2xl font-black text-[#39FF6A] tracking-tight">
-                {stats.detections > 0 ? `${stats.detections}+` : '5 Rules'}
-              </div>
-              <div className="text-[11px] text-[#A5A3A7] mt-0.5">
-                {stats.detections > 0 ? 'Threat Findings' : 'MITRE ATT&CK'}
-              </div>
-            </div>
+        {/* Right 5 Columns: Single Integrated Visual Focal Point */}
+        <div className="lg:col-span-5 relative">
+          <div className="hero-visual-frame relative rounded-2xl p-[1px] bg-gradient-to-b from-[#8D949D]/80 via-[#3A3F46] to-[#17191C] shadow-2xl overflow-hidden">
+            <div className="relative rounded-[15px] bg-[#101113] overflow-hidden aspect-[4/5] sm:aspect-[3/4] flex items-center justify-center">
+              {/* Character visual with high-contrast metallic treatment */}
+              <img
+                src="/hero-character.png"
+                alt="TraceX Cybernetic Security Investigator"
+                className="w-full h-full object-cover object-center filter contrast-110 brightness-95"
+              />
 
-            <div className="p-3 rounded-lg bg-[#171719]/80 border border-[#383438]">
-              <div className="text-xl sm:text-2xl font-black text-[#E7A1B5] tracking-tight">
-                {stats.incidents > 0 ? `${stats.incidents} Active` : 'Graph Engine'}
+              {/* Matte black gradient overlay at bottom for seamless integration */}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#101113] via-transparent to-transparent pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-r from-[#101113]/50 via-transparent to-transparent pointer-events-none" />
+
+              {/* High-tech precision crosshair watermark */}
+              <div className="absolute top-4 right-4 font-mono text-[9px] text-[#C6CBD1]/80 px-2.5 py-1 rounded bg-[#08090A]/80 border border-[#3A3F46] backdrop-blur-sm">
+                SYSTEM: ARMED // SECTOR-07
               </div>
-              <div className="text-[11px] text-[#A5A3A7] mt-0.5">
-                {stats.incidents > 0 ? 'Correlated Incidents' : 'Multi-Stage Stories'}
+
+              {/* Precision HUD Telemetry Overlay */}
+              <div className="absolute bottom-4 left-4 right-4 p-3 rounded-xl bg-[#08090A]/90 border border-[#3A3F46] backdrop-blur-md font-mono text-[11px] space-y-1.5">
+                <div className="flex items-center justify-between text-[#C6CBD1]">
+                  <span className="text-[10px] uppercase tracking-wider text-[#727982]">INTRUSION RECONSTRUCTION</span>
+                  <span className="text-[#39FF6A] font-bold">100% CORRELATED</span>
+                </div>
+                <div className="flex items-center justify-between text-xs text-[#F4F5F6]">
+                  <span>TARGET: 10.0.0.50 (PostgreSQL)</span>
+                  <span className="text-[#FF6464] font-semibold">ATTACKER: 185.220.101.5</span>
+                </div>
+                <div className="w-full bg-[#17191C] h-1.5 rounded-full overflow-hidden">
+                  <div className="bg-gradient-to-r from-[#39FF6A] to-[#C6CBD1] h-full w-[85%] rounded-full" />
+                </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Right Column (Cybernetic Character & Floating Information Panels) */}
-        <div className="lg:col-span-5 relative flex justify-center items-center">
-          {/* Character Container with Soft Dark Vignette */}
-          <div className="relative w-full max-w-sm sm:max-w-md aspect-[4/5] rounded-2xl overflow-hidden border border-[#383438] bg-gradient-to-b from-[#101113] via-[#171719] to-[#08090A] shadow-2xl flex items-center justify-center">
-            {/* Background character portrait */}
-            <img
-              src="/hero-character.png"
-              alt="TraceX Cybernetic Android Security Intelligence"
-              className="w-full h-full object-cover object-center filter brightness-95 contrast-105"
-            />
-
-            {/* Gradient Overlays for cinematic blending */}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#08090A] via-transparent to-transparent opacity-80" />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#08090A]/60 via-transparent to-[#08090A]/40" />
-            <div className="absolute inset-0 border border-[#E7A1B5]/20 rounded-2xl pointer-events-none" />
-
-            {/* Floating Panel 1: Top Right - Threat Intelligence / Investigation Overview */}
-            <div className="absolute top-4 right-4 p-3 rounded-xl bg-[#171719]/90 backdrop-blur-md border border-[#383438] shadow-lg max-w-[190px] space-y-2 z-20">
-              <div className="flex items-center justify-between">
-                <span className="text-[9px] font-mono uppercase tracking-wider text-[#E7A1B5] font-bold">
-                  THREAT INTELLIGENCE
-                </span>
-                <span className="w-1.5 h-1.5 rounded-full bg-[#39FF6A] animate-ping" />
-              </div>
-
-              {/* World / Relationship Visual */}
-              <div className="h-14 rounded-lg bg-[#08090A] border border-[#383438]/80 flex items-center justify-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-[radial-gradient(#39FF6A_1px,transparent_1px)] [background-size:8px_8px] opacity-25" />
-                <div className="relative flex items-center gap-2 text-[10px] font-mono text-[#39FF6A]">
-                  <Activity className="w-3.5 h-3.5 animate-pulse" />
-                  <span>LIVE ANALYSIS</span>
-                </div>
-              </div>
-
-              <div className="space-y-1 text-[10px] font-mono text-[#A5A3A7]">
-                <div className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3 h-3 text-[#39FF6A]" />
-                  <span>Log Ingestion</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3 h-3 text-[#39FF6A]" />
-                  <span>Rule Detections</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3 h-3 text-[#39FF6A]" />
-                  <span>Incident Correlation</span>
-                </div>
-              </div>
+      {/* Bottom Consolidated Metrics & Capability Strip */}
+      <div className="hero-metrics-bar mt-12 p-[1px] rounded-2xl bg-gradient-to-r from-[#3A3F46] via-[#8D949D]/60 to-[#3A3F46] shadow-xl">
+        <div className="rounded-[15px] bg-[#101113] p-4 sm:p-6 grid grid-cols-2 md:grid-cols-4 gap-6 items-center divide-y md:divide-y-0 md:divide-x divide-[#3A3F46]/60">
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-[#08090A] border border-[#3A3F46] flex items-center justify-center text-[#39FF6A]">
+              <Database className="w-5 h-5" />
             </div>
+            <div>
+              <div className="text-xl sm:text-2xl font-black text-[#F4F5F6] font-mono">{stats.events}</div>
+              <div className="text-[11px] font-mono text-[#A4AAB2] uppercase tracking-wider">Events Ingested</div>
+            </div>
+          </div>
 
-            {/* Floating Panel 2: Bottom Right - From Raw Logs to Full Attack Story */}
-            <div className="absolute bottom-4 right-4 p-3 rounded-xl bg-[#171719]/90 backdrop-blur-md border border-[#383438] shadow-lg max-w-[190px] space-y-1.5 z-20">
-              <span className="text-[9px] font-mono uppercase tracking-wider text-[#A5A3A7] font-semibold block">
-                FROM RAW LOGS TO FULL ATTACK STORY
-              </span>
+          <div className="flex items-center gap-3.5 pt-4 md:pt-0 md:pl-6">
+            <div className="w-10 h-10 rounded-xl bg-[#08090A] border border-[#3A3F46] flex items-center justify-center text-[#FFD84D]">
+              <Activity className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="text-xl sm:text-2xl font-black text-[#FFD84D] font-mono">{stats.detections}</div>
+              <div className="text-[11px] font-mono text-[#A4AAB2] uppercase tracking-wider">Threat Signals</div>
+            </div>
+          </div>
 
-              <div className="space-y-1 text-[11px] font-mono">
-                <div className="flex items-center gap-2 text-[#F4F2F3]">
-                  <ArrowRight className="w-3 h-3 text-[#39FF6A]" />
-                  <span className="font-bold">DETECT</span>
-                </div>
-                <div className="flex items-center gap-2 text-[#F4F2F3]">
-                  <ArrowRight className="w-3 h-3 text-[#39FF6A]" />
-                  <span className="font-bold">CORRELATE</span>
-                </div>
-                <div className="flex items-center gap-2 text-[#F4F2F3]">
-                  <ArrowRight className="w-3 h-3 text-[#39FF6A]" />
-                  <span className="font-bold">RECONSTRUCT</span>
-                </div>
-                <div className="flex items-center gap-2 text-[#F4F2F3]">
-                  <ArrowRight className="w-3 h-3 text-[#39FF6A]" />
-                  <span className="font-bold">EXPLAIN</span>
-                </div>
-              </div>
+          <div className="flex items-center gap-3.5 pt-4 md:pt-0 md:pl-6">
+            <div className="w-10 h-10 rounded-xl bg-[#08090A] border border-[#3A3F46] flex items-center justify-center text-[#C6CBD1]">
+              <GitMerge className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="text-xl sm:text-2xl font-black text-liquid-silver font-mono">{stats.incidents}</div>
+              <div className="text-[11px] font-mono text-[#A4AAB2] uppercase tracking-wider">Attack Incidents</div>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3.5 pt-4 md:pt-0 md:pl-6">
+            <div className="w-10 h-10 rounded-xl bg-[#08090A] border border-[#3A3F46] flex items-center justify-center text-[#39FF6A]">
+              <ShieldCheck className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="text-xl sm:text-2xl font-black text-[#39FF6A] font-mono">5 STAGES</div>
+              <div className="text-[11px] font-mono text-[#A4AAB2] uppercase tracking-wider">End-to-End Story</div>
             </div>
           </div>
         </div>
