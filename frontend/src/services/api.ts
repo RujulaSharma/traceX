@@ -64,13 +64,18 @@ export const tracexApi = {
     return data || { total: 0, events: [] };
   },
 
-  getEventById: async (id: number): Promise<SecurityEvent> => {
-    const res = await api.get(`/logs/events`, { params: { limit: 1 } });
-    if (Array.isArray(res.data)) {
-      const match = res.data.find((e: SecurityEvent) => e.id === id);
-      if (match) return match;
+  getEventById: async (id: number): Promise<SecurityEvent | null> => {
+    // Note: The FastAPI backend currently provides /api/logs/events without single-event /{id} endpoint.
+    // If ever invoked, query with reasonable limit to find matching event by ID.
+    try {
+      const res = await api.get('/logs/events', { params: { limit: 100 } });
+      if (Array.isArray(res.data)) {
+        return res.data.find((e: SecurityEvent) => e.id === id) || null;
+      }
+      return null;
+    } catch {
+      return null;
     }
-    return res.data;
   },
 
   // Detections
@@ -94,9 +99,9 @@ export const tracexApi = {
       title: f.title || f.rule_name || 'Threat Finding',
       entity_type: f.entity_type || (f.username ? 'user' : f.source_ip ? 'ip' : 'entity'),
       entity_value: f.entity_value || f.username || f.source_ip || 'N/A',
-      event_count: f.event_count ?? (Array.isArray(f.evidence_event_ids) ? f.evidence_event_ids.length : 1),
-      mitre_technique: f.mitre_technique || f.metadata?.mitre_technique || f.rule_id || 'T1110',
-      mitre_tactic: f.mitre_tactic || f.metadata?.mitre_tactic || f.detection_type || 'ATT&CK',
+      event_count: f.event_count ?? (Array.isArray(f.evidence_event_ids) ? f.evidence_event_ids.length : 0),
+      mitre_technique: f.mitre_technique || f.metadata?.mitre_technique || 'N/A',
+      mitre_tactic: f.mitre_tactic || f.metadata?.mitre_tactic || f.detection_type || 'N/A',
     }));
     return {
       total: Array.isArray(data) ? data.length : (data?.total ?? findings.length),

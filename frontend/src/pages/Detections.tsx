@@ -146,10 +146,10 @@ export const Detections: React.FC = () => {
                   <td className="p-3.5">
                     <div className="flex items-center gap-1.5">
                       <span className="text-[11px] px-2 py-0.5 rounded bg-indigo-950/80 border border-indigo-800 text-indigo-300 font-semibold">
-                        {f.mitre_tactic || 'ATT&CK'}
+                        {f.mitre_tactic || 'N/A'}
                       </span>
                       <span className="text-[11px] font-mono text-slate-400">
-                        {f.mitre_technique || 'T1110'}
+                        {f.mitre_technique || 'N/A'}
                       </span>
                     </div>
                   </td>
