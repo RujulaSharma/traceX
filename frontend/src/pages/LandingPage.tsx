@@ -562,6 +562,9 @@ export const LandingPage: React.FC = () => {
               if (k !== w._k) {
                 w._k = k;
                 w.style.setProperty('--k', String(k));
+                if (!w.closest('.r') && !w.closest('.g')) {
+                  w.style.color = k > 0.5 ? '#E5E7EB' : '#9CA3AF';
+                }
               }
             });
 

@@ -555,7 +555,7 @@
 }
 
 .tracex-landing .num {
-  font:600 110px/1 Geist;letter-spacing:-.05em;color:var(--r2);text-shadow:0 0 28px rgba(255,62,143,.65), 0 0 50px rgba(255,62,143,.35)
+  font:600 110px/1 Geist;letter-spacing:-.05em;color:var(--r2)!important;-webkit-text-stroke:0 transparent!important;text-stroke:0 transparent!important;paint-order:normal;text-shadow:0 0 28px rgba(255,62,143,.65), 0 0 50px rgba(255,62,143,.35)
 }
 
 .tracex-landing .tx h3 {
@@ -799,19 +799,19 @@
 }
 
 .tracex-landing #st p {
-  font:600 clamp(32px,4.8vw,68px)/1.15 Geist, sans-serif;letter-spacing:-.035em;margin:0 0 5vh;color:#F4F2F3
+  font:600 clamp(32px,4.8vw,68px)/1.15 Geist, sans-serif;letter-spacing:-.035em;margin:0 0 5vh;color:#9CA3AF!important
 }
 
 .tracex-landing .wd {
-  font-style:normal;display:inline-block;color:color-mix(in srgb, #FFFFFF calc(55% + var(--k,1)*45%), #C9D1D9);transition:color .25s ease
+  font-style:normal;display:inline-block;color:#9CA3AF!important;transition:color .25s ease
 }
 
-.tracex-landing .r, .tracex-landing .r .wd {
-  --c:var(--r2);color:var(--r2)!important;text-shadow:0 0 22px rgba(255,62,143,.75), 0 0 45px rgba(255,62,143,.45);font-weight:700
+.tracex-landing .r, .tracex-landing .r .wd, .tracex-landing #st p .r, .tracex-landing #st p .r .wd {
+  --c:var(--r2);color:var(--r2)!important;text-shadow:0 0 24px rgba(255,62,143,.8), 0 0 45px rgba(255,62,143,.5)!important;font-weight:700
 }
 
-.tracex-landing .g, .tracex-landing .g .wd {
-  --c:var(--n);color:var(--n)!important;text-shadow:0 0 22px rgba(61,255,134,.75), 0 0 45px rgba(61,255,134,.45);font-weight:700
+.tracex-landing .g, .tracex-landing .g .wd, .tracex-landing #st p .g, .tracex-landing #st p .g .wd {
+  --c:var(--n);color:var(--n)!important;text-shadow:0 0 24px rgba(61,255,134,.8), 0 0 45px rgba(61,255,134,.5)!important;font-weight:700
 }
 
 .tracex-landing #sts {
