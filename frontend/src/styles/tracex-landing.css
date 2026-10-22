@@ -30,7 +30,7 @@
   font-family: 'Geist', system-ui, -apple-system, sans-serif;
   font-size: 15px;
   line-height: 1.5;
-  overflow-x: hidden;
+  overflow-x: clip;
   position: relative;
   width: 100%;
 }
@@ -48,7 +48,7 @@
 }
 
 .tracex-landing {
-  margin:0;color:var(--w);font:400 15px/1.5 Geist,system-ui,sans-serif;overflow-x:hidden
+  margin:0;color:var(--w);font:400 15px/1.5 Geist,system-ui,sans-serif;overflow-x:clip
 }
 
 .tracex-landing .mono, .tracex-landing small, .tracex-landing em {
@@ -96,11 +96,11 @@
 }
 
 .tracex-landing #hero {
-  position:relative;height:150vh
+  position:relative;min-height:100vh
 }
 
 .tracex-landing #hs {
-  position:sticky;top:0;height:100vh;overflow:hidden;padding:64px 6vw 0;display:flex;flex-direction:column;justify-content:center
+  position:relative;min-height:100vh;overflow:hidden;padding:64px 6vw 0;display:flex;flex-direction:column;justify-content:center
 }
 
 .tracex-landing #hs .tag {
@@ -205,20 +205,16 @@
   fill:var(--r2)
 }
 
-.tracex-landing #hs::after {
-  content:"";position:absolute;inset:0;background:var(--k);opacity:calc((var(--hp) - .55)*1);pointer-events:none;z-index:3
-}
-
 .tracex-landing #cue {
   position:absolute;left:6vw;bottom:4vh;font:300 11px "Geist Mono",monospace;letter-spacing:.25em;color:var(--s)
 }
 
 .tracex-landing #seq {
-  height:620vh;position:relative;z-index:2;margin-top:-14vh
+  min-height:100vh;position:relative;z-index:2;margin-top:0;background:var(--k)
 }
 
 .tracex-landing #sk {
-  position:sticky;top:0;height:100vh;overflow:hidden;padding-top:64px;background:radial-gradient(ellipse 50% 40% at 50% 70%,rgba(61,255,134,.07),transparent 70%),var(--k);box-shadow:0 -40px 80px rgba(8,9,10,.95),0 -1px 0 rgba(61,255,134,.25)
+  position:relative;min-height:100vh;width:100%;overflow:hidden;padding-top:64px;padding-bottom:32px;display:flex;flex-direction:column;justify-content:center;background:radial-gradient(ellipse 50% 40% at 50% 70%,rgba(61,255,134,.07),transparent 70%),var(--k);box-shadow:0 -40px 80px rgba(8,9,10,.95),0 -1px 0 rgba(61,255,134,.25)
 }
 
 .tracex-landing #hd {
@@ -758,7 +754,7 @@
 }
 
 .tracex-landing #sk .win {
-  transform:perspective(1500px) rotateX(calc((1 - var(--en,1))*24deg)) scale(calc((.8 + var(--en,1)*.2)*(1 + var(--ex,0)*.55)));opacity:calc(.3 + var(--en,1)*.7 - var(--ex,0)*.85);box-shadow:0 50px 120px -30px rgba(61,255,134,calc(.06 + var(--en,1)*.12)),0 0 0 1px #000
+  transform:perspective(1500px);box-shadow:0 50px 120px -30px rgba(61,255,134,.16),0 0 0 1px #000;opacity:1
 }
 
 .tracex-landing #sk .win::after {
@@ -766,7 +762,7 @@
 }
 
 .tracex-landing #hd, .tracex-landing #steps, .tracex-landing #hint {
-  opacity:calc(1 - var(--ex,0)*1.3)
+  opacity:1
 }
 
 .tracex-landing .row .win {
@@ -782,11 +778,11 @@
 }
 
 .tracex-landing #st {
-  height:260vh;position:relative
+  min-height:100vh;position:relative;background:var(--k)
 }
 
 .tracex-landing .si {
-  position:sticky;top:0;height:100vh;display:flex;flex-direction:column;justify-content:center;padding:64px 8vw 0;max-width:1300px;margin:0 auto
+  position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:64px 8vw 0;max-width:1300px;margin:0 auto
 }
 
 .tracex-landing #st p {
