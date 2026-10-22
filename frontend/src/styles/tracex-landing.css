@@ -1,12 +1,14 @@
 /* TraceX Landing Page Styles - Scoped to .tracex-landing */
 :root {
-  --k: #08090A;
-  --c: #101113;
-  --g: #171719;
-  --w: #F4F2F3;
-  --s: #A5ABB3;
+  --k: #0B0C0E;
+  --c: #131519;
+  --g: #1A1D23;
+  --w: #F6F4F6;
+  --s: #ABB0B8;
   --r: #E7A1B5;
-  --r2: #F3B6C7;
+  --r2: #F7BFCE;
+  --r-light: #FDE8EF;
+  --r-glow: rgba(247, 191, 206, 0.45);
   --n: #3DFF86;
   --hp: 0;
   --img: url(/hero-hologram.webp);
@@ -14,18 +16,25 @@
 }
 
 .tracex-landing {
-  --k: #08090A;
-  --c: #101113;
-  --g: #171719;
-  --w: #F4F2F3;
-  --s: #A5ABB3;
+  --k: #0B0C0E;
+  --c: #131519;
+  --g: #1A1D23;
+  --w: #F6F4F6;
+  --s: #ABB0B8;
   --r: #E7A1B5;
-  --r2: #F3B6C7;
+  --r2: #F7BFCE;
+  --r-light: #FDE8EF;
+  --r-glow: rgba(247, 191, 206, 0.45);
   --n: #3DFF86;
   --hp: 0;
   --img: url(/hero-hologram.webp);
   color-scheme: dark;
-  background: var(--k);
+  background-color: #0A0C0F;
+  background-image: 
+    radial-gradient(ellipse 65% 50% at 85% 15%, rgba(247, 191, 206, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 45% at 15% 45%, rgba(61, 255, 134, 0.05) 0%, transparent 65%),
+    radial-gradient(ellipse 65% 50% at 80% 70%, rgba(247, 191, 206, 0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 45% at 20% 90%, rgba(61, 255, 134, 0.04) 0%, transparent 65%);
   color: var(--w);
   font-family: 'Geist', system-ui, -apple-system, sans-serif;
   font-size: 15px;
@@ -36,7 +45,7 @@
 }
 
 .tracex-landing {
-  --k:#08090A;--c:#101113;--g:#171719;--w:#F4F2F3;--s:#A5ABB3;--r:#E7A1B5;--r2:#F3B6C7;--n:#3DFF86;--hp:0;color-scheme:dark
+  --k:#0B0C0E;--c:#131519;--g:#1A1D23;--w:#F6F4F6;--s:#ABB0B8;--r:#E7A1B5;--r2:#F7BFCE;--n:#3DFF86;--hp:0;color-scheme:dark
 }
 
 .tracex-landing, .tracex-landing * {
@@ -44,7 +53,7 @@
 }
 
 .tracex-landing {
-  background:var(--k);scroll-behavior:smooth
+  background-color:#0A0C0F;scroll-behavior:smooth
 }
 
 .tracex-landing {
@@ -104,19 +113,19 @@
 }
 
 .tracex-landing #hs .tag {
-  color:var(--n);font:400 12px "Geist Mono",monospace;letter-spacing:.3em;position:relative;z-index:2
+  color:var(--r2);font:500 12px "Geist Mono",monospace;letter-spacing:.28em;position:relative;z-index:2;text-shadow:0 0 16px rgba(247,191,206,.4)
 }
 
 .tracex-landing #hs h1 {
-  position:relative;z-index:2;margin:18px 0 26px;font:400 clamp(50px,8.2vw,132px)/.92 Anton,Impact,sans-serif;text-transform:uppercase;background:linear-gradient(#fff 30%,#7d8086);-webkit-background-clip:text;background-clip:text;color:transparent;transform:translateY(calc(var(--hp)*-90px));opacity:calc(1 - var(--hp)*.85)
+  position:relative;z-index:2;margin:18px 0 26px;font:400 clamp(50px,8.2vw,132px)/.92 Anton,Impact,sans-serif;text-transform:uppercase;background:linear-gradient(#fff 30%,#a2a8b2);-webkit-background-clip:text;background-clip:text;color:transparent
 }
 
 .tracex-landing #hs h1 span {
-  -webkit-text-fill-color:var(--n)
+  background:linear-gradient(135deg, #FDE8EF 0%, #F7BFCE 50%, #E7A1B5 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 24px rgba(247,191,206,.35))
 }
 
 .tracex-landing #hs p {
-  position:relative;z-index:2;max-width:46ch;color:var(--s);font-size:18px;margin:0 0 30px;opacity:calc(1 - var(--hp)*1.4)
+  position:relative;z-index:2;max-width:48ch;color:#B2B8C2;font-size:18px;margin:0 0 30px
 }
 
 .tracex-landing #hs .cta {
@@ -234,7 +243,7 @@
 }
 
 .tracex-landing #steps::before {
-  content:"";position:absolute;left:-1px;top:0;width:1px;height:calc(var(--p,0)*100%);background:var(--n);box-shadow:0 0 10px var(--n)
+  content:"";position:absolute;left:-1px;top:0;width:2px;height:calc(var(--p,0)*100%);background:linear-gradient(180deg, var(--n), var(--r2));box-shadow:0 0 12px rgba(247,191,206,.6)
 }
 
 .tracex-landing #steps li {
@@ -250,7 +259,7 @@
 }
 
 .tracex-landing #steps li.on {
-  color:var(--n)
+  color:var(--r2);text-shadow:0 0 12px rgba(247,191,206,.5)
 }
 
 .tracex-landing .win {
@@ -510,23 +519,23 @@
 }
 
 .tracex-landing #caps {
-  max-width:1180px;margin:0 auto;padding:18vh 6vw 6vh
+  max-width:1180px;margin:0 auto;padding:9vh 6vw 3vh
 }
 
 .tracex-landing #caps h2, .tracex-landing #end h2 {
-  font:600 clamp(34px,5vw,68px)/1.02 Geist;letter-spacing:-.035em;margin:0 0 20px;max-width:15ch
+  font:600 clamp(34px,5vw,68px)/1.02 Geist;letter-spacing:-.035em;margin:0 0 16px;max-width:16ch
 }
 
 .tracex-landing #caps h2 span, .tracex-landing #end h2 span {
-  color:var(--n)
+  color:var(--r2);text-shadow:0 0 24px rgba(247,191,206,.4)
 }
 
 .tracex-landing #caps .ld {
-  color:var(--s);font-size:17px;max-width:48ch;margin:0 0 8vh
+  color:var(--s);font-size:17px;max-width:48ch;margin:0 0 4vh
 }
 
 .tracex-landing .row {
-  display:grid;grid-template-columns:1fr 1.25fr;gap:5vw;align-items:center;padding:9vh 0;border-top:1px solid rgba(255,255,255,.08)
+  display:grid;grid-template-columns:1fr 1.25fr;gap:5vw;align-items:center;padding:4.5vh 0;border-top:1px solid rgba(255,255,255,.08)
 }
 
 .tracex-landing .row:nth-child(even) .tx {
@@ -534,7 +543,7 @@
 }
 
 .tracex-landing .tx {
-  opacity:0;transform:translateY(40px);transition:.8s cubic-bezier(.2,.7,.2,1)
+  opacity:1
 }
 
 .tracex-landing .row.v .tx {
@@ -542,11 +551,11 @@
 }
 
 .tracex-landing .num {
-  font:600 110px/1 Geist;letter-spacing:-.05em;color:transparent;-webkit-text-stroke:1px #3b3e43
+  font:600 110px/1 Geist;letter-spacing:-.05em;color:transparent;-webkit-text-stroke:1px rgba(247,191,206,.35);text-shadow:0 0 24px rgba(247,191,206,.15)
 }
 
 .tracex-landing .tx h3 {
-  font:600 34px/1.1 Geist;letter-spacing:-.03em;margin:14px 0 12px
+  font:600 34px/1.1 Geist;letter-spacing:-.03em;margin:14px 0 12px;color:var(--w)
 }
 
 .tracex-landing .tx p {
@@ -558,7 +567,7 @@
 }
 
 .tracex-landing .tx li::before {
-  content:"";display:inline-block;width:14px;height:1px;background:var(--n);margin-right:12px;vertical-align:middle
+  content:"";display:inline-block;width:14px;height:1px;background:linear-gradient(90deg, var(--r2), var(--n));margin-right:12px;vertical-align:middle
 }
 
 .tracex-landing .tx ul {
@@ -570,7 +579,7 @@
 }
 
 .tracex-landing #end {
-  min-height:90vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:12vh 6vw;border-top:1px solid rgba(255,255,255,.08)
+  min-height:55vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:7vh 6vw;border-top:1px solid rgba(255,255,255,.08)
 }
 
 .tracex-landing #end h2 {
@@ -586,7 +595,7 @@
 }
 
 .tracex-landing #pricing {
-  max-width:1180px;margin:0 auto;padding:16vh 6vw 8vh;text-align:center
+  max-width:1180px;margin:0 auto;padding:9vh 6vw 5vh;text-align:center
 }
 
 .tracex-landing #pricing h2 {
@@ -594,15 +603,15 @@
 }
 
 .tracex-landing #pricing h2 span {
-  color:var(--n)
+  color:var(--r2);text-shadow:0 0 24px rgba(247,191,206,.4)
 }
 
 .tracex-landing #pricing .ld {
-  color:var(--s);max-width:52ch;margin:0 auto 28px;font-size:17px
+  color:var(--s);max-width:52ch;margin:0 auto 24px;font-size:17px
 }
 
 .tracex-landing .bt {
-  display:inline-flex;border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:4px;margin-bottom:7vh
+  display:inline-flex;border:1px solid rgba(247,191,206,.25);border-radius:999px;padding:4px;margin-bottom:4vh;background:rgba(255,255,255,.02)
 }
 
 .tracex-landing .bt button {
@@ -610,11 +619,11 @@
 }
 
 .tracex-landing .bt button.on {
-  background:var(--n);color:var(--k)
+  background:var(--r2);color:var(--k);font-weight:600;box-shadow:0 0 16px rgba(247,191,206,.4)
 }
 
 .tracex-landing .bt em {
-  font-size:10px;margin-left:6px
+  font-size:10px;margin-left:6px;color:var(--n)
 }
 
 .tracex-landing .pg {
@@ -622,7 +631,7 @@
 }
 
 .tracex-landing .pc {
-  position:relative;padding:34px 30px;border:1px solid rgba(255,255,255,.1);border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.01));opacity:0;transform:translateY(40px);transition:opacity .8s,transform .8s cubic-bezier(.2,.7,.2,1);transition-delay:calc(var(--i)*.12s)
+  position:relative;padding:34px 30px;border:1px solid rgba(255,255,255,.1);border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.01))
 }
 
 .tracex-landing .pc.v {
@@ -630,11 +639,11 @@
 }
 
 .tracex-landing .pc.hot {
-  border-color:rgba(61,255,134,.6);background:linear-gradient(180deg,rgba(61,255,134,.09),rgba(61,255,134,.01));box-shadow:0 0 70px -12px rgba(61,255,134,.3)
+  border-color:rgba(247,191,206,.65);background:linear-gradient(180deg,rgba(247,191,206,.09),rgba(247,191,206,.01));box-shadow:0 0 60px -10px rgba(247,191,206,.25)
 }
 
 .tracex-landing .pc .pl {
-  position:absolute;top:-12px;left:30px;background:var(--n);color:var(--k);font:500 10px "Geist Mono";letter-spacing:.14em;padding:4px 10px;border-radius:3px
+  position:absolute;top:-12px;left:30px;background:var(--r2);color:var(--k);font:600 10px "Geist Mono";letter-spacing:.14em;padding:4px 10px;border-radius:3px;box-shadow:0 0 12px rgba(247,191,206,.4)
 }
 
 .tracex-landing .pc h3 {
@@ -794,7 +803,7 @@
 }
 
 .tracex-landing .r {
-  --c:var(--r)
+  --c:var(--r2);color:var(--r2);text-shadow:0 0 16px rgba(247,191,206,.5);font-weight:700
 }
 
 .tracex-landing .g {
@@ -807,6 +816,10 @@
 
 .tracex-landing #sts b {
   font:600 clamp(36px,5vw,72px)/1 Geist;letter-spacing:-.04em;color:var(--n);display:block
+}
+
+.tracex-landing #sts div:nth-child(2) b {
+  color:var(--r2);text-shadow:0 0 24px rgba(247,191,206,.45)
 }
 
 @media (max-width:860px){
