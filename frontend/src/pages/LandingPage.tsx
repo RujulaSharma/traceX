@@ -443,34 +443,61 @@ export const LandingPage: React.FC = () => {
 
     // GSAP ScrollTrigger Orchestration
     const ctx = gsap.context(() => {
-      // 1. HERO PARALLAX & RETICLE SCANNERS
+      // 1. HERO ENTRANCE & PARALLAX
       const rt = $('#rt');
       const sw = $('#sw');
+
+      gsap.fromTo(
+        ['#hs .tag', '#hs h1', '#hs p', '#hs .cta'],
+        { x: -50, opacity: 0 },
+        {
+          x: 0,
+          opacity: 1,
+          duration: 0.85,
+          stagger: 0.1,
+          ease: 'power3.out',
+          delay: 0.05,
+        }
+      );
+
+      gsap.fromTo(
+        '.ch',
+        { x: 50, opacity: 0 },
+        {
+          x: 0,
+          opacity: 1,
+          duration: 0.9,
+          stagger: 0.12,
+          ease: 'power3.out',
+          delay: 0.2,
+        }
+      );
+
       if (hero) {
         ScrollTrigger.create({
           id: 'hero-trigger',
           trigger: hero,
           start: 'top top',
           end: 'bottom top',
-          scrub: 0.5,
+          scrub: 0.4,
           onUpdate: (self) => {
             const h = self.progress;
             hero.style.setProperty('--hp', String(h));
             if (rt) {
-              rt.style.setProperty('--a', String(C((h - 0.1) / 0.35)));
+              rt.style.setProperty('--a', String(C((h - 0.05) / 0.3)));
               rt.style.setProperty(
                 '--b',
-                String(C((h - 0.4) / 0.15) * (1 - C((h - 0.8) / 0.15)))
+                String(C((h - 0.3) / 0.15) * (1 - C((h - 0.75) / 0.15)))
               );
             }
             if (sw) {
-              sw.style.opacity = h > 0.04 && h < 0.95 ? '0.85' : '0';
+              sw.style.opacity = h > 0.03 && h < 0.95 ? '0.85' : '0';
             }
           },
         });
       }
 
-      // 2. INVESTIGATION SEQUENCE (PINNED 5-STAGE ENGINE)
+      // 2. INVESTIGATION SEQUENCE (PINNED 5-STAGE ENGINE - CRISP & PROMPT)
       const seq = $('#seq');
       const stepsEl = $('#steps');
       const winEl = $('#sk .win');
@@ -479,9 +506,9 @@ export const LandingPage: React.FC = () => {
           id: 'seq-trigger',
           trigger: seq,
           start: 'top top',
-          end: () => `+=${window.innerWidth <= 860 ? 2200 : 3200}`,
+          end: () => `+=${window.innerWidth <= 860 ? 1100 : 1600}`,
           pin: true,
-          scrub: 0.8,
+          scrub: 0.5,
           anticipatePin: 1,
           onUpdate: (self) => {
             const p = self.progress; // 0.0 to 1.0
@@ -490,10 +517,10 @@ export const LandingPage: React.FC = () => {
 
             if (stepsEl) stepsEl.style.setProperty('--p', String(p));
 
-            // Stage sub-progress (clamped and held at end)
+            // Stage sub-progress: finishes promptly in the first 62%, holds in remaining 38%
             const stageStart = currentStage * 0.2;
             const stageRaw = (p - stageStart) / 0.2;
-            const localProgress = Math.min(1, Math.max(0, stageRaw / 0.85));
+            const localProgress = Math.min(1, Math.max(0, stageRaw / 0.62));
 
             // Bidirectional paint of all stages to prevent desync
             for (let s = 0; s < 5; s++) {
@@ -523,9 +550,9 @@ export const LandingPage: React.FC = () => {
           id: 'st-trigger',
           trigger: st,
           start: 'top top',
-          end: () => `+=${window.innerWidth <= 860 ? 900 : 1400}`,
+          end: () => `+=${window.innerWidth <= 860 ? 550 : 850}`,
           pin: true,
-          scrub: 0.8,
+          scrub: 0.5,
           anticipatePin: 1,
           onUpdate: (self) => {
             const q3 = self.progress; // 0.0 to 1.0
@@ -537,8 +564,8 @@ export const LandingPage: React.FC = () => {
               }
             });
 
-            // Reveal stats in the second half of the scrub
-            const q = C((q3 - 0.55) / 0.38);
+            // Reveal stats earlier in the scrub so numbers don't appear late
+            const q = C((q3 - 0.2) / 0.5);
             st.style.setProperty('--q', String(q));
             sns.forEach((n) => {
               const num = Number(n.dataset.n || 0) * q;
@@ -550,26 +577,44 @@ export const LandingPage: React.FC = () => {
         });
       }
 
-      // 4. CAPABILITY DEMONSTRATION ROWS (#caps)
+      // 4. CAPABILITY DEMONSTRATION ROWS (ALTERNATING ENTRANCES: LEFT & RIGHT)
       $$('.row').forEach((row, i) => {
         const tx = row.querySelector('.tx') as HTMLElement | null;
         const win = row.querySelector('.win.cl') as HTMLElement | null;
         const pn = row.querySelector('.cl .pn') as HTMLElement | null;
         const unit = rowUnits[i];
+        const isEven = i % 2 === 1;
 
         if (tx) {
           gsap.fromTo(
             tx,
-            { opacity: 0, y: 35, filter: 'blur(8px)' },
+            { opacity: 0, x: isEven ? 60 : -60 },
             {
               opacity: 1,
-              y: 0,
-              filter: 'blur(0px)',
-              duration: 0.8,
-              ease: 'power2.out',
+              x: 0,
+              duration: 0.75,
+              ease: 'power3.out',
               scrollTrigger: {
                 trigger: row,
-                start: 'top 80%',
+                start: 'top 88%',
+                toggleActions: 'play none none reverse',
+              },
+            }
+          );
+        }
+
+        if (win) {
+          gsap.fromTo(
+            win,
+            { opacity: 0, x: isEven ? -60 : 60 },
+            {
+              opacity: 1,
+              x: 0,
+              duration: 0.75,
+              ease: 'power3.out',
+              scrollTrigger: {
+                trigger: row,
+                start: 'top 88%',
                 toggleActions: 'play none none reverse',
               },
             }
@@ -579,9 +624,9 @@ export const LandingPage: React.FC = () => {
         if (win && pn && unit) {
           ScrollTrigger.create({
             trigger: row,
-            start: 'top 85%',
+            start: 'top 90%',
             end: 'bottom 40%',
-            scrub: 0.5,
+            scrub: 0.4,
             onUpdate: (self) => {
               const s = self.progress;
               win.style.setProperty('--rv', String(C(s * 1.8)));
@@ -591,21 +636,53 @@ export const LandingPage: React.FC = () => {
         }
       });
 
-      // 5. PRICING CARDS STAGGERED ENTRANCE
+      // 5. PRICING CARDS (DIRECTIONAL SLIDE-IN ENTRANCE)
       const pc = $$('.pc');
-      if (pc.length > 0) {
+      if (pc.length === 3) {
         gsap.fromTo(
-          pc,
-          { opacity: 0, y: 40 },
+          pc[0],
+          { opacity: 0, x: -50 },
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.75,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: '#pricing',
+              start: 'top 85%',
+              toggleActions: 'play none none reverse',
+            },
+          }
+        );
+        gsap.fromTo(
+          pc[1],
+          { opacity: 0, y: 35, scale: 0.95 },
           {
             opacity: 1,
             y: 0,
-            duration: 0.7,
-            stagger: 0.15,
-            ease: 'power2.out',
+            scale: 1,
+            duration: 0.75,
+            ease: 'power3.out',
+            delay: 0.1,
             scrollTrigger: {
               trigger: '#pricing',
-              start: 'top 75%',
+              start: 'top 85%',
+              toggleActions: 'play none none reverse',
+            },
+          }
+        );
+        gsap.fromTo(
+          pc[2],
+          { opacity: 0, x: 50 },
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.75,
+            ease: 'power3.out',
+            delay: 0.2,
+            scrollTrigger: {
+              trigger: '#pricing',
+              start: 'top 85%',
               toggleActions: 'play none none reverse',
             },
           }
@@ -625,7 +702,7 @@ export const LandingPage: React.FC = () => {
             ease: 'power2.out',
             scrollTrigger: {
               trigger: '#end',
-              start: 'top 80%',
+              start: 'top 85%',
               toggleActions: 'play none none reverse',
             },
           }
@@ -709,7 +786,9 @@ export const LandingPage: React.FC = () => {
           <span className="ch" style={{ right: '34vw', top: '80vh', animationDelay: '-5s' }}>
             <b>T1078</b> valid accounts
           </span>
-          <div className="tag">AUTONOMOUS INVESTIGATION · ATTACK RECONSTRUCTION</div>
+          <div className="tag" style={{ color: '#F7BFCE', textShadow: '0 0 16px rgba(247,191,206,0.45)' }}>
+            AUTONOMOUS INVESTIGATION · ATTACK RECONSTRUCTION
+          </div>
           <h1>
             Find the
             <br />
@@ -717,7 +796,16 @@ export const LandingPage: React.FC = () => {
             <br />
             Reconstruct
             <br />
-            <span>the story.</span>
+            <span
+              style={{
+                background: 'linear-gradient(135deg, #FDE8EF 0%, #F7BFCE 50%, #E7A1B5 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                filter: 'drop-shadow(0 0 22px rgba(247,191,206,0.35))',
+              }}
+            >
+              the story.
+            </span>
           </h1>
           <p>
             TraceX transforms fragmented security telemetry into correlated attack narratives,
@@ -768,9 +856,21 @@ export const LandingPage: React.FC = () => {
       <section id="st">
         <div className="si">
           <p>
-            Attackers hide in the <span className="r">noise.</span>{' '}
+            Attackers hide in the{' '}
+            <span
+              className="r"
+              style={{ color: '#F7BFCE', textShadow: '0 0 16px rgba(247,191,206,0.55)' }}
+            >
+              noise.
+            </span>{' '}
             <span className="g">TraceX</span> reads every log, connects every clue, and shows you{' '}
-            <span className="g">exactly what happened</span>, in the order it happened.
+            <span
+              className="r"
+              style={{ color: '#F7BFCE', textShadow: '0 0 16px rgba(247,191,206,0.45)' }}
+            >
+              exactly what happened
+            </span>
+            , in the order it happened.
           </p>
           <div id="sts">
             <div>
@@ -780,10 +880,16 @@ export const LandingPage: React.FC = () => {
               <small>log sources joined</small>
             </div>
             <div>
-              <b className="sn" data-n="2.4" data-d="1" data-u="M">
+              <b
+                className="sn"
+                data-n="2.4"
+                data-d="1"
+                data-u="M"
+                style={{ color: '#F7BFCE', textShadow: '0 0 24px rgba(247,191,206,0.45)' }}
+              >
                 0
               </b>
-              <small>events read per minute</small>
+              <small style={{ color: '#F7BFCE' }}>events read per minute</small>
             </div>
             <div>
               <b className="sn" data-n="4" data-u=" min">
@@ -798,7 +904,16 @@ export const LandingPage: React.FC = () => {
       {/* Capability Deep-Dives with Interactive Demonstration Windows */}
       <section id="caps">
         <h2>
-          From raw telemetry to a <span>defensible</span> narrative.
+          From raw telemetry to a{' '}
+          <span
+            style={{
+              color: '#F7BFCE',
+              textShadow: '0 0 20px rgba(247,191,206,0.45)',
+            }}
+          >
+            defensible
+          </span>{' '}
+          narrative.
         </h2>
         <p className="ld">
           Five connected stages, each designed to reduce the distance between an isolated alert
@@ -811,7 +926,10 @@ export const LandingPage: React.FC = () => {
       {/* Pricing Section with Monthly/Yearly Toggle */}
       <section id="pricing">
         <h2>
-          Pick the depth of <span>investigation.</span>
+          Pick the depth of{' '}
+          <span style={{ color: '#F7BFCE', textShadow: '0 0 20px rgba(247,191,206,0.45)' }}>
+            investigation.
+          </span>
         </h2>
         <p className="ld">
           Every plan includes timelines, attack graphs and MITRE ATT&amp;CK mapping. Pro adds
@@ -935,7 +1053,10 @@ export const LandingPage: React.FC = () => {
       {/* Final Call to Action */}
       <section id="end">
         <h2>
-          Read the breach <span>back.</span>
+          Read the breach{' '}
+          <span style={{ color: '#F7BFCE', textShadow: '0 0 20px rgba(247,191,206,0.45)' }}>
+            back.
+          </span>
         </h2>
         <p>
           See an attack rebuilt from scattered logs into one sequence you can verify. Start free, or
