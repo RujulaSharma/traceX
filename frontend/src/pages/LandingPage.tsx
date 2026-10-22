@@ -146,7 +146,7 @@ export const LandingPage: React.FC = () => {
         (l, i) =>
           `<div class="lg${l[6] ? ' h' : ''}" data-s="${R(i)}" style="left:${l[3]}%;top:${l[4]}px;--d:${l[5]}"><span>${l[0]}</span> <b>${l[1]}</b> ${l[2]}</div>`
       ).join('')}`,
-      `<div class="hrow">Suspicious authentication activity<em>last 24h</em></div><div class="st">${[
+      `<div class="hrow"><span style="color:var(--n);margin-right:6px">⚠</span>Suspicious authentication activity<em>last 24h</em></div><div class="st">${[
         ['EVENTS', 2.41, 2, 'M'],
         ['DETECTIONS', 7, 0, ''],
         ['FAILED AUTH', 1284, 0, ''],
@@ -158,17 +158,17 @@ export const LandingPage: React.FC = () => {
         )
         .join('')}</div><div class="g2"><div>${DT.map(
         (d, i) =>
-          `<div class="dr" data-s="${(0.2 + i * 0.13).toFixed(2)},${(0.42 + i * 0.13).toFixed(2)}"><div><b>${d[0]}</b><small>${d[1]}</small></div><span class="tg${d[2] === 'CRITICAL' ? ' c' : ''}">${d[2]}</span></div>`
+          `<div class="dr" data-s="${(0.1 + i * 0.12).toFixed(2)},${(0.32 + i * 0.12).toFixed(2)}"><div><b>${d[0]}</b><small>${d[1]}</small></div><span class="tg${d[2] === 'CRITICAL' ? ' c' : ''}">${d[2]}</span></div>`
       ).join('')}</div><div class="cx"><small>FAILED LOGINS / 15M</small><div class="bars">${BH.map(
         (h, i) =>
-          `<i class="${i === 9 || i === 10 ? 'x' : ''}" data-s="${R(i, 0.03, 0.3).replace(/^/, '')}" style="--h:${h}"></i>`
+          `<i class="${i === 9 || i === 10 ? 'x' : ''}" data-s="${R(i, 0.03, 0.25)}" style="--h:${h}"></i>`
       ).join('')}</div><em>Spike at 02:14 UTC · +540%</em></div></div>`,
       `<svg viewBox="0 0 680 402">${ED.map(
         (e, j) =>
           `<line data-s="${(0.3 + j * 0.08).toFixed(2)},${(0.5 + j * 0.08).toFixed(2)}" pathLength="1" x1="${ND[e[0]][2]}" y1="${ND[e[0]][3]}" x2="${ND[e[1]][2]}" y2="${ND[e[1]][3]}"/>`
       ).join('')}${ND.map(
         (n, i) =>
-          `<g class="nd" data-s="${R(i, 0.08, 0.2)}"><circle cx="${n[2]}" cy="${n[3]}" r="19" fill="#101113" stroke="${n[4] ? '#E7A1B5' : '#3DFF86'}" stroke-width="1.5"/><circle cx="${n[2]}" cy="${n[3]}" r="4" fill="${n[4] ? '#E7A1B5' : '#3DFF86'}"/><text x="${n[2]}" y="${n[3] + 36}" text-anchor="middle">${n[0]}</text><text class="t" x="${n[2]}" y="${n[3] + 48}" text-anchor="middle">${n[1]}</text></g>`
+          `<g class="nd" data-s="${R(i, 0.08, 0.2)}"><circle cx="${n[2]}" cy="${n[3]}" r="19" fill="#101113" stroke="${n[4] ? '#FF2A85' : '#3DFF86'}" stroke-width="1.5"/><circle cx="${n[2]}" cy="${n[3]}" r="4" fill="${n[4] ? '#FF2A85' : '#3DFF86'}"/><text x="${n[2]}" y="${n[3] + 36}" text-anchor="middle">${n[0]}</text><text class="t" x="${n[2]}" y="${n[3] + 48}" text-anchor="middle">${n[1]}</text></g>`
       ).join('')}</svg><div class="pill" data-s=".85,1">6 entities · 7 relationships · 1 shared narrative</div>`,
       `<small>RECONSTRUCTED TIMELINE</small><div class="hrow" style="margin-top:4px">INC-2041 · Operation Glass Ledger<em>71m 58s span</em></div><div class="rl"><i data-s="0,.85"></i>${TL.map(
         (_, i) =>
@@ -787,7 +787,7 @@ export const LandingPage: React.FC = () => {
           <span className="ch" style={{ right: '34vw', top: '80vh', animationDelay: '-5s' }}>
             <b>T1078</b> valid accounts
           </span>
-          <div className="tag" style={{ color: '#F7BFCE', textShadow: '0 0 16px rgba(247,191,206,0.45)' }}>
+          <div className="tag" style={{ color: '#FF3E8F', textShadow: '0 0 16px rgba(255,62,143,0.5)' }}>
             AUTONOMOUS INVESTIGATION · ATTACK RECONSTRUCTION
           </div>
           <h1>
@@ -799,10 +799,10 @@ export const LandingPage: React.FC = () => {
             <br />
             <span
               style={{
-                background: 'linear-gradient(135deg, #FDE8EF 0%, #F7BFCE 50%, #E7A1B5 100%)',
+                background: 'linear-gradient(135deg, #FFB3D1 0%, #FF3E8F 50%, #FF1A75 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
-                filter: 'drop-shadow(0 0 22px rgba(247,191,206,0.35))',
+                filter: 'drop-shadow(0 0 22px rgba(255,62,143,0.45))',
               }}
             >
               the story.
@@ -860,14 +860,14 @@ export const LandingPage: React.FC = () => {
             Attackers hide in the{' '}
             <span
               className="r"
-              style={{ color: '#F7BFCE', textShadow: '0 0 16px rgba(247,191,206,0.55)' }}
+              style={{ color: '#FF3E8F', textShadow: '0 0 16px rgba(255,62,143,0.55)' }}
             >
               noise.
             </span>{' '}
             <span className="g">TraceX</span> reads every log, connects every clue, and shows you{' '}
             <span
               className="r"
-              style={{ color: '#F7BFCE', textShadow: '0 0 16px rgba(247,191,206,0.45)' }}
+              style={{ color: '#FF3E8F', textShadow: '0 0 16px rgba(255,62,143,0.45)' }}
             >
               exactly what happened
             </span>
@@ -886,11 +886,11 @@ export const LandingPage: React.FC = () => {
                 data-n="2.4"
                 data-d="1"
                 data-u="M"
-                style={{ color: '#F7BFCE', textShadow: '0 0 24px rgba(247,191,206,0.45)' }}
+                style={{ color: '#FF3E8F', textShadow: '0 0 24px rgba(255,62,143,0.5)' }}
               >
                 0
               </b>
-              <small style={{ color: '#F7BFCE' }}>events read per minute</small>
+              <small style={{ color: '#FF3E8F' }}>events read per minute</small>
             </div>
             <div>
               <b className="sn" data-n="4" data-u=" min">
@@ -908,8 +908,8 @@ export const LandingPage: React.FC = () => {
           From raw telemetry to a{' '}
           <span
             style={{
-              color: '#F7BFCE',
-              textShadow: '0 0 20px rgba(247,191,206,0.45)',
+              color: '#FF3E8F',
+              textShadow: '0 0 20px rgba(255,62,143,0.5)',
             }}
           >
             defensible
@@ -928,7 +928,7 @@ export const LandingPage: React.FC = () => {
       <section id="pricing">
         <h2>
           Pick the depth of{' '}
-          <span style={{ color: '#F7BFCE', textShadow: '0 0 20px rgba(247,191,206,0.45)' }}>
+          <span style={{ color: '#FF3E8F', textShadow: '0 0 20px rgba(255,62,143,0.5)' }}>
             investigation.
           </span>
         </h2>
@@ -1055,7 +1055,7 @@ export const LandingPage: React.FC = () => {
       <section id="end">
         <h2>
           Read the breach{' '}
-          <span style={{ color: '#F7BFCE', textShadow: '0 0 20px rgba(247,191,206,0.45)' }}>
+          <span style={{ color: '#FF3E8F', textShadow: '0 0 20px rgba(255,62,143,0.5)' }}>
             back.
           </span>
         </h2>
