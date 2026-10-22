@@ -755,7 +755,7 @@
 }
 
 .tracex-landing .w {
-  display:inline-block;font-style:normal;opacity:0;transform:translateY(.45em);filter:blur(8px);transition:opacity .7s,transform .7s,filter .7s;transition-delay:calc(var(--w)*.07s)
+  display:inline-block;font-style:normal;filter:none
 }
 
 .tracex-landing .wr.v .w, .tracex-landing #hd h2.on .w {
@@ -779,7 +779,7 @@
 }
 
 .tracex-landing .tx {
-  filter:blur(10px);transition:opacity .8s,transform .8s cubic-bezier(.2,.7,.2,1),filter .8s
+  filter:none;
 }
 
 .tracex-landing .row.v .tx {
