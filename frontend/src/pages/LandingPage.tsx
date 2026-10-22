@@ -565,11 +565,13 @@ export const LandingPage: React.FC = () => {
               }
             });
 
-            // Reveal stats earlier in the scrub so numbers don't appear late
-            const q = C((q3 - 0.2) / 0.5);
+            // Reveal stats smoothly as user scrubs into section
+            const q = Math.min(1, Math.max(0, q3 * 1.5));
             st.style.setProperty('--q', String(q));
             sns.forEach((n) => {
-              const num = Number(n.dataset.n || 0) * q;
+              const target = Number(n.dataset.n || 0);
+              const factor = Math.min(1, 0.2 + q * 0.8);
+              const num = target * factor;
               const d = +(n.dataset.d || 0);
               n.textContent =
                 (d ? num.toFixed(d) : Math.round(num).toString()) + (n.dataset.u || '');
@@ -876,7 +878,7 @@ export const LandingPage: React.FC = () => {
           <div id="sts">
             <div>
               <b className="sn" data-n="38">
-                0
+                38
               </b>
               <small>log sources joined</small>
             </div>
@@ -888,13 +890,13 @@ export const LandingPage: React.FC = () => {
                 data-u="M"
                 style={{ color: '#FF3E8F', textShadow: '0 0 24px rgba(255,62,143,0.5)' }}
               >
-                0
+                2.4M
               </b>
               <small style={{ color: '#FF3E8F' }}>events read per minute</small>
             </div>
             <div>
               <b className="sn" data-n="4" data-u=" min">
-                0
+                4 min
               </b>
               <small>median time to a first narrative</small>
             </div>
