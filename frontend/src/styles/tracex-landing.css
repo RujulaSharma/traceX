@@ -1,0 +1,878 @@
+/* TraceX Landing Page Styles - Scoped to .tracex-landing */
+:root {
+  --k: #08090A;
+  --c: #101113;
+  --g: #171719;
+  --w: #F4F2F3;
+  --s: #A5ABB3;
+  --r: #E7A1B5;
+  --r2: #F3B6C7;
+  --n: #3DFF86;
+  --hp: 0;
+  --img: url(/hero-hologram.webp);
+  color-scheme: dark;
+}
+
+.tracex-landing {
+  --k: #08090A;
+  --c: #101113;
+  --g: #171719;
+  --w: #F4F2F3;
+  --s: #A5ABB3;
+  --r: #E7A1B5;
+  --r2: #F3B6C7;
+  --n: #3DFF86;
+  --hp: 0;
+  --img: url(/hero-hologram.webp);
+  color-scheme: dark;
+  background: var(--k);
+  color: var(--w);
+  font-family: 'Geist', system-ui, -apple-system, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  overflow-x: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.tracex-landing {
+  --k:#08090A;--c:#101113;--g:#171719;--w:#F4F2F3;--s:#A5ABB3;--r:#E7A1B5;--r2:#F3B6C7;--n:#3DFF86;--hp:0;color-scheme:dark
+}
+
+.tracex-landing, .tracex-landing * {
+  box-sizing:border-box
+}
+
+.tracex-landing {
+  background:var(--k);scroll-behavior:smooth
+}
+
+.tracex-landing {
+  margin:0;color:var(--w);font:400 15px/1.5 Geist,system-ui,sans-serif;overflow-x:hidden
+}
+
+.tracex-landing .mono, .tracex-landing small, .tracex-landing em {
+  font-family:"Geist Mono",monospace;font-style:normal
+}
+
+.tracex-landing nav {
+  position:fixed;top:0;left:0;right:0;z-index:30;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 6vw;backdrop-filter:blur(14px);background:rgba(8,9,10,.65);border-bottom:1px solid rgba(255,255,255,.06)
+}
+
+.tracex-landing nav b {
+  font-weight:600;font-size:20px
+}
+
+.tracex-landing nav b i {
+  color:var(--n);font-style:normal
+}
+
+.tracex-landing nav a {
+  color:var(--s);text-decoration:none;margin:0 14px;font-size:14px
+}
+
+.tracex-landing nav a:hover {
+  color:var(--w)
+}
+
+.tracex-landing nav .m {
+  display:flex;align-items:center
+}
+
+.tracex-landing .btn {
+  display:inline-block;padding:12px 22px;border:1px solid var(--n);background:rgba(61,255,134,.08);color:var(--n)!important;text-decoration:none;font-weight:500;border-radius:4px;margin:0
+}
+
+.tracex-landing .btn.p {
+  background:var(--n);color:var(--k)!important
+}
+
+.tracex-landing .btn.o {
+  border-color:rgba(255,255,255,.18);color:var(--w)!important;background:transparent
+}
+
+.tracex-landing a:focus-visible, .tracex-landing button:focus-visible {
+  outline:2px solid var(--r);outline-offset:3px
+}
+
+.tracex-landing #hero {
+  position:relative;height:150vh
+}
+
+.tracex-landing #hs {
+  position:sticky;top:0;height:100vh;overflow:hidden;padding:64px 6vw 0;display:flex;flex-direction:column;justify-content:center
+}
+
+.tracex-landing #hs .tag {
+  color:var(--n);font:400 12px "Geist Mono",monospace;letter-spacing:.3em;position:relative;z-index:2
+}
+
+.tracex-landing #hs h1 {
+  position:relative;z-index:2;margin:18px 0 26px;font:400 clamp(50px,8.2vw,132px)/.92 Anton,Impact,sans-serif;text-transform:uppercase;background:linear-gradient(#fff 30%,#7d8086);-webkit-background-clip:text;background-clip:text;color:transparent;transform:translateY(calc(var(--hp)*-90px));opacity:calc(1 - var(--hp)*.85)
+}
+
+.tracex-landing #hs h1 span {
+  -webkit-text-fill-color:var(--n)
+}
+
+.tracex-landing #hs p {
+  position:relative;z-index:2;max-width:46ch;color:var(--s);font-size:18px;margin:0 0 30px;opacity:calc(1 - var(--hp)*1.4)
+}
+
+.tracex-landing #hs .cta {
+  position:relative;z-index:2;display:flex;gap:12px;opacity:calc(1 - var(--hp)*1.4)
+}
+
+.tracex-landing .ch {
+  position:absolute;z-index:1;padding:7px 12px;border:1px solid rgba(255,255,255,.08);border-radius:4px;background:rgba(16,17,19,.8);font:300 11px "Geist Mono",monospace;color:var(--s);animation:fl 7s ease-in-out infinite
+}
+
+.tracex-landing .ch b {
+  color:var(--n);font-weight:400
+}
+
+.tracex-landing .ch.r b {
+  color:var(--r)
+}
+
+@keyframes fl{50%{transform:translateY(-14px)}}
+
+.tracex-landing #fg {
+  position:absolute;right:0;top:0;height:100%;aspect-ratio:1672/941;-webkit-mask-image:linear-gradient(90deg,transparent,#000 24%);mask-image:linear-gradient(90deg,transparent,#000 24%);pointer-events:none
+}
+
+.tracex-landing #fgi {
+  position:absolute;inset:0;transform-origin:72% 40%;transform:translate3d(calc(var(--mx,0)*-16px - var(--hp)*3vw),calc(var(--my,0)*-9px),0) scale(calc(1.02 + var(--hp)*.6));filter:brightness(calc(1 - var(--hp)*.55)) blur(calc(var(--hp)*3px))
+}
+
+.tracex-landing .ph, .tracex-landing .gl {
+  position:absolute;inset:0;background:var(--img) center/cover no-repeat
+}
+
+.tracex-landing .ph {
+  animation:br 9s ease-in-out infinite
+}
+
+@keyframes br{50%{transform:scale(1.018)}}
+
+.tracex-landing .gl {
+  mix-blend-mode:screen;opacity:0
+}
+
+.tracex-landing .g1 {
+  animation:g1 7s steps(1) infinite
+}
+
+.tracex-landing .g2 {
+  filter:hue-rotate(140deg) saturate(1.6);animation:g2 11s steps(1) infinite
+}
+
+@keyframes g1{0%,100%{opacity:0}41%{opacity:.6;clip-path:inset(30% 0 52% 0);transform:translateX(-16px)}42%{opacity:.6;clip-path:inset(62% 0 24% 0);transform:translateX(12px)}43%{opacity:0}}
+
+@keyframes g2{0%,100%{opacity:0}63%{opacity:.5;clip-path:inset(12% 0 74% 0);transform:translateX(14px)}64%{opacity:.5;clip-path:inset(48% 0 38% 0);transform:translateX(-10px)}65%{opacity:0}}
+
+.tracex-landing #fgi::after {
+  content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,.28) 0 1px,transparent 1px 3px);mix-blend-mode:multiply;opacity:.5
+}
+
+.tracex-landing #sw {
+  position:absolute;left:0;right:0;top:calc(var(--hp)*100%);height:2px;background:linear-gradient(90deg,transparent,var(--n),transparent);box-shadow:0 0 22px var(--n);opacity:0;transition:opacity .3s
+}
+
+.tracex-landing #rt {
+  position:absolute;inset:0;width:100%;height:100%;--a:0;--b:0;overflow:visible
+}
+
+.tracex-landing #rt .d {
+  fill:none;stroke:var(--n);stroke-width:2;stroke-dasharray:1;stroke-dashoffset:calc(1 - var(--a));filter:drop-shadow(0 0 6px var(--n))
+}
+
+.tracex-landing #rt .sp {
+  fill:none;stroke:var(--r);stroke-width:1.5;stroke-dasharray:6 14;opacity:calc(var(--a)*.8);transform-origin:1185px 385px;animation:sp 22s linear infinite
+}
+
+@keyframes sp{to{transform:rotate(360deg)}}
+
+.tracex-landing #rt .l {
+  stroke:var(--n);stroke-width:1.5;opacity:var(--a)
+}
+
+.tracex-landing #rt text {
+  font:400 17px "Geist Mono",monospace;fill:var(--n);opacity:var(--b);letter-spacing:.12em
+}
+
+.tracex-landing #rt text.r {
+  fill:var(--r2)
+}
+
+.tracex-landing #hs::after {
+  content:"";position:absolute;inset:0;background:var(--k);opacity:calc((var(--hp) - .55)*1);pointer-events:none;z-index:3
+}
+
+.tracex-landing #cue {
+  position:absolute;left:6vw;bottom:4vh;font:300 11px "Geist Mono",monospace;letter-spacing:.25em;color:var(--s)
+}
+
+.tracex-landing #seq {
+  height:620vh;position:relative;z-index:2;margin-top:-14vh
+}
+
+.tracex-landing #sk {
+  position:sticky;top:0;height:100vh;overflow:hidden;padding-top:64px;background:radial-gradient(ellipse 50% 40% at 50% 70%,rgba(61,255,134,.07),transparent 70%),var(--k);box-shadow:0 -40px 80px rgba(8,9,10,.95),0 -1px 0 rgba(61,255,134,.25)
+}
+
+.tracex-landing #hd {
+  position:relative;height:150px;margin-top:8px
+}
+
+.tracex-landing #hd h2 {
+  position:absolute;inset:0;margin:0;padding:0 12vw;display:flex;align-items:center;justify-content:center;text-align:center;font:600 clamp(28px,4vw,56px)/1.08 Geist,sans-serif;letter-spacing:-.03em;opacity:0;transform:translateY(16px);transition:.55s
+}
+
+.tracex-landing #hd h2.on {
+  opacity:1;transform:none
+}
+
+.tracex-landing #steps {
+  position:absolute;left:3vw;top:50%;margin:0;padding:0 0 0 22px;list-style:none;transform:translateY(-30%);border-left:1px solid rgba(255,255,255,.1)
+}
+
+.tracex-landing #steps::before {
+  content:"";position:absolute;left:-1px;top:0;width:1px;height:calc(var(--p,0)*100%);background:var(--n);box-shadow:0 0 10px var(--n)
+}
+
+.tracex-landing #steps li {
+  padding:11px 0;font:400 11px "Geist Mono",monospace;letter-spacing:.2em;color:#555a60;cursor:pointer;transition:.3s
+}
+
+.tracex-landing #steps li b {
+  margin-right:12px;font-weight:400
+}
+
+.tracex-landing #steps li.d {
+  color:var(--s)
+}
+
+.tracex-landing #steps li.on {
+  color:var(--n)
+}
+
+.tracex-landing .win {
+  width:min(720px,92vw);height:440px;margin:0 auto;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:var(--c);overflow:hidden;position:relative;box-shadow:0 50px 120px -30px rgba(61,255,134,.14),0 0 0 1px #000
+}
+
+.tracex-landing .tb {
+  height:38px;display:flex;align-items:center;gap:6px;padding:0 14px;border-bottom:1px solid rgba(255,255,255,.08);background:var(--g);font:400 11px "Geist Mono",monospace;color:var(--s)
+}
+
+.tracex-landing .tb i {
+  width:8px;height:8px;border-radius:50%;background:#34363a
+}
+
+.tracex-landing .tb i:nth-child(3) {
+  background:var(--n)
+}
+
+.tracex-landing .tb span {
+  flex:1;text-align:center
+}
+
+.tracex-landing .tb b {
+  color:var(--w);font-weight:500
+}
+
+.tracex-landing .demo {
+  color:var(--n);border:1px solid rgba(61,255,134,.4);padding:1px 8px;border-radius:3px;font-size:10px
+}
+
+.tracex-landing .bd {
+  position:relative;height:calc(100% - 38px)
+}
+
+.tracex-landing .pn {
+  position:absolute;inset:0;padding:18px 20px;opacity:0;transition:opacity .45s;font-size:12px
+}
+
+.tracex-landing .pn.on, .tracex-landing .cl .pn {
+  opacity:1
+}
+
+.tracex-landing [data-s] {
+  --k:0
+}
+
+.tracex-landing small {
+  display:block;font-size:10px;letter-spacing:.14em;color:var(--s);text-transform:uppercase
+}
+
+.tracex-landing .lg {
+  position:absolute;white-space:nowrap;padding:6px 10px;border:1px solid rgba(255,255,255,.07);border-radius:4px;background:rgba(255,255,255,.02);font:400 11px "Geist Mono",monospace;color:var(--s);opacity:calc(var(--k)*.85);transform:translateX(calc(var(--sp)*var(--d)*1px))
+}
+
+.tracex-landing .lg b {
+  color:var(--w);font-weight:500
+}
+
+.tracex-landing .lg.h {
+  border-color:rgba(231,161,181,.7);background:rgba(231,161,181,.15);color:var(--r2);opacity:calc(.35 + var(--k)*.65);box-shadow:0 0 calc(var(--sp)*34px) rgba(231,161,181,.4)
+}
+
+.tracex-landing .lg.h b {
+  color:var(--n)
+}
+
+.tracex-landing .cnt {
+  position:absolute;right:20px;top:14px;color:var(--s);font-size:10px;letter-spacing:.14em
+}
+
+.tracex-landing .cnt b {
+  color:var(--n);font-weight:400;margin-left:8px
+}
+
+.tracex-landing .hrow {
+  display:flex;align-items:center;gap:10px;font:500 15px Geist,sans-serif
+}
+
+.tracex-landing .hrow em {
+  margin-left:auto;font-size:11px;color:var(--s);font-weight:400
+}
+
+.tracex-landing .st {
+  display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0
+}
+
+.tracex-landing .st div {
+  padding:9px 12px;border:1px solid rgba(255,255,255,.08);border-radius:5px;background:rgba(255,255,255,.02)
+}
+
+.tracex-landing .st b {
+  font:500 24px Geist;display:block
+}
+
+.tracex-landing .st .cr {
+  border-color:rgba(231,161,181,.5)
+}
+
+.tracex-landing .st .cr b {
+  color:var(--r)
+}
+
+.tracex-landing .g2 {
+  display:grid;grid-template-columns:1.15fr 1fr;gap:12px
+}
+
+.tracex-landing .dr {
+  display:flex;align-items:center;gap:8px;padding:8px 11px;margin-bottom:7px;border:1px solid rgba(255,255,255,.08);border-radius:5px;background:rgba(255,255,255,.02);opacity:var(--k);transform:translateY(calc((1 - var(--k))*14px))
+}
+
+.tracex-landing .dr div {
+  flex:1;min-width:0
+}
+
+.tracex-landing .dr b {
+  display:block;font-weight:500;font-size:12px
+}
+
+.tracex-landing .dr small {
+  letter-spacing:0;text-transform:none;font-size:9.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis
+}
+
+.tracex-landing .tg {
+  font:500 9px "Geist Mono";letter-spacing:.1em;padding:3px 8px;border-radius:3px;border:1px solid rgba(61,255,134,.4);color:var(--n)
+}
+
+.tracex-landing .tg.c {
+  background:rgba(231,161,181,.16);border-color:var(--r);color:var(--r2)
+}
+
+.tracex-landing .cx {
+  border:1px solid rgba(255,255,255,.08);border-radius:5px;padding:11px;display:flex;flex-direction:column;height:236px
+}
+
+.tracex-landing .cx em {
+  font-size:10px;color:var(--n);margin-top:8px
+}
+
+.tracex-landing .bars {
+  flex:1;display:flex;align-items:flex-end;gap:4px
+}
+
+.tracex-landing .bars i {
+  flex:1;background:#2c2e32;height:calc(var(--k)*var(--h)*1%)
+}
+
+.tracex-landing .bars i.x {
+  background:var(--r);box-shadow:0 0 12px rgba(231,161,181,.5)
+}
+
+.tracex-landing .pn svg {
+  position:absolute;inset:0;width:100%;height:100%
+}
+
+.tracex-landing .pn line {
+  stroke:var(--n);stroke-width:1.2;stroke-dasharray:1;stroke-dashoffset:calc(1 - var(--k));opacity:.75
+}
+
+.tracex-landing .pn .nd {
+  opacity:var(--k)
+}
+
+.tracex-landing .pn text {
+  fill:var(--w);font:500 10px "Geist Mono"
+}
+
+.tracex-landing .pn text.t {
+  fill:var(--s);font-size:8px;letter-spacing:.1em
+}
+
+.tracex-landing .pill {
+  position:absolute;left:20px;bottom:16px;padding:7px 12px;border:1px solid rgba(61,255,134,.5);border-radius:4px;background:rgba(61,255,134,.06);color:var(--n);font:400 11px "Geist Mono";opacity:var(--k)
+}
+
+.tracex-landing .rl {
+  position:relative;height:2px;background:rgba(255,255,255,.1);margin:24px 0 18px
+}
+
+.tracex-landing .rl i {
+  position:absolute;left:0;top:0;height:100%;background:var(--n);width:calc(var(--k)*100%);box-shadow:0 0 10px var(--n)
+}
+
+.tracex-landing .rl u {
+  position:absolute;top:-5px;width:12px;height:12px;border-radius:50%;border:2px solid var(--n);background:var(--c);opacity:var(--k);text-decoration:none
+}
+
+.tracex-landing .rl u.x {
+  border-color:var(--r);background:var(--r)
+}
+
+.tracex-landing .tl {
+  display:grid;grid-template-columns:repeat(6,1fr);gap:8px
+}
+
+.tracex-landing .tl>div {
+  opacity:var(--k);transform:translateY(calc((1 - var(--k))*12px))
+}
+
+.tracex-landing .tl em {
+  display:block;color:var(--n);font-size:11px
+}
+
+.tracex-landing .tl small {
+  font-size:8.5px;margin:2px 0 6px;letter-spacing:.1em
+}
+
+.tracex-landing .tl b {
+  display:block;font-weight:500;font-size:12px;line-height:1.25
+}
+
+.tracex-landing .tl p {
+  margin:6px 0 0;font-size:10px;line-height:1.4;color:var(--s)
+}
+
+.tracex-landing .tl .x em, .tracex-landing .tl .x small {
+  color:var(--r)
+}
+
+.tracex-landing .bg2 {
+  background:rgba(231,161,181,.16);border:1px solid var(--r);color:var(--r2);font:500 10px "Geist Mono";padding:3px 8px;border-radius:3px;letter-spacing:.1em
+}
+
+.tracex-landing .ev {
+  border:1px solid rgba(255,255,255,.08);border-radius:5px;padding:8px 11px;margin-bottom:7px;background:rgba(255,255,255,.02)
+}
+
+.tracex-landing .ev b {
+  font-weight:500;font-size:12px;display:block
+}
+
+.tracex-landing .ev small {
+  text-transform:none;letter-spacing:0;font-size:9.5px
+}
+
+.tracex-landing .ev .dd {
+  max-height:calc(var(--k)*44px);opacity:var(--k);overflow:hidden;font-size:10.5px;color:var(--s);padding-top:calc(var(--k)*6px)
+}
+
+.tracex-landing .nar {
+  border:1px solid rgba(61,255,134,.35);border-radius:5px;padding:12px;background:rgba(61,255,134,.05);font-size:12px;line-height:1.55;min-height:110px;margin-top:8px
+}
+
+.tracex-landing .cps {
+  display:flex;flex-wrap:wrap;gap:6px;margin-top:10px
+}
+
+.tracex-landing .cps span {
+  font:400 10px "Geist Mono";padding:3px 8px;border:1px solid rgba(61,255,134,.4);color:var(--n);border-radius:3px;opacity:var(--k)
+}
+
+.tracex-landing #hint {
+  position:absolute;right:3vw;bottom:4vh;display:flex;gap:18px;align-items:center;font:300 11px "Geist Mono";letter-spacing:.2em;color:var(--s)
+}
+
+.tracex-landing #hint a {
+  border:1px solid rgba(255,255,255,.15);padding:9px 14px;color:var(--s);text-decoration:none
+}
+
+.tracex-landing #caps {
+  max-width:1180px;margin:0 auto;padding:18vh 6vw 6vh
+}
+
+.tracex-landing #caps h2, .tracex-landing #end h2 {
+  font:600 clamp(34px,5vw,68px)/1.02 Geist;letter-spacing:-.035em;margin:0 0 20px;max-width:15ch
+}
+
+.tracex-landing #caps h2 span, .tracex-landing #end h2 span {
+  color:var(--n)
+}
+
+.tracex-landing #caps .ld {
+  color:var(--s);font-size:17px;max-width:48ch;margin:0 0 8vh
+}
+
+.tracex-landing .row {
+  display:grid;grid-template-columns:1fr 1.25fr;gap:5vw;align-items:center;padding:9vh 0;border-top:1px solid rgba(255,255,255,.08)
+}
+
+.tracex-landing .row:nth-child(even) .tx {
+  order:2
+}
+
+.tracex-landing .tx {
+  opacity:0;transform:translateY(40px);transition:.8s cubic-bezier(.2,.7,.2,1)
+}
+
+.tracex-landing .row.v .tx {
+  opacity:1;transform:none
+}
+
+.tracex-landing .num {
+  font:600 110px/1 Geist;letter-spacing:-.05em;color:transparent;-webkit-text-stroke:1px #3b3e43
+}
+
+.tracex-landing .tx h3 {
+  font:600 34px/1.1 Geist;letter-spacing:-.03em;margin:14px 0 12px
+}
+
+.tracex-landing .tx p {
+  color:var(--s);margin:0 0 22px;max-width:36ch
+}
+
+.tracex-landing .tx li {
+  list-style:none;padding:5px 0;font-size:14px
+}
+
+.tracex-landing .tx li::before {
+  content:"";display:inline-block;width:14px;height:1px;background:var(--n);margin-right:12px;vertical-align:middle
+}
+
+.tracex-landing .tx ul {
+  margin:0;padding:0
+}
+
+.tracex-landing .row .win {
+  margin:0;width:100%
+}
+
+.tracex-landing #end {
+  min-height:90vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:12vh 6vw;border-top:1px solid rgba(255,255,255,.08)
+}
+
+.tracex-landing #end h2 {
+  max-width:14ch
+}
+
+.tracex-landing #end p {
+  color:var(--s);max-width:46ch;margin:0 0 30px
+}
+
+.tracex-landing footer {
+  padding:0 6vw 5vh;text-align:center;color:var(--s);font:300 11px "Geist Mono"
+}
+
+.tracex-landing #pricing {
+  max-width:1180px;margin:0 auto;padding:16vh 6vw 8vh;text-align:center
+}
+
+.tracex-landing #pricing h2 {
+  font:600 clamp(34px,5vw,64px)/1.04 Geist;letter-spacing:-.035em;margin:0 auto 16px;max-width:16ch
+}
+
+.tracex-landing #pricing h2 span {
+  color:var(--n)
+}
+
+.tracex-landing #pricing .ld {
+  color:var(--s);max-width:52ch;margin:0 auto 28px;font-size:17px
+}
+
+.tracex-landing .bt {
+  display:inline-flex;border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:4px;margin-bottom:7vh
+}
+
+.tracex-landing .bt button {
+  border:0;background:transparent;color:var(--s);font:500 13px Geist;padding:8px 18px;border-radius:999px;cursor:pointer
+}
+
+.tracex-landing .bt button.on {
+  background:var(--n);color:var(--k)
+}
+
+.tracex-landing .bt em {
+  font-size:10px;margin-left:6px
+}
+
+.tracex-landing .pg {
+  display:grid;grid-template-columns:repeat(3,1fr);gap:20px;text-align:left
+}
+
+.tracex-landing .pc {
+  position:relative;padding:34px 30px;border:1px solid rgba(255,255,255,.1);border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.01));opacity:0;transform:translateY(40px);transition:opacity .8s,transform .8s cubic-bezier(.2,.7,.2,1);transition-delay:calc(var(--i)*.12s)
+}
+
+.tracex-landing .pc.v {
+  opacity:1;transform:none
+}
+
+.tracex-landing .pc.hot {
+  border-color:rgba(61,255,134,.6);background:linear-gradient(180deg,rgba(61,255,134,.09),rgba(61,255,134,.01));box-shadow:0 0 70px -12px rgba(61,255,134,.3)
+}
+
+.tracex-landing .pc .pl {
+  position:absolute;top:-12px;left:30px;background:var(--n);color:var(--k);font:500 10px "Geist Mono";letter-spacing:.14em;padding:4px 10px;border-radius:3px
+}
+
+.tracex-landing .pc h3 {
+  margin:0 0 6px;font:600 22px Geist
+}
+
+.tracex-landing .pc .ds {
+  color:var(--s);font-size:14px;margin:0 0 22px;min-height:44px
+}
+
+.tracex-landing .pc .pr {
+  display:flex;align-items:baseline;gap:4px
+}
+
+.tracex-landing .pc .pr sup {
+  font-size:24px;color:var(--s);align-self:flex-start;margin-top:8px
+}
+
+.tracex-landing .pc .pr b {
+  font:600 58px/1 Geist;letter-spacing:-.04em
+}
+
+.tracex-landing .pc .pr span {
+  color:var(--s);font-size:13px;margin-left:6px
+}
+
+.tracex-landing .pc .nt {
+  font:300 11px "Geist Mono";color:var(--s);margin:6px 0 24px;min-height:16px
+}
+
+.tracex-landing .pc .btn {
+  display:block;text-align:center;margin-bottom:26px
+}
+
+.tracex-landing .pc ul {
+  margin:0;padding:20px 0 0;border-top:1px solid rgba(255,255,255,.08);list-style:none
+}
+
+.tracex-landing .pc li {
+  padding:6px 0 6px 26px;position:relative;font-size:14px
+}
+
+.tracex-landing .pc li::before {
+  content:"";position:absolute;left:2px;top:11px;width:10px;height:5px;border-left:2px solid var(--n);border-bottom:2px solid var(--n);transform:rotate(-45deg)
+}
+
+.tracex-landing .pc li b {
+  font-weight:500
+}
+
+.tracex-landing .btn.rr {
+  border-color:var(--r);color:var(--r2)!important;background:rgba(231,161,181,.08)
+}
+
+.tracex-landing #end .acts {
+  display:flex;gap:12px;flex-wrap:wrap;justify-content:center
+}
+
+.tracex-landing #end .nt {
+  margin-top:22px;font:300 12px "Geist Mono";color:var(--s)
+}
+
+.tracex-landing footer.ft {
+  text-align:left;padding:9vh 6vw 4vh;border-top:1px solid rgba(255,255,255,.08);font:300 14px Geist;color:var(--s)
+}
+
+.tracex-landing .fg {
+  display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:5vw;max-width:1180px;margin:0 auto
+}
+
+.tracex-landing .fg b {
+  font:600 22px Geist;color:var(--w)
+}
+
+.tracex-landing .fg b i {
+  color:var(--n);font-style:normal
+}
+
+.tracex-landing .fg p {
+  max-width:32ch;margin:12px 0 18px
+}
+
+.tracex-landing .fg h4 {
+  margin:0 0 14px;font:500 13px Geist;color:var(--w)
+}
+
+.tracex-landing .fg a {
+  display:block;color:var(--s);text-decoration:none;padding:4px 0
+}
+
+.tracex-landing .fg a:hover {
+  color:var(--n)
+}
+
+.tracex-landing .ok {
+  display:inline-flex;align-items:center;gap:8px;font:300 11px "Geist Mono";color:var(--n)
+}
+
+.tracex-landing .ok i {
+  width:7px;height:7px;border-radius:50%;background:var(--n);box-shadow:0 0 10px var(--n);animation:cue 2.4s infinite
+}
+
+.tracex-landing .fb {
+  max-width:1180px;margin:7vh auto 0;padding-top:22px;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font:300 11px "Geist Mono"
+}
+
+.tracex-landing #hd h2 {
+  flex-wrap:wrap;align-content:center;gap:0 .26em
+}
+
+.tracex-landing .w {
+  display:inline-block;font-style:normal;opacity:0;transform:translateY(.45em);filter:blur(8px);transition:opacity .7s,transform .7s,filter .7s;transition-delay:calc(var(--w)*.07s)
+}
+
+.tracex-landing .wr.v .w, .tracex-landing #hd h2.on .w {
+  opacity:1;transform:none;filter:none
+}
+
+.tracex-landing #sk .win {
+  transform:perspective(1500px) rotateX(calc((1 - var(--en,1))*24deg)) scale(calc((.8 + var(--en,1)*.2)*(1 + var(--ex,0)*.55)));opacity:calc(.3 + var(--en,1)*.7 - var(--ex,0)*.85);box-shadow:0 50px 120px -30px rgba(61,255,134,calc(.06 + var(--en,1)*.12)),0 0 0 1px #000
+}
+
+.tracex-landing #sk .win::after {
+  content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.06) 48%,transparent 58%);transform:translateX(calc((var(--p2,0) - .5)*160%))
+}
+
+.tracex-landing #hd, .tracex-landing #steps, .tracex-landing #hint {
+  opacity:calc(1 - var(--ex,0)*1.3)
+}
+
+.tracex-landing .row .win {
+  transform-origin:50% 100%;transform:perspective(1400px) rotateX(calc((1 - var(--rv,1))*16deg)) scale(calc(.9 + var(--rv,1)*.1))
+}
+
+.tracex-landing .tx {
+  filter:blur(10px);transition:opacity .8s,transform .8s cubic-bezier(.2,.7,.2,1),filter .8s
+}
+
+.tracex-landing .row.v .tx {
+  filter:none
+}
+
+.tracex-landing #st {
+  height:260vh;position:relative
+}
+
+.tracex-landing .si {
+  position:sticky;top:0;height:100vh;display:flex;flex-direction:column;justify-content:center;padding:64px 8vw 0;max-width:1300px;margin:0 auto
+}
+
+.tracex-landing #st p {
+  font:600 clamp(30px,4.8vw,70px)/1.12 Geist;letter-spacing:-.035em;margin:0 0 6vh
+}
+
+.tracex-landing .wd {
+  font-style:normal;color:color-mix(in srgb,var(--c,#F4F2F3) calc(var(--k,0)*100%),#2c2f33)
+}
+
+.tracex-landing .r {
+  --c:var(--r)
+}
+
+.tracex-landing .g {
+  --c:var(--n)
+}
+
+.tracex-landing #sts {
+  display:flex;gap:7vw;flex-wrap:wrap;opacity:var(--q,0);transform:translateY(calc((1 - var(--q,0))*30px))
+}
+
+.tracex-landing #sts b {
+  font:600 clamp(36px,5vw,72px)/1 Geist;letter-spacing:-.04em;color:var(--n);display:block
+}
+
+@media (max-width:860px){
+
+.tracex-landing nav .m a {
+  display: none;
+}
+
+.tracex-landing .ch {
+  display: none;
+}
+
+.tracex-landing .pg {
+  grid-template-columns:1fr
+}
+
+.tracex-landing .fg {
+  grid-template-columns:1fr 1fr
+}
+
+.tracex-landing #fg {
+  opacity:.55
+}
+
+.tracex-landing #steps {
+  display:none
+}
+
+.tracex-landing .row {
+  grid-template-columns:1fr
+}
+
+.tracex-landing .row:nth-child(even) .tx {
+  order:0
+}
+
+}
+
+@media (max-width:560px){
+
+.tracex-landing .fg {
+  grid-template-columns:1fr
+}
+
+.tracex-landing #hs h1 {
+  font-size: clamp(38px, 11vw, 64px);
+}
+
+.tracex-landing .win {
+  height: 400px;
+}
+
+}
+
+@media (prefers-reduced-motion:reduce){
+
+.tracex-landing .ch {
+  animation:none
+}
+
+.tracex-landing .tx {
+  transition:none
+}
+
+}
