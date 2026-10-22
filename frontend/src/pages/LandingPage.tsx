@@ -1,6 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import '../styles/tracex-landing.css';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export const LandingPage: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -9,9 +13,6 @@ export const LandingPage: React.FC = () => {
   useEffect(() => {
     const root = containerRef.current;
     if (!root) return;
-
-    let isRunning = true;
-    let rafId: number;
 
     const $ = (s: string, r: Element | Document = root): HTMLElement | null =>
       r.querySelector(s);
@@ -259,7 +260,7 @@ export const LandingPage: React.FC = () => {
           `<div class="row"><div class="tx"><div class="num">0${i + 1}</div><h3>${c[0]}</h3><p>${c[1]}</p><ul>${(c[2] as string[]).map((b) => `<li>${b}</li>`).join('')}</ul></div><div class="win cl"><div class="tb"><i></i><i></i><i></i><span>tracex://${NM[i]}</span><em class="demo">● DEMO DATA</em></div><div class="bd"><div class="pn">${P[i]}</div></div></div></div>`
       ).join('');
 
-    // Animation engine
+    // Animation Unit Parsing
     interface UnitEntry {
       e: HTMLElement;
       r: number[];
@@ -269,12 +270,11 @@ export const LandingPage: React.FC = () => {
     }
     interface Unit {
       el: HTMLElement;
-      get: () => number | null;
       els: UnitEntry[];
     }
 
-    const units: Unit[] = [];
-    const mk = (el: HTMLElement, get: () => number | null) => {
+    const stageUnits: Unit[] = [];
+    $$('#bd>.pn').forEach((el) => {
       const els: UnitEntry[] = $$('[data-s]', el).map((e) => ({
         e,
         r: (e.dataset.s || '0,1').split(',').map(Number),
@@ -282,34 +282,20 @@ export const LandingPage: React.FC = () => {
         t: e.dataset.t,
         k: -1,
       }));
-      units.push({ el, get, els });
-    };
+      stageUnits.push({ el, els });
+    });
 
-    $$('#bd>.pn').forEach((el, i) => mk(el, () => stg(i)));
-    $$('.cl .pn').forEach((el) =>
-      mk(el, () => {
-        const r = el.getBoundingClientRect();
-        if (r.bottom < -50 || r.top > window.innerHeight + 50) return null;
-        const s = C((window.innerHeight * 0.95 - r.top) / (window.innerHeight * 0.8));
-        const win = el.closest('.win') as HTMLElement | null;
-        if (win) win.style.setProperty('--rv', String(C(s * 1.8)));
-        return s;
-      })
-    );
-
-    let tp = 0;
-    let act = -1;
-    const seq = $('#seq');
-    const hero = $('#hero');
-
-    const stg = (i: number) => {
-      const x = tp * 5;
-      return i < Math.floor(Math.min(x, 4.9999))
-        ? 1
-        : i > Math.floor(Math.min(x, 4.9999))
-          ? 0
-          : C(x - i);
-    };
+    const rowUnits: Unit[] = [];
+    $$('.cl .pn').forEach((el) => {
+      const els: UnitEntry[] = $$('[data-s]', el).map((e) => ({
+        e,
+        r: (e.dataset.s || '0,1').split(',').map(Number),
+        n: e.dataset.n,
+        t: e.dataset.t,
+        k: -1,
+      }));
+      rowUnits.push({ el, els });
+    });
 
     function paint(u: Unit, sp: number) {
       u.el.style.setProperty('--sp', String(sp));
@@ -331,60 +317,8 @@ export const LandingPage: React.FC = () => {
       }
     }
 
-    const reduce = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
-
-    function setStage(i: number) {
-      act = i;
-      $$('#bd>.pn').forEach((e, j) => e.classList.toggle('on', j === i));
-      $$('#hd h2').forEach((e, j) => e.classList.toggle('on', j === i));
-      $$('#steps li').forEach((e, j) => {
-        e.classList.toggle('on', j === i);
-        e.classList.toggle('d', j < i);
-      });
-      const url = $('#url');
-      if (url) url.innerHTML = 'tracex://investigation/<b>' + NM[i] + '</b>';
-      const ct = $('#ct');
-      if (ct) ct.textContent = '0' + (i + 1) + '/05';
-    }
-
-    $$('#steps li').forEach((li) => {
-      li.onclick = () => {
-        if (!seq) return;
-        const targetScroll =
-          seq.offsetTop +
-          ((+(li.dataset.i || 0)) / 5 + 0.02) * (seq.offsetHeight - window.innerHeight);
-        window.scrollTo({
-          top: targetScroll,
-          behavior: 'smooth',
-        });
-      };
-    });
-
-    const io = new IntersectionObserver(
-      (es) => {
-        es.forEach((e) => {
-          if (e.isIntersecting) e.target.classList.add('v');
-        });
-      },
-      { threshold: 0.25 }
-    );
-    $$('.row').forEach((r) => io.observe(r));
-
-    const RT = $('#rt');
-    const SW = $('#sw');
-
-    const handlePointerMove = (e: PointerEvent) => {
-      if (!hero) return;
-      hero.style.setProperty('--mx', String(e.clientX / window.innerWidth - 0.5));
-      hero.style.setProperty('--my', String(e.clientY / window.innerHeight - 0.5));
-    };
-    window.addEventListener('pointermove', handlePointerMove);
-
-    const SK = $('#sk');
-    const ST = $('#st');
+    // Text splitting for kinetic typography
     const SWD: HTMLElement[] = [];
-    const SNS = $$('.sn');
-
     function split(h: Element, cls: string, out?: HTMLElement[]) {
       let i = 0;
       const f = (n: Node) => {
@@ -417,11 +351,50 @@ export const LandingPage: React.FC = () => {
     $$('#hd h2,#caps h2,#pricing h2,#end h2').forEach((h) => {
       split(h, 'w');
       h.classList.add('wr');
-      if (!h.closest('#hd')) io.observe(h);
     });
 
-    $$('.pc').forEach((c) => io.observe(c));
+    // Stage switching helper
+    let act = -1;
+    function setStage(i: number) {
+      if (i === act) return;
+      act = i;
+      $$('#bd>.pn').forEach((e, j) => {
+        const isActive = j === i;
+        e.classList.toggle('on', isActive);
+        e.style.opacity = isActive ? '1' : '0';
+        e.style.pointerEvents = isActive ? 'auto' : 'none';
+      });
+      $$('#hd h2').forEach((e, j) => {
+        const isActive = j === i;
+        e.classList.toggle('on', isActive);
+        e.style.opacity = isActive ? '1' : '0';
+        e.style.transform = isActive ? 'translateY(0)' : 'translateY(16px)';
+        e.style.pointerEvents = isActive ? 'auto' : 'none';
+      });
+      $$('#steps li').forEach((e, j) => {
+        e.classList.toggle('on', j === i);
+        e.classList.toggle('d', j < i);
+      });
+      const url = $('#url');
+      if (url) url.innerHTML = 'tracex://investigation/<b>' + NM[i] + '</b>';
+      const ct = $('#ct');
+      if (ct) ct.textContent = '0' + (i + 1) + '/05';
+    }
 
+    // Set initial stage
+    setStage(0);
+    if (stageUnits[0]) paint(stageUnits[0], 0);
+
+    // Pointer parallax on Hero
+    const hero = $('#hero');
+    const handlePointerMove = (e: PointerEvent) => {
+      if (!hero) return;
+      hero.style.setProperty('--mx', String(e.clientX / window.innerWidth - 0.5));
+      hero.style.setProperty('--my', String(e.clientY / window.innerHeight - 0.5));
+    };
+    window.addEventListener('pointermove', handlePointerMove);
+
+    // Pricing Billing Period Toggle
     $$('.bt button').forEach((b) => {
       b.onclick = () => {
         $$('.bt button').forEach((x) => x.classList.toggle('on', x === b));
@@ -435,95 +408,241 @@ export const LandingPage: React.FC = () => {
       };
     });
 
-    function frame() {
-      if (!isRunning) return;
-      const vh = window.innerHeight;
-      const scrollY = window.scrollY;
-
-      if (hero) {
-        const h = C(scrollY / (hero.offsetHeight - vh));
-        hero.style.setProperty('--hp', String(h));
-        if (RT) {
-          RT.style.setProperty('--a', String(C((h - 0.1) / 0.35)));
-          RT.style.setProperty(
-            '--b',
-            String(C((h - 0.4) / 0.15) * (1 - C((h - 0.8) / 0.15)))
-          );
-        }
-        if (SW) {
-          SW.style.opacity = h > 0.04 && h < 0.9 ? '0.85' : '0';
-        }
-      }
-
-      if (seq && SK) {
-        const r = seq.getBoundingClientRect();
-        const p = C(-r.top / (seq.offsetHeight - vh));
-        tp = reduce ? p : tp + (p - tp) * 0.14;
-        if (Math.abs(p - tp) < 0.0004) tp = p;
-        const i = Math.min(4, Math.floor(tp * 5));
-
-        SK.style.setProperty('--en', String(C((vh - r.top) / (vh * 0.95))));
-        SK.style.setProperty('--ex', String(C((p - 0.9) / 0.1)));
-        SK.style.setProperty('--p2', String(tp));
-
-        if (i !== act) setStage(i);
-        const stepsEl = $('#steps');
-        if (stepsEl) stepsEl.style.setProperty('--p', String(tp));
-
-        if (r.bottom > 0 && r.top < vh) {
-          units.forEach((u) => {
-            if (u.el.closest('.cl')) return;
-            const sp = u.get();
-            if (sp !== null) paint(u, sp);
+    // Step navigation click
+    $$('#steps li').forEach((li) => {
+      li.onclick = () => {
+        const stageIdx = Number(li.dataset.i || 0);
+        const st = ScrollTrigger.getById('seq-trigger');
+        if (st) {
+          const targetScroll = st.start + (stageIdx * 0.2 + 0.08) * (st.end - st.start);
+          window.scrollTo({
+            top: targetScroll,
+            behavior: 'smooth',
           });
         }
-      }
+      };
+    });
 
-      if (ST) {
-        const sr = ST.getBoundingClientRect();
-        const q3 = C(-sr.top / (ST.offsetHeight - vh));
-        const q = C((q3 - 0.74) / 0.2);
-
-        if (sr.bottom > 0 && sr.top < vh) {
-          SWD.forEach((w: any, j) => {
-            const k = C(q3 * 1.3 * (SWD.length + 4) - j);
-            if (k !== w._k) {
-              w._k = k;
-              w.style.setProperty('--k', String(k));
-            }
+    // Skip Sequence click
+    const skipBtn = $('#skip-seq');
+    if (skipBtn) {
+      skipBtn.onclick = (e) => {
+        e.preventDefault();
+        const st = ScrollTrigger.getById('seq-trigger');
+        if (st) {
+          window.scrollTo({
+            top: st.end + 50,
+            behavior: 'smooth',
           });
-          ST.style.setProperty('--q', String(q));
-          SNS.forEach((n) => {
-            const num = Number(n.dataset.n || 0) * q;
-            const d = +(n.dataset.d || 0);
-            n.textContent = (d ? num.toFixed(d) : Math.round(num).toString()) + (n.dataset.u || '');
-          });
+        } else {
+          const caps = $('#caps');
+          if (caps) caps.scrollIntoView({ behavior: 'smooth' });
         }
-      }
-
-      units.forEach((u) => {
-        if (!u.el.closest('.cl')) return;
-        const s = u.get();
-        if (s !== null) paint(u, s);
-      });
-
-      rafId = requestAnimationFrame(frame);
+      };
     }
 
-    rafId = requestAnimationFrame(frame);
+    // GSAP ScrollTrigger Orchestration
+    const ctx = gsap.context(() => {
+      // 1. HERO PARALLAX & RETICLE SCANNERS
+      const rt = $('#rt');
+      const sw = $('#sw');
+      if (hero) {
+        ScrollTrigger.create({
+          id: 'hero-trigger',
+          trigger: hero,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: 0.5,
+          onUpdate: (self) => {
+            const h = self.progress;
+            hero.style.setProperty('--hp', String(h));
+            if (rt) {
+              rt.style.setProperty('--a', String(C((h - 0.1) / 0.35)));
+              rt.style.setProperty(
+                '--b',
+                String(C((h - 0.4) / 0.15) * (1 - C((h - 0.8) / 0.15)))
+              );
+            }
+            if (sw) {
+              sw.style.opacity = h > 0.04 && h < 0.95 ? '0.85' : '0';
+            }
+          },
+        });
+      }
+
+      // 2. INVESTIGATION SEQUENCE (PINNED 5-STAGE ENGINE)
+      const seq = $('#seq');
+      const stepsEl = $('#steps');
+      const winEl = $('#sk .win');
+      if (seq) {
+        ScrollTrigger.create({
+          id: 'seq-trigger',
+          trigger: seq,
+          start: 'top top',
+          end: () => `+=${window.innerWidth <= 860 ? 2200 : 3200}`,
+          pin: true,
+          scrub: 0.8,
+          anticipatePin: 1,
+          onUpdate: (self) => {
+            const p = self.progress; // 0.0 to 1.0
+            const currentStage = Math.min(4, Math.floor(p * 5));
+            setStage(currentStage);
+
+            if (stepsEl) stepsEl.style.setProperty('--p', String(p));
+
+            // Stage sub-progress (clamped and held at end)
+            const stageStart = currentStage * 0.2;
+            const stageRaw = (p - stageStart) / 0.2;
+            const localProgress = Math.min(1, Math.max(0, stageRaw / 0.85));
+
+            // Bidirectional paint of all stages to prevent desync
+            for (let s = 0; s < 5; s++) {
+              if (stageUnits[s]) {
+                if (s < currentStage) {
+                  paint(stageUnits[s], 1);
+                } else if (s > currentStage) {
+                  paint(stageUnits[s], 0);
+                } else {
+                  paint(stageUnits[s], localProgress);
+                }
+              }
+            }
+
+            if (winEl) {
+              winEl.style.setProperty('--p2', String(p));
+            }
+          },
+        });
+      }
+
+      // 3. KINETIC TYPOGRAPHY & STATS COUNTERS (#st)
+      const st = $('#st');
+      const sns = $$('.sn');
+      if (st) {
+        ScrollTrigger.create({
+          id: 'st-trigger',
+          trigger: st,
+          start: 'top top',
+          end: () => `+=${window.innerWidth <= 860 ? 900 : 1400}`,
+          pin: true,
+          scrub: 0.8,
+          anticipatePin: 1,
+          onUpdate: (self) => {
+            const q3 = self.progress; // 0.0 to 1.0
+            SWD.forEach((w: any, j) => {
+              const k = C(q3 * 1.3 * (SWD.length + 4) - j);
+              if (k !== w._k) {
+                w._k = k;
+                w.style.setProperty('--k', String(k));
+              }
+            });
+
+            // Reveal stats in the second half of the scrub
+            const q = C((q3 - 0.55) / 0.38);
+            st.style.setProperty('--q', String(q));
+            sns.forEach((n) => {
+              const num = Number(n.dataset.n || 0) * q;
+              const d = +(n.dataset.d || 0);
+              n.textContent =
+                (d ? num.toFixed(d) : Math.round(num).toString()) + (n.dataset.u || '');
+            });
+          },
+        });
+      }
+
+      // 4. CAPABILITY DEMONSTRATION ROWS (#caps)
+      $$('.row').forEach((row, i) => {
+        const tx = row.querySelector('.tx') as HTMLElement | null;
+        const win = row.querySelector('.win.cl') as HTMLElement | null;
+        const pn = row.querySelector('.cl .pn') as HTMLElement | null;
+        const unit = rowUnits[i];
+
+        if (tx) {
+          gsap.fromTo(
+            tx,
+            { opacity: 0, y: 35, filter: 'blur(8px)' },
+            {
+              opacity: 1,
+              y: 0,
+              filter: 'blur(0px)',
+              duration: 0.8,
+              ease: 'power2.out',
+              scrollTrigger: {
+                trigger: row,
+                start: 'top 80%',
+                toggleActions: 'play none none reverse',
+              },
+            }
+          );
+        }
+
+        if (win && pn && unit) {
+          ScrollTrigger.create({
+            trigger: row,
+            start: 'top 85%',
+            end: 'bottom 40%',
+            scrub: 0.5,
+            onUpdate: (self) => {
+              const s = self.progress;
+              win.style.setProperty('--rv', String(C(s * 1.8)));
+              paint(unit, s);
+            },
+          });
+        }
+      });
+
+      // 5. PRICING CARDS STAGGERED ENTRANCE
+      const pc = $$('.pc');
+      if (pc.length > 0) {
+        gsap.fromTo(
+          pc,
+          { opacity: 0, y: 40 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.7,
+            stagger: 0.15,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: '#pricing',
+              start: 'top 75%',
+              toggleActions: 'play none none reverse',
+            },
+          }
+        );
+      }
+
+      // 6. CLOSING CTA ENTRANCE
+      const endActs = $('#end .acts');
+      if (endActs) {
+        gsap.fromTo(
+          endActs,
+          { opacity: 0, y: 25 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: '#end',
+              start: 'top 80%',
+              toggleActions: 'play none none reverse',
+            },
+          }
+        );
+      }
+    }, containerRef);
 
     return () => {
-      isRunning = false;
-      cancelAnimationFrame(rafId);
       window.removeEventListener('pointermove', handlePointerMove);
-      io.disconnect();
+      ctx.revert();
     };
   }, []);
 
   return (
     <div
       ref={containerRef}
-      className="tracex-landing bg-[#08090A] text-[#F4F2F3] font-sans selection:bg-[#3DFF86] selection:text-[#08090A] overflow-x-hidden min-h-screen"
+      className="tracex-landing bg-[#08090A] text-[#F4F2F3] font-sans selection:bg-[#3DFF86] selection:text-[#08090A] overflow-x-clip min-h-screen"
     >
       {/* Top Navigation */}
       <nav>
@@ -638,7 +757,9 @@ export const LandingPage: React.FC = () => {
           </div>
           <div id="hint">
             <span>SCROLL TO ADVANCE</span>
-            <a href="#caps">SKIP SEQUENCE</a>
+            <a href="#caps" id="skip-seq">
+              SKIP SEQUENCE
+            </a>
           </div>
         </div>
       </section>
