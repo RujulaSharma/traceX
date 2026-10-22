@@ -33,16 +33,51 @@
   box-shadow: 0 0 20px -5px rgba(6, 182, 212, 0.35);
 }
 
-.glow-pink {
-  box-shadow: 0 0 20px -3px rgba(231, 161, 181, 0.25);
+.glow-silver {
+  box-shadow: 0 0 25px -4px rgba(198, 203, 209, 0.22);
+}
+
+.glow-chrome {
+  box-shadow: 0 0 30px -3px rgba(241, 243, 245, 0.3);
 }
 
 .glow-green {
-  box-shadow: 0 0 20px -3px rgba(57, 255, 106, 0.3);
+  box-shadow: 0 0 20px -3px rgba(57, 255, 106, 0.35);
+}
+
+/* Liquid Mercury and Polished Chrome Gradients */
+.bg-liquid-mercury {
+  background: linear-gradient(135deg, #454B53 0%, #F1F3F5 18%, #8D949D 34%, #22252A 48%, #D9DDE2 65%, #707781 82%, #F1F3F5 100%);
+}
+
+.bg-mercury-card {
+  background: linear-gradient(180deg, #1A1D21 0%, #131518 100%);
+  border: 1px solid #3A3F46;
+}
+
+.bg-mercury-surface {
+  background: linear-gradient(145deg, #22252A 0%, #17191C 100%);
+  border: 1px solid #3A3F46;
+}
+
+.text-liquid-silver {
+  background: linear-gradient(135deg, #F1F3F5 0%, #C6CBD1 50%, #8D949D 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-bright-chrome {
+  background: linear-gradient(180deg, #FFFFFF 0%, #D9DDE2 60%, #8D949D 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.border-mercury-light {
+  border-color: rgba(241, 243, 245, 0.25);
 }
 
 .border-graphite {
-  border-color: #383438;
+  border-color: #3A3F46;
 }
 
 .code-font {
