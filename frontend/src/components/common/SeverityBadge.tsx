@@ -10,11 +10,11 @@ export const SeverityBadge: React.FC<SeverityBadgeProps> = ({ severity, classNam
   const norm = (severity || 'info').toLowerCase();
 
   const colors: Record<string, string> = {
-    critical: 'bg-red-950/80 text-red-400 border-red-700/60 shadow-[0_0_12px_rgba(239,68,68,0.25)]',
-    high: 'bg-orange-950/80 text-orange-400 border-orange-700/60',
-    medium: 'bg-amber-950/80 text-amber-400 border-amber-700/60',
-    low: 'bg-blue-950/80 text-blue-400 border-blue-700/60',
-    info: 'bg-slate-800/80 text-slate-300 border-slate-700/60',
+    critical: 'bg-red-50 text-red-700 border-red-200 shadow-sm',
+    high: 'bg-orange-50 text-orange-700 border-orange-200',
+    medium: 'bg-amber-50 text-amber-700 border-amber-200',
+    low: 'bg-blue-50 text-blue-700 border-blue-200',
+    info: 'bg-purple-50 text-purple-700 border-purple-200',
   };
 
   const sizeClasses: Record<string, string> = {

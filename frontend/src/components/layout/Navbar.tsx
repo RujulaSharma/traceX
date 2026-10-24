@@ -26,44 +26,44 @@ export const Navbar: React.FC = () => {
   }, []);
 
   return (
-    <header className="h-16 border-b border-slate-800/80 bg-slate-950/70 backdrop-blur-xl px-6 flex items-center justify-between sticky top-0 z-30">
+    <header className="h-16 border-b border-purple-100 bg-white/90 backdrop-blur-xl px-6 flex items-center justify-between sticky top-0 z-30 shadow-sm">
       {/* Brand */}
       <Link to="/" className="flex items-center gap-3 group" title="Return to Public Site">
-        <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-cyan-500/20 group-hover:shadow-cyan-500/40 transition">
+        <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-purple-500/20 group-hover:shadow-purple-500/40 transition">
           <Shield className="w-5 h-5 text-white" />
         </div>
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-base font-extrabold tracking-tight text-white group-hover:text-cyan-300 transition">
-              Trace<span className="text-cyan-400">X</span>
+            <h1 className="text-base font-extrabold tracking-tight text-slate-900 group-hover:text-purple-700 transition">
+              Trace<span className="text-purple-600">X</span>
             </h1>
-            <span className="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-cyan-950/80 text-cyan-400 border border-cyan-800/60">
+            <span className="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-purple-50 text-purple-700 border border-purple-200">
               SOC Core v1.0
             </span>
           </div>
-          <p className="text-[11px] text-slate-400 -mt-0.5">Autonomous Security Investigation & Reconstruction</p>
+          <p className="text-[11px] text-slate-500 -mt-0.5">Autonomous Security Investigation & Reconstruction</p>
         </div>
       </Link>
 
       {/* Center Actions / Status */}
       <div className="flex items-center gap-4">
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900/90 border border-slate-800 text-xs">
-          <Activity className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
-          <span className="text-slate-400">Pipeline Status:</span>
-          <span className="font-semibold text-emerald-400 flex items-center gap-1">
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-purple-50/70 border border-purple-100 text-xs">
+          <Activity className="w-3.5 h-3.5 text-purple-600 animate-pulse" />
+          <span className="text-slate-500">Pipeline Status:</span>
+          <span className="font-semibold text-emerald-600 flex items-center gap-1">
             <CheckCircle2 className="w-3 h-3" /> Active
           </span>
         </div>
 
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900/90 border border-slate-800 text-xs">
-          <span className="text-slate-400">Backend API:</span>
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-purple-50/70 border border-purple-100 text-xs">
+          <span className="text-slate-500">Backend API:</span>
           <span
             className={`flex items-center gap-1 font-semibold ${
               healthy === true
-                ? 'text-emerald-400'
+                ? 'text-emerald-600'
                 : healthy === false
-                ? 'text-red-400'
-                : 'text-amber-400'
+                ? 'text-red-500'
+                : 'text-amber-500'
             }`}
           >
             <span
@@ -80,22 +80,22 @@ export const Navbar: React.FC = () => {
           <button
             onClick={checkStatus}
             disabled={isRefreshing}
-            className="text-slate-400 hover:text-white p-0.5 ml-1 transition"
+            className="text-slate-400 hover:text-slate-700 p-0.5 ml-1 transition"
             title="Refresh connection"
           >
-            <RefreshCw className={`w-3 h-3 ${isRefreshing ? 'animate-spin text-cyan-400' : ''}`} />
+            <RefreshCw className={`w-3 h-3 ${isRefreshing ? 'animate-spin text-purple-600' : ''}`} />
           </button>
         </div>
 
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900/90 border border-slate-800 text-xs text-slate-300">
-          <Terminal className="w-3.5 h-3.5 text-indigo-400" />
-          <span className="text-slate-400">Mode:</span>
-          <span className="font-mono font-medium text-cyan-300">Autonomous Threat Recon</span>
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-purple-50/70 border border-purple-100 text-xs text-slate-700">
+          <Terminal className="w-3.5 h-3.5 text-purple-600" />
+          <span className="text-slate-500">Mode:</span>
+          <span className="font-mono font-medium text-purple-700">Autonomous Threat Recon</span>
         </div>
 
         <Link
           to="/"
-          className="flex items-center gap-1.5 text-xs text-slate-300 hover:text-emerald-400 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 hover:border-emerald-500/40 transition font-semibold"
+          className="flex items-center gap-1.5 text-xs text-slate-700 hover:text-purple-700 px-3 py-1.5 rounded-lg bg-white border border-purple-200 hover:border-purple-400 shadow-sm transition font-semibold"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span className="hidden sm:inline">Public Site</span>
