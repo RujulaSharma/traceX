@@ -1,1141 +1,685 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import '../styles/tracex-landing.css';
 
-gsap.registerPlugin(ScrollTrigger);
-
 export const LandingPage: React.FC = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const [activeConsoleTab, setActiveConsoleTab] = useState<'events' | 'analysis' | 'graph'>('events');
+  const [activeStage, setActiveStage] = useState<number>(4); // Stage 05 (0-indexed: 4) active like mockup
 
-  useEffect(() => {
-    const root = containerRef.current;
-    if (!root) return;
-
-    const $ = (s: string, r: Element | Document = root): HTMLElement | null =>
-      r.querySelector(s);
-    const $$ = (s: string, r: Element | Document = root): HTMLElement[] =>
-      Array.from(r.querySelectorAll(s));
-    const C = (x: number, a = 0, b = 1) => Math.min(b, Math.max(a, x));
-    const R = (i: number, a = 0.07, l = 0.25) =>
-      `${(i * a).toFixed(2)},${(i * a + l).toFixed(2)}`;
-
-    const H = [
-      'Every intrusion leaves a signal.',
-      'Detect the activity that deserves attention.',
-      'Connect events that tell the same story.',
-      'Reconstruct how the intrusion unfolded.',
-      'Turn fragmented evidence into an understandable investigation.',
-    ];
-    const NM = ['signal', 'detection', 'connection', 'reconstruction', 'evidence'];
-    const SN = [
-      'THE SIGNAL',
-      'THE DETECTION',
-      'THE CONNECTION',
-      'THE RECONSTRUCTION',
-      'THE EVIDENCE',
-    ];
-
-    const LG: [string, string, string, number, number, number, string?][] = [
-      ['02:14:07.112', 'auth.fail', 'a.reyes 185.220.101.47', 4, 20, 40],
-      ['02:14:07.381', 'auth.fail', 'j.lindqvist 185.220.101.47', 40, 56, -50],
-      ['02:18:44.020', 'dns.query', 'WS-DEV-031 10.20.6.11', 8, 104, 60],
-      ['02:33:10.551', 'vpn.connect', 'r.chen 91.204.18.3', 44, 146, -40],
-      ['02:31:52.904', 'auth.success', 'm.okafor 185.220.101.47', 14, 208, 0, 'h'],
-      ['02:38:10.207', 'proc.create', 'WS-FIN-022 powershell.exe -enc', 3, 272, 50],
-      ['02:41:03.778', 'auth.fail', 'svc-backup 45.137.21.9', 42, 314, -60],
-      ['02:44:19.330', 'file.read', 'FS-ARCHIVE \\payroll', 8, 352, 40],
-      ['02:52:44.102', 'proc.access', 'lsass.exe WS-FIN-022', 48, 360, -30],
-    ];
-
-    const DT = [
-      ['Impossible travel sign-in', 'DET-4821 · m.okafor · 185.220.101.47', 'CRITICAL'],
-      ['Brute-force burst (412 attempts)', 'DET-4819 · svc-backup · 45.137.21.9', 'HIGH'],
-      ['Encoded PowerShell execution', 'DET-4816 · WS-FIN-022 · powershell.exe', 'CRITICAL'],
-      ['New admin group membership', 'DET-4810 · j.lindqvist · DC-01', 'HIGH'],
-    ];
-
-    const BH = [12, 16, 10, 22, 18, 30, 26, 36, 58, 100, 84, 40, 26, 20];
-    const ND: [string, string, number, number, number?][] = [
-      ['185.220.101.47', 'EXTERNAL IP', 110, 190],
-      ['auth.success', 'EVENT', 250, 80],
-      ['m.okafor', 'USER', 330, 300, 1],
-      ['WS-FIN-022', 'HOST', 470, 190],
-      ['powershell.exe', 'PROCESS', 570, 80],
-      ['FS-ARCHIVE', 'RESOURCE', 600, 300],
-    ];
-    const ED = [
-      [0, 1],
-      [0, 2],
-      [1, 2],
-      [2, 3],
-      [3, 4],
-      [3, 5],
-      [4, 5],
-    ];
-
-    const TL = [
-      [
-        '02:14:07',
-        'INITIAL ACCESS',
-        'Password spray against portal',
-        '412 failed attempts from a single external address across 38 accounts.',
-      ],
-      [
-        '02:31:52',
-        'VALID ACCOUNT',
-        'Successful sign-in for m.okafor',
-        'Login from new geography 11 minutes after a domestic session.',
-      ],
-      [
-        '02:38:10',
-        'EXECUTION',
-        'Encoded PowerShell on WS-FIN-022',
-        'Base64 command spawned from explorer.exe under the compromised user.',
-      ],
-      [
-        '02:52:44',
-        'CREDENTIAL ACCESS',
-        'LSASS memory read',
-        'Process handle requested on lsass.exe with read privileges.',
-      ],
-      [
-        '03:09:31',
-        'LATERAL MOVEMENT',
-        'SMB session to FS-ARCHIVE',
-        'Admin share accessed using harvested service credentials.',
-      ],
-      [
-        '03:26:05',
-        'EXFILTRATION',
-        '4.2 GB outbound transfer',
-        'Compressed archive transferred to an external endpoint over HTTPS.',
-      ],
-    ];
-
-    const EV = [
-      [
-        'auth_logs_0214.ndjson',
-        'EV-01 · evt_7f3a92c1',
-        '4,812 failed attempts, then one successful sign-in from 185.220.101.47.',
-      ],
-      [
-        'Process tree · WS-FIN-022',
-        'EV-02 · evt_80b1e4d2',
-        'explorer.exe to powershell.exe -enc with a 2.1 KB base64 payload.',
-      ],
-      [
-        'LSASS handle request',
-        'EV-03 · evt_84c7a310',
-        'Read access to lsass.exe from the PowerShell process.',
-      ],
-      [
-        'Egress flow summary',
-        'EV-04 · evt_91fe22a8',
-        '4.2 GB sent to an external endpoint over HTTPS.',
-      ],
-    ];
-
-    const NAR =
-      'A password spray led to a valid sign-in for m.okafor, followed by encoded PowerShell on WS-FIN-022, credential access, lateral movement to FS-ARCHIVE and a 4.2 GB outbound transfer.';
-
-    const P = [
-      `<div class="cnt mono">EVENTS INGESTED<b data-s="0,.8" data-n="412118">0</b></div>${LG.map(
-        (l, i) =>
-          `<div class="lg${l[6] ? ' h' : ''}" data-s="${R(i)}" style="left:${l[3]}%;top:${l[4]}px;--d:${l[5]}"><span>${l[0]}</span> <b>${l[1]}</b> ${l[2]}</div>`
-      ).join('')}`,
-      `<div class="hrow"><span style="color:var(--n);margin-right:6px">⚠</span>Suspicious authentication activity<em>last 24h</em></div><div class="st">${[
-        ['EVENTS', 2.41, 2, 'M'],
-        ['DETECTIONS', 7, 0, ''],
-        ['FAILED AUTH', 1284, 0, ''],
-        ['CRITICAL', 2, 0, ''],
-      ]
-        .map(
-          (s, i) =>
-            `<div class="${i === 3 ? 'cr' : ''}"><small>${s[0]}</small><b data-s="0,.3" data-n="${s[1]}" data-d="${s[2]}" data-u="${s[3]}">0</b></div>`
-        )
-        .join('')}</div><div class="g2"><div>${DT.map(
-        (d, i) =>
-          `<div class="dr" data-s="${(0.1 + i * 0.12).toFixed(2)},${(0.32 + i * 0.12).toFixed(2)}"><div><b>${d[0]}</b><small>${d[1]}</small></div><span class="tg${d[2] === 'CRITICAL' ? ' c' : ''}">${d[2]}</span></div>`
-      ).join('')}</div><div class="cx"><small>FAILED LOGINS / 15M</small><div class="bars">${BH.map(
-        (h, i) =>
-          `<i class="${i === 9 || i === 10 ? 'x' : ''}" data-s="${R(i, 0.03, 0.25)}" style="--h:${h}"></i>`
-      ).join('')}</div><em>Spike at 02:14 UTC · +540%</em></div></div>`,
-      `<svg viewBox="0 0 680 402">${ED.map(
-        (e, j) =>
-          `<line data-s="${(0.3 + j * 0.08).toFixed(2)},${(0.5 + j * 0.08).toFixed(2)}" pathLength="1" x1="${ND[e[0]][2]}" y1="${ND[e[0]][3]}" x2="${ND[e[1]][2]}" y2="${ND[e[1]][3]}"/>`
-      ).join('')}${ND.map(
-        (n, i) =>
-          `<g class="nd" data-s="${R(i, 0.08, 0.2)}"><circle cx="${n[2]}" cy="${n[3]}" r="19" fill="#101113" stroke="${n[4] ? '#FF2A85' : '#3DFF86'}" stroke-width="1.5"/><circle cx="${n[2]}" cy="${n[3]}" r="4" fill="${n[4] ? '#FF2A85' : '#3DFF86'}"/><text x="${n[2]}" y="${n[3] + 36}" text-anchor="middle">${n[0]}</text><text class="t" x="${n[2]}" y="${n[3] + 48}" text-anchor="middle">${n[1]}</text></g>`
-      ).join('')}</svg><div class="pill" data-s=".85,1">6 entities · 7 relationships · 1 shared narrative</div>`,
-      `<small>RECONSTRUCTED TIMELINE</small><div class="hrow" style="margin-top:4px">INC-2041 · Operation Glass Ledger<em>71m 58s span</em></div><div class="rl"><i data-s="0,.85"></i>${TL.map(
-        (_, i) =>
-          `<u class="${i === 5 ? 'x' : ''}" style="left:${i * 16.66}%" data-s="${R(i, 0.15, 0.1)}"></u>`
-      ).join('')}</div><div class="tl">${TL.map(
-        (t, i) =>
-          `<div class="${i === 5 ? 'x' : ''}" data-s="${R(i, 0.15, 0.2)}"><em>${t[0]}</em><small>${t[1]}</small><b>${t[2]}</b><p>${t[3]}</p></div>`
-      ).join('')}</div>`,
-      `<div class="hrow"><span class="bg2">CRITICAL</span>Operation Glass Ledger</div><div class="mono" style="color:var(--n);font-size:11px;margin:6px 0 12px">14 entities · 1,287 events · 6 techniques</div><div class="g2"><div><small style="margin-bottom:8px">EVIDENCE</small>${EV.map(
-        (e, i) =>
-          `<div class="ev"><b>${e[0]}</b><small>${e[1]}</small><div class="dd" data-s="${(0.1 + i * 0.15).toFixed(2)},${(0.3 + i * 0.15).toFixed(2)}">${e[2]}</div></div>`
-      ).join('')}</div><div><small>INCIDENT NARRATIVE</small><div class="nar" data-s=".35,.9" data-t="${NAR}"></div><div class="cps">${[
-        'T1110',
-        'T1078',
-        'T1059.001',
-        'T1003.001',
-        'T1021.002',
-        'T1567',
-      ]
-        .map(
-          (t, i) =>
-            `<span data-s="${(0.6 + i * 0.06).toFixed(2)},${(0.7 + i * 0.06).toFixed(2)}">${t}</span>`
-        )
-        .join('')}</div></div></div>`,
-    ];
-
-    const bd = $('#bd');
-    if (bd) bd.innerHTML = P.map((p) => `<div class="pn">${p}</div>`).join('');
-    const hd = $('#hd');
-    if (hd) hd.innerHTML = H.map((h) => `<h2>${h}</h2>`).join('');
-    const steps = $('#steps');
-    if (steps)
-      steps.innerHTML = SN.map((s, i) => `<li data-i="${i}"><b>0${i + 1}</b>${s}</li>`).join(
-        ''
-      );
-
-    const CP = [
-      [
-        'Security Log Ingestion',
-        'Bring fragmented security telemetry into one investigation workflow.',
-        [
-          'CSV, JSON and NDJSON sources',
-          'Normalized into a shared event schema',
-          'Ingestion history with event counts',
-        ],
-      ],
-      [
-        'Threat Detection',
-        'Surface suspicious activity and highlight the findings that need attention.',
-        [
-          'Severity-ranked findings',
-          'Suspicious authentication patterns',
-          'Technique context on every detection',
-        ],
-      ],
-      [
-        'Cross-Event Correlation',
-        'Connect related activity across users, hosts, network indicators, and time.',
-        [
-          'Entity-level linking',
-          'Time-window clustering',
-          'One cluster per probable intrusion',
-        ],
-      ],
-      [
-        'Attack Reconstruction',
-        'Understand the sequence of events and the relationships between entities.',
-        [
-          'Chronological stage ordering',
-          'Graph and timeline stay in sync',
-          'Hover a stage to trace the path',
-        ],
-      ],
-      [
-        'Evidence and Explainability',
-        'Make investigations easier to understand, review, and communicate.',
-        [
-          'Every claim references an event',
-          'MITRE ATT&CK technique labels',
-          'A plain-language incident summary',
-        ],
-      ],
-    ];
-
-    const rows = $('#rows');
-    if (rows)
-      rows.innerHTML = CP.map(
-        (c, i) =>
-          `<div class="row"><div class="tx"><div class="num">0${i + 1}</div><h3>${c[0]}</h3><p>${c[1]}</p><ul>${(c[2] as string[]).map((b) => `<li>${b}</li>`).join('')}</ul></div><div class="win cl"><div class="tb"><i></i><i></i><i></i><span>tracex://${NM[i]}</span><em class="demo">● DEMO DATA</em></div><div class="bd"><div class="pn">${P[i]}</div></div></div></div>`
-      ).join('');
-
-    // Animation Unit Parsing
-    interface UnitEntry {
-      e: HTMLElement;
-      r: number[];
-      n: string | undefined;
-      t: string | undefined;
-      k: number;
-    }
-    interface Unit {
-      el: HTMLElement;
-      els: UnitEntry[];
-    }
-
-    const stageUnits: Unit[] = [];
-    $$('#bd>.pn').forEach((el) => {
-      const els: UnitEntry[] = $$('[data-s]', el).map((e) => ({
-        e,
-        r: (e.dataset.s || '0,1').split(',').map(Number),
-        n: e.dataset.n,
-        t: e.dataset.t,
-        k: -1,
-      }));
-      stageUnits.push({ el, els });
-    });
-
-    const rowUnits: Unit[] = [];
-    $$('.cl .pn').forEach((el) => {
-      const els: UnitEntry[] = $$('[data-s]', el).map((e) => ({
-        e,
-        r: (e.dataset.s || '0,1').split(',').map(Number),
-        n: e.dataset.n,
-        t: e.dataset.t,
-        k: -1,
-      }));
-      rowUnits.push({ el, els });
-    });
-
-    function paint(u: Unit, sp: number) {
-      u.el.style.setProperty('--sp', String(sp));
-      for (const o of u.els) {
-        const k = C((sp - o.r[0]) / (o.r[1] - o.r[0]));
-        if (k === o.k) continue;
-        o.k = k;
-        o.e.style.setProperty('--k', String(k));
-        if (o.n != null) {
-          const v = Number(o.n) * k;
-          const d = +(o.e.dataset.d || 0);
-          o.e.textContent =
-            (d ? v.toFixed(d) : Math.round(v).toLocaleString('en-US')) +
-            (o.e.dataset.u || '');
-        }
-        if (o.t) {
-          o.e.textContent = o.t.slice(0, Math.round(o.t.length * k));
-        }
-      }
-    }
-
-    // Text splitting for kinetic typography
-    const SWD: HTMLElement[] = [];
-    function split(h: Element, cls: string, out?: HTMLElement[]) {
-      let i = 0;
-      const f = (n: Node) => {
-        [...n.childNodes].forEach((c) => {
-          if (c.nodeType === 3) {
-            const fr = document.createDocumentFragment();
-            (c.textContent || '').split(/(\s+)/).forEach((t) => {
-              if (!t.trim()) {
-                fr.append(t);
-              } else {
-                const e = document.createElement('i');
-                e.className = cls;
-                e.textContent = t;
-                e.style.setProperty('--w', String(i++));
-                fr.append(e);
-                if (out) out.push(e);
-              }
-            });
-            c.replaceWith(fr);
-          } else {
-            f(c);
-          }
-        });
-      };
-      f(h);
-    }
-
-    const stP = $('#st p');
-    if (stP) split(stP, 'wd', SWD);
-    $$('#hd h2,#caps h2,#pricing h2,#end h2').forEach((h) => {
-      split(h, 'w');
-      h.classList.add('wr');
-    });
-
-    // Stage switching helper
-    let act = -1;
-    function setStage(i: number) {
-      if (i === act) return;
-      act = i;
-      $$('#bd>.pn').forEach((e, j) => {
-        const isActive = j === i;
-        e.classList.toggle('on', isActive);
-        e.style.opacity = isActive ? '1' : '0';
-        e.style.pointerEvents = isActive ? 'auto' : 'none';
-      });
-      $$('#hd h2').forEach((e, j) => {
-        const isActive = j === i;
-        e.classList.toggle('on', isActive);
-        e.style.opacity = isActive ? '1' : '0';
-        e.style.transform = isActive ? 'translateY(0)' : 'translateY(16px)';
-        e.style.pointerEvents = isActive ? 'auto' : 'none';
-      });
-      $$('#steps li').forEach((e, j) => {
-        e.classList.toggle('on', j === i);
-        e.classList.toggle('d', j < i);
-      });
-      const url = $('#url');
-      if (url) url.innerHTML = 'tracex://investigation/<b>' + NM[i] + '</b>';
-      const ct = $('#ct');
-      if (ct) ct.textContent = '0' + (i + 1) + '/05';
-    }
-
-    // Set initial stage
-    setStage(0);
-    if (stageUnits[0]) paint(stageUnits[0], 0);
-
-    // Pointer parallax on Hero
-    const hero = $('#hero');
-    const handlePointerMove = (e: PointerEvent) => {
-      if (!hero) return;
-      hero.style.setProperty('--mx', String(e.clientX / window.innerWidth - 0.5));
-      hero.style.setProperty('--my', String(e.clientY / window.innerHeight - 0.5));
-    };
-    window.addEventListener('pointermove', handlePointerMove);
-
-    // Pricing Billing Period Toggle
-    $$('.bt button').forEach((b) => {
-      b.onclick = () => {
-        $$('.bt button').forEach((x) => x.classList.toggle('on', x === b));
-        const y = b.dataset.b === 'y';
-        $$('.amt').forEach((a) => {
-          a.textContent = (y ? a.dataset.y : a.dataset.m) || '';
-        });
-        $$('.pc .nt').forEach((n) => {
-          n.textContent = (y ? n.dataset.y : n.dataset.m) || '';
-        });
-      };
-    });
-
-    // Step navigation click
-    $$('#steps li').forEach((li) => {
-      li.onclick = () => {
-        const stageIdx = Number(li.dataset.i || 0);
-        const st = ScrollTrigger.getById('seq-trigger');
-        if (st) {
-          const targetScroll = st.start + (stageIdx * 0.2 + 0.08) * (st.end - st.start);
-          window.scrollTo({
-            top: targetScroll,
-            behavior: 'smooth',
-          });
-        }
-      };
-    });
-
-    // Skip Sequence click
-    const skipBtn = $('#skip-seq');
-    if (skipBtn) {
-      skipBtn.onclick = (e) => {
-        e.preventDefault();
-        const st = ScrollTrigger.getById('seq-trigger');
-        if (st) {
-          window.scrollTo({
-            top: st.end + 50,
-            behavior: 'smooth',
-          });
-        } else {
-          const caps = $('#caps');
-          if (caps) caps.scrollIntoView({ behavior: 'smooth' });
-        }
-      };
-    }
-
-    // GSAP ScrollTrigger Orchestration
-    const ctx = gsap.context(() => {
-      const isMobile = window.innerWidth <= 860;
-      // 1. HERO ENTRANCE & PARALLAX
-      const rt = $('#rt');
-      const sw = $('#sw');
-
-      gsap.fromTo(
-        ['#hs .tag', '#hs h1', '#hs p', '#hs .cta'],
-        { x: isMobile ? -20 : -50, opacity: 0 },
-        {
-          x: 0,
-          opacity: 1,
-          duration: 0.85,
-          stagger: 0.1,
-          ease: 'power3.out',
-          delay: 0.05,
-        }
-      );
-
-      gsap.fromTo(
-        '.ch',
-        { x: 50, opacity: 0 },
-        {
-          x: 0,
-          opacity: 1,
-          duration: 0.9,
-          stagger: 0.12,
-          ease: 'power3.out',
-          delay: 0.2,
-        }
-      );
-
-      if (hero) {
-        ScrollTrigger.create({
-          id: 'hero-trigger',
-          trigger: hero,
-          start: 'top top',
-          end: 'bottom top',
-          scrub: 0.4,
-          onUpdate: (self) => {
-            const h = self.progress;
-            hero.style.setProperty('--hp', String(h));
-            if (rt) {
-              rt.style.setProperty('--a', String(C((h - 0.05) / 0.3)));
-              rt.style.setProperty(
-                '--b',
-                String(C((h - 0.3) / 0.15) * (1 - C((h - 0.75) / 0.15)))
-              );
-            }
-            if (sw) {
-              sw.style.opacity = h > 0.03 && h < 0.95 ? '0.85' : '0';
-            }
-          },
-        });
-      }
-
-      // 2. INVESTIGATION SEQUENCE (PINNED 5-STAGE ENGINE - CRISP & PROMPT)
-      const seq = $('#seq');
-      const stepsEl = $('#steps');
-      const winEl = $('#sk .win');
-      if (seq) {
-        ScrollTrigger.create({
-          id: 'seq-trigger',
-          trigger: seq,
-          start: 'top top',
-          end: () => `+=${window.innerWidth <= 860 ? 1100 : 1600}`,
-          pin: true,
-          scrub: 0.5,
-          anticipatePin: 1,
-          onUpdate: (self) => {
-            const p = self.progress; // 0.0 to 1.0
-            const currentStage = Math.min(4, Math.floor(p * 5));
-            setStage(currentStage);
-
-            if (stepsEl) stepsEl.style.setProperty('--p', String(p));
-
-            // Stage sub-progress: finishes promptly in the first 62%, holds in remaining 38%
-            const stageStart = currentStage * 0.2;
-            const stageRaw = (p - stageStart) / 0.2;
-            const localProgress = Math.min(1, Math.max(0, stageRaw / 0.62));
-
-            // Bidirectional paint of all stages to prevent desync
-            for (let s = 0; s < 5; s++) {
-              if (stageUnits[s]) {
-                if (s < currentStage) {
-                  paint(stageUnits[s], 1);
-                } else if (s > currentStage) {
-                  paint(stageUnits[s], 0);
-                } else {
-                  paint(stageUnits[s], localProgress);
-                }
-              }
-            }
-
-            if (winEl) {
-              winEl.style.setProperty('--p2', String(p));
-            }
-          },
-        });
-      }
-
-      // 3. KINETIC TYPOGRAPHY & STATS COUNTERS (#st)
-      const st = $('#st');
-      const sns = $$('.sn');
-      if (st) {
-        ScrollTrigger.create({
-          id: 'st-trigger',
-          trigger: st,
-          start: 'top top',
-          end: () => `+=${window.innerWidth <= 860 ? 550 : 850}`,
-          pin: true,
-          scrub: 0.5,
-          anticipatePin: 1,
-          onUpdate: (self) => {
-            const q3 = self.progress; // 0.0 to 1.0
-            SWD.forEach((w: any, j) => {
-              const k = C(q3 * 1.3 * (SWD.length + 4) - j);
-              if (k !== w._k) {
-                w._k = k;
-                w.style.setProperty('--k', String(k));
-                if (!w.closest('.r') && !w.closest('.g')) {
-                  w.style.color = k > 0.5 ? '#E5E7EB' : '#9CA3AF';
-                }
-              }
-            });
-
-            // Reveal stats smoothly as user scrubs into section
-            const q = Math.min(1, Math.max(0, q3 * 1.5));
-            st.style.setProperty('--q', String(q));
-            sns.forEach((n) => {
-              const target = Number(n.dataset.n || 0);
-              const factor = Math.min(1, 0.2 + q * 0.8);
-              const num = target * factor;
-              const d = +(n.dataset.d || 0);
-              n.textContent =
-                (d ? num.toFixed(d) : Math.round(num).toString()) + (n.dataset.u || '');
-            });
-          },
-        });
-      }
-
-      // 4. CAPABILITY DEMONSTRATION ROWS (ALTERNATING ENTRANCES: LEFT & RIGHT)
-      $$('.row').forEach((row, i) => {
-        const tx = row.querySelector('.tx') as HTMLElement | null;
-        const win = row.querySelector('.win.cl') as HTMLElement | null;
-        const pn = row.querySelector('.cl .pn') as HTMLElement | null;
-        const unit = rowUnits[i];
-        const isEven = i % 2 === 1;
-
-        if (tx) {
-          gsap.fromTo(
-            tx,
-            { opacity: 0, x: isMobile ? (isEven ? 24 : -24) : (isEven ? 60 : -60) },
-            {
-              opacity: 1,
-              x: 0,
-              duration: 0.75,
-              ease: 'power3.out',
-              scrollTrigger: {
-                trigger: row,
-                start: 'top 88%',
-                toggleActions: 'play none none reverse',
-              },
-            }
-          );
-        }
-
-        if (win) {
-          gsap.fromTo(
-            win,
-            { opacity: 0, x: isMobile ? (isEven ? -24 : 24) : (isEven ? -60 : 60) },
-            {
-              opacity: 1,
-              x: 0,
-              duration: 0.75,
-              ease: 'power3.out',
-              scrollTrigger: {
-                trigger: row,
-                start: 'top 88%',
-                toggleActions: 'play none none reverse',
-              },
-            }
-          );
-        }
-
-        if (win && pn && unit) {
-          ScrollTrigger.create({
-            trigger: row,
-            start: 'top 90%',
-            end: 'bottom 40%',
-            scrub: 0.4,
-            onUpdate: (self) => {
-              const s = self.progress;
-              win.style.setProperty('--rv', String(C(s * 1.8)));
-              paint(unit, s);
-            },
-          });
-        }
-      });
-
-      // 5. PRICING CARDS (DIRECTIONAL SLIDE-IN ENTRANCE)
-      const pc = $$('.pc');
-      if (pc.length === 3) {
-        gsap.fromTo(
-          pc[0],
-          { opacity: 0, x: isMobile ? -20 : -50 },
-          {
-            opacity: 1,
-            x: 0,
-            duration: 0.75,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: '#pricing',
-              start: 'top 85%',
-              toggleActions: 'play none none reverse',
-            },
-          }
-        );
-        gsap.fromTo(
-          pc[1],
-          { opacity: 0, y: isMobile ? 20 : 35, scale: isMobile ? 0.98 : 0.95 },
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.75,
-            ease: 'power3.out',
-            delay: 0.1,
-            scrollTrigger: {
-              trigger: '#pricing',
-              start: 'top 85%',
-              toggleActions: 'play none none reverse',
-            },
-          }
-        );
-        gsap.fromTo(
-          pc[2],
-          { opacity: 0, x: isMobile ? 20 : 50 },
-          {
-            opacity: 1,
-            x: 0,
-            duration: 0.75,
-            ease: 'power3.out',
-            delay: 0.2,
-            scrollTrigger: {
-              trigger: '#pricing',
-              start: 'top 85%',
-              toggleActions: 'play none none reverse',
-            },
-          }
-        );
-      }
-
-      // 6. CLOSING CTA ENTRANCE
-      const endActs = $('#end .acts');
-      if (endActs) {
-        gsap.fromTo(
-          endActs,
-          { opacity: 0, y: 25 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: 'power2.out',
-            scrollTrigger: {
-              trigger: '#end',
-              start: 'top 85%',
-              toggleActions: 'play none none reverse',
-            },
-          }
-        );
-      }
-    }, containerRef);
-
-    return () => {
-      window.removeEventListener('pointermove', handlePointerMove);
-      ctx.revert();
-    };
-  }, []);
+  const handleLoadScenario = () => {
+    // Navigate to SOC with APT scenario query
+    navigate('/soc?scenario=apt');
+  };
 
   return (
-    <div
-      ref={containerRef}
-      className="tracex-landing bg-[#08090A] text-[#F4F2F3] font-sans selection:bg-[#3DFF86] selection:text-[#08090A] overflow-x-clip min-h-screen"
-    >
-      {/* Top Navigation */}
-      <nav>
-        <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
-          <b>
-            Trace<i>X</i>
-          </b>
-        </Link>
-        <div className="m">
-          <a href="#seq">Platform</a>
-          <a href="#caps">Capabilities</a>
-          <a href="#seq">Investigation</a>
-          <a href="#pricing">Pricing</a>
-          <button
-            type="button"
-            className="btn"
-            style={{ cursor: 'pointer' }}
-            onClick={() => navigate('/soc')}
-          >
-            Launch Platform
+    <div className="tracex-landing">
+      {/* Background Watermark */}
+      <div className="hero-watermark" aria-hidden="true">
+        TRACEX
+      </div>
+
+      {/* Top Sticky Navigation */}
+      <nav className="tx-navbar">
+        <div className="tx-nav-inner">
+          <Link to="/" className="tx-logo">
+            <span className="tx-logo-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a3e635" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                <path d="M12 8v4" />
+                <path d="M12 16h.01" />
+              </svg>
+            </span>
+            <span>Trace<span className="tx-logo-accent">X</span></span>
+          </Link>
+
+          <div className="tx-nav-menu">
+            <Link to="/" className="tx-nav-link active">Overview</Link>
+            <Link to="/soc" className="tx-nav-link">SOC Dashboard</Link>
+            <Link to="/incidents" className="tx-nav-link">Timeline</Link>
+            <Link to="/detections" className="tx-nav-link">Detections</Link>
+            <Link to="/events" className="tx-nav-link">Event Logs</Link>
+            <Link to="/incidents" className="tx-nav-link">Reports</Link>
+          </div>
+
+          <button onClick={() => navigate('/soc')} className="tx-btn-lime">
+            Open Workspace
           </button>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section id="hero">
-        <div id="hs">
-          <div id="fg">
-            <div id="fgi">
-              <div className="ph" />
-              <div className="gl g1" />
-              <div className="gl g2" />
-              <svg id="rt" viewBox="0 0 1672 941" aria-hidden="true">
-                <circle className="d" pathLength={1} cx="1185" cy="385" r="190" />
-                <circle className="sp" cx="1185" cy="385" r="228" />
-                <path
-                  className="d"
-                  pathLength={1}
-                  d="M940 190V130H1000M1370 130H1430V190M1430 600V660H1370M1000 660H940V600"
-                />
-                <path className="l" d="M935 385H985M1385 385H1435M1185 120V170M1185 600V650" />
-                <text x="780" y="705">
-                  TARGET LOCKED
-                </text>
-                <text className="r" x="780" y="732">
-                  HOLLOW-07 · UNATTRIBUTED
-                </text>
-                <text x="780" y="759">
-                  FACE NOT AVAILABLE
-                </text>
-                <text x="780" y="786">
-                  FIRST SEEN 02:31:52 UTC
-                </text>
-              </svg>
-              <i id="sw" />
+      <section className="tx-hero">
+        <div className="tx-container">
+          <div className="tx-hero-grid">
+            {/* Left Column */}
+            <div className="tx-hero-left">
+              <div className="tx-hero-tag">
+                <span className="tx-pulse-dot" />
+                AUTONOMOUS INVESTIGATION & ATTACK RECONSTRUCTION
+              </div>
+
+              <h1 className="tx-hero-title">
+                Turn fragmented<br />
+                security logs<br />
+                into <span className="italic-lime">cohesive attack<br />stories.</span>
+              </h1>
+
+              <p className="tx-hero-desc">
+                TraceX ingests multi-source authentication, firewall and server telemetry, correlates detections into MITRE-aligned detection rules, and reconstructs a 5-stage causal intrusion story with zero tedious clicks.
+              </p>
+
+              <div className="tx-hero-actions">
+                <button onClick={() => navigate('/soc')} className="tx-btn-lime">
+                  Open SOC Workspace
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </button>
+                <button onClick={handleLoadScenario} className="tx-btn-dark">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon points="5 3 19 12 5 21 5 3" />
+                  </svg>
+                  Load Full Scenario
+                </button>
+              </div>
+            </div>
+
+            {/* Right Column: Console Mock Window */}
+            <div className="tx-console-card">
+              <div className="tx-console-header">
+                <div className="tx-console-tabs">
+                  <button
+                    className={`tx-console-tab ${activeConsoleTab === 'events' ? 'active' : ''}`}
+                    onClick={() => setActiveConsoleTab('events')}
+                  >
+                    EVENT STREAM
+                  </button>
+                  <button
+                    className={`tx-console-tab ${activeConsoleTab === 'analysis' ? 'active' : ''}`}
+                    onClick={() => setActiveConsoleTab('analysis')}
+                  >
+                    INCIDENT ANALYSIS
+                  </button>
+                  <button
+                    className={`tx-console-tab ${activeConsoleTab === 'graph' ? 'active' : ''}`}
+                    onClick={() => setActiveConsoleTab('graph')}
+                  >
+                    CAUSAL GRAPH
+                  </button>
+                </div>
+                <div className="tx-console-status">
+                  <span className="tx-pulse-dot" />
+                  Live Correlation Active
+                </div>
+              </div>
+
+              <div className="tx-console-main">
+                {/* Event stream rows */}
+                <div className="tx-event-rows">
+                  <div className="tx-event-row">
+                    <span className="tx-event-time">02:14:07</span>
+                    <span className="tx-event-type">AUTH_BRUTE_FORCE</span>
+                    <span className="tx-event-target">185.220.101.47</span>
+                  </div>
+                  <div className="tx-event-row">
+                    <span className="tx-event-time">02:31:52</span>
+                    <span className="tx-event-type">VPN_LOGIN</span>
+                    <span className="tx-event-target">m.okafor (Geo)</span>
+                  </div>
+                  <div className="tx-event-row">
+                    <span className="tx-event-time">02:38:10</span>
+                    <span className="tx-event-type">POWERSHELL_EXEC</span>
+                    <span className="tx-event-target">WS-FIN-022</span>
+                  </div>
+                  <div className="tx-event-row">
+                    <span className="tx-event-time">02:44:19</span>
+                    <span className="tx-event-type">FILE_READ</span>
+                    <span className="tx-event-target">FS-ARCHIVE</span>
+                  </div>
+                  <div className="tx-event-row">
+                    <span className="tx-event-time">02:52:44</span>
+                    <span className="tx-event-type">DATA_EXFIL</span>
+                    <span className="tx-event-target">45.137.21.9</span>
+                  </div>
+                </div>
+
+                {/* Mini Causal Graph */}
+                <div className="tx-mini-graph">
+                  <svg width="100%" height="100%" viewBox="0 0 180 120" fill="none">
+                    {/* Connection lines */}
+                    <path d="M 20 60 Q 55 25 80 50 T 130 35 T 165 75" stroke="#a3e635" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.8" />
+                    <line x1="20" y1="60" x2="60" y2="90" stroke="rgba(163, 230, 53, 0.4)" strokeWidth="1.5" />
+                    <line x1="60" y1="90" x2="110" y2="85" stroke="rgba(163, 230, 53, 0.4)" strokeWidth="1.5" />
+                    <line x1="110" y1="85" x2="165" y2="75" stroke="#a3e635" strokeWidth="1.5" />
+                    
+                    {/* Node 1 */}
+                    <circle cx="20" cy="60" r="5" fill="#a3e635" />
+                    <circle cx="20" cy="60" r="9" stroke="rgba(163, 230, 53, 0.3)" strokeWidth="1.5" />
+                    
+                    {/* Node 2 */}
+                    <circle cx="60" cy="90" r="4" fill="#a3e635" />
+                    
+                    {/* Node 3 */}
+                    <circle cx="80" cy="50" r="5" fill="#a3e635" />
+                    <circle cx="80" cy="50" r="9" stroke="rgba(163, 230, 53, 0.3)" strokeWidth="1.5" />
+                    
+                    {/* Node 4 */}
+                    <circle cx="110" cy="85" r="4" fill="#a3e635" />
+                    
+                    {/* Node 5 */}
+                    <circle cx="130" cy="35" r="5" fill="#a3e635" />
+
+                    {/* Node 6 (Target) */}
+                    <circle cx="165" cy="75" r="6" fill="#a3e635" />
+                    <circle cx="165" cy="75" r="11" stroke="#a3e635" strokeWidth="1.5" opacity="0.5" />
+                  </svg>
+                </div>
+              </div>
+
+              {/* Console Evidence Drawer */}
+              <div className="tx-console-evidence">
+                <div className="tx-evidence-top">
+                  <span className="tx-evidence-label">EVIDENCE CORRELATION</span>
+                  <div className="tx-evidence-conf">
+                    <span>Confidence: 95%</span>
+                    <div className="tx-conf-bar">
+                      <div className="tx-conf-fill" style={{ width: '95%' }} />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="tx-evidence-meta">
+                  <span>Target: <strong>DC-01, FS-ARCHIVE</strong></span>
+                  <span>Victim: <strong>m.okafor</strong></span>
+                  <span>Attacker: <strong>185.220.101.47</strong></span>
+                </div>
+
+                <div className="tx-evidence-story">
+                  "185.220.101.47 brute-forced admin, escalated privileges, and staged 4.2GB payroll data."
+                </div>
+              </div>
+
+              <div className="tx-console-footer">
+                <button onClick={() => navigate('/soc')}>INVESTIGATE INCIDENT</button>
+                <button onClick={() => navigate('/soc')}>VIEW FULL GRAPH</button>
+                <button onClick={() => navigate('/incidents')}>EXPORT EVIDENCE PACK</button>
+              </div>
             </div>
           </div>
-          <span className="ch" style={{ right: '9vw', top: '24vh' }}>
-            <b>›</b> 185.220.101.47 → 10.20.4.18
-          </span>
-          <span className="ch r" style={{ right: '5vw', top: '62vh', animationDelay: '-3s' }}>
-            <b>›</b> proc.create powershell.exe -enc
-          </span>
-          <span className="ch" style={{ right: '34vw', top: '80vh', animationDelay: '-5s' }}>
-            <b>T1078</b> valid accounts
-          </span>
-          <div className="tag" style={{ color: '#FF3E8F', textShadow: '0 0 16px rgba(255,62,143,0.5)' }}>
-            AUTONOMOUS INVESTIGATION · ATTACK RECONSTRUCTION
-          </div>
-          <h1>
-            Find the
-            <br />
-            intruder.
-            <br />
-            Reconstruct
-            <br />
-            <span
-              style={{
-                background: 'linear-gradient(135deg, #FFB3D1 0%, #FF3E8F 50%, #FF1A75 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                filter: 'drop-shadow(0 0 22px rgba(255,62,143,0.45))',
-              }}
-            >
-              the story.
-            </span>
-          </h1>
-          <p>
-            TraceX transforms fragmented security telemetry into correlated attack narratives,
-            giving security teams a clearer path from suspicious activity to actionable evidence.
-          </p>
-          <div className="cta">
-            <a className="btn p" href="#seq">
-              Explore the Platform
-            </a>
-            <button
-              type="button"
-              className="btn o"
-              style={{ cursor: 'pointer' }}
-              onClick={() => navigate('/soc')}
-            >
-              Open SOC Console
-            </button>
-          </div>
-          <div id="cue">SCROLL</div>
         </div>
       </section>
 
-      {/* Sticky Interactive 5-Stage Sequence */}
-      <section id="seq">
-        <div id="sk">
-          <ol id="steps" />
-          <div id="hd" />
-          <div className="win">
-            <div className="tb">
-              <i />
-              <i />
-              <i />
-              <span id="url" />
-              <em id="ct" />
+      {/* Horizontal Pipeline Bar: LIVE ATTACK RECONSTRUCTION ENGINE */}
+      <section className="tx-pipeline-section">
+        <div className="tx-container">
+          <div className="tx-pipeline-card">
+            <div className="tx-pipeline-header">
+              <div className="tx-pipeline-title-group">
+                <div className="tx-pipeline-title">
+                  <span className="tx-pulse-dot" />
+                  LIVE ATTACK RECONSTRUCTION ENGINE
+                </div>
+                <div className="tx-pipeline-meta">
+                  Target IP: <span>185.220.101.47</span> · <span>5-stage causal chain</span>
+                </div>
+              </div>
+              <button onClick={() => navigate('/soc')} className="tx-btn-dark">
+                Explore interactive progression ↗
+              </button>
             </div>
-            <div className="bd" id="bd" />
-          </div>
-          <div id="hint">
-            <span>SCROLL TO ADVANCE</span>
-            <a href="#caps" id="skip-seq">
-              SKIP SEQUENCE
-            </a>
-          </div>
-        </div>
-      </section>
 
-      {/* Kinetic Typography and Animated Stats */}
-      <section id="st">
-        <div className="si">
-          <p>
-            Attackers hide in the{' '}
-            <span
-              className="r"
-              style={{ color: '#FF3E8F', textShadow: '0 0 16px rgba(255,62,143,0.55)' }}
-            >
-              noise.
-            </span>{' '}
-            <span className="g">TraceX</span> reads every log, connects every clue, and shows you{' '}
-            <span
-              className="r"
-              style={{ color: '#FF3E8F', textShadow: '0 0 16px rgba(255,62,143,0.45)' }}
-            >
-              exactly what happened
-            </span>
-            , in the order it happened.
-          </p>
-          <div id="sts">
-            <div>
-              <b className="sn" data-n="38">
-                38
-              </b>
-              <small>log sources joined</small>
-            </div>
-            <div>
-              <b
-                className="sn"
-                data-n="2.4"
-                data-d="1"
-                data-u="M"
-                style={{ color: '#FF3E8F', textShadow: '0 0 24px rgba(255,62,143,0.5)' }}
+            <div className="tx-stages-row">
+              {/* Stage 01 */}
+              <div
+                className={`tx-stage-box ${activeStage === 0 ? 'active' : ''}`}
+                onClick={() => setActiveStage(0)}
+                style={{ cursor: 'pointer' }}
               >
-                2.4M
-              </b>
-              <small style={{ color: '#FF3E8F' }}>events read per minute</small>
+                <div className="tx-stage-num">Stage 01</div>
+                <div className="tx-stage-name">Reconnaissance</div>
+                <div className="tx-stage-status">Done · Port sweep (412 probes)</div>
+              </div>
+
+              {/* Stage 02 */}
+              <div
+                className={`tx-stage-box ${activeStage === 1 ? 'active' : ''}`}
+                onClick={() => setActiveStage(1)}
+                style={{ cursor: 'pointer' }}
+              >
+                <div className="tx-stage-num">Stage 02</div>
+                <div className="tx-stage-name">Credential Access</div>
+                <div className="tx-stage-status">Done · Spray 38 accounts</div>
+              </div>
+
+              {/* Stage 03 */}
+              <div
+                className={`tx-stage-box ${activeStage === 2 ? 'active' : ''}`}
+                onClick={() => setActiveStage(2)}
+                style={{ cursor: 'pointer' }}
+              >
+                <div className="tx-stage-num">Stage 03</div>
+                <div className="tx-stage-name">Initial Access</div>
+                <div className="tx-stage-status">Done · Sign-in m.okafor</div>
+              </div>
+
+              {/* Stage 04 */}
+              <div
+                className={`tx-stage-box ${activeStage === 3 ? 'active' : ''}`}
+                onClick={() => setActiveStage(3)}
+                style={{ cursor: 'pointer' }}
+              >
+                <div className="tx-stage-num">Stage 04</div>
+                <div className="tx-stage-name">Privilege Escalation</div>
+                <div className="tx-stage-status">Done · Sudo WS-FIN-022</div>
+              </div>
+
+              {/* Stage 05 (Active highlighted glowing box) */}
+              <div
+                className={`tx-stage-box ${activeStage === 4 ? 'active' : ''}`}
+                onClick={() => setActiveStage(4)}
+                style={{ cursor: 'pointer' }}
+              >
+                <div className="tx-stage-num">Stage 05</div>
+                <div className="tx-stage-name">Data Impact</div>
+                <div className="tx-stage-status">Active · Outbound 4.2GB staged</div>
+              </div>
             </div>
-            <div>
-              <b className="sn" data-n="4" data-u=" min">
-                4 min
-              </b>
-              <small>median time to a first narrative</small>
+
+            <div className="tx-pipeline-footer">
+              <div>Table view / Network graph / Forensic trace</div>
+              <div>Reconstructed in 0.032s (12,184 raw events → 5-stage causal chain)</div>
+              <div className="tx-chain-badge">Chain Alert Severity: High 95</div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Capability Deep-Dives with Interactive Demonstration Windows */}
-      <section id="caps">
-        <h2>
-          From raw telemetry to a{' '}
-          <span
-            style={{
-              color: '#FF3E8F',
-              textShadow: '0 0 20px rgba(255,62,143,0.5)',
-            }}
-          >
-            defensible
-          </span>{' '}
-          narrative.
-        </h2>
-        <p className="ld">
-          Five connected stages, each designed to reduce the distance between an isolated alert
-          and an investigation a team can review. Previews are interactive demonstrations with mock
-          data.
-        </p>
-        <div id="rows" />
+      {/* Section 2: "From scattered logs to a readable attack story." */}
+      <section className="tx-process-section">
+        <div className="tx-container">
+          <div className="tx-section-tag">HOW TRACEX WORKS</div>
+          <h2 className="tx-section-title">
+            From scattered logs to a<br />
+            <span className="italic-lime">readable</span> attack story.
+          </h2>
+
+          <div className="tx-process-cards">
+            {/* Card 01 - Ingest Logs */}
+            <div className="tx-process-card">
+              <div className="tx-process-card-num">01</div>
+              <div className="tx-process-graphic">
+                <div className="tx-stepped-bars">
+                  <div className="tx-stepped-bar" style={{ height: '8px' }} />
+                  <div className="tx-stepped-bar" style={{ height: '14px' }} />
+                  <div className="tx-stepped-bar" style={{ height: '20px' }} />
+                  <div className="tx-stepped-bar" style={{ height: '26px' }} />
+                  <div className="tx-stepped-bar" style={{ height: '32px' }} />
+                </div>
+              </div>
+              <h3 className="tx-process-title">Ingest Logs</h3>
+              <p className="tx-process-desc">
+                Multi-source log normalization, firewall and server telemetry, automated schema mapping, that reads raw logs from any source without manual regex.
+              </p>
+              <Link to="/ingestion" className="tx-process-link">
+                Open Logs →
+              </Link>
+            </div>
+
+            {/* Card 02 - Detect Threats */}
+            <div className="tx-process-card">
+              <div className="tx-process-card-num">02</div>
+              <div className="tx-process-graphic">
+                <div className="tx-radar-dots">
+                  <span className="tx-radar-dot" style={{ opacity: 0.3, transform: 'scale(0.8)' }} />
+                  <span className="tx-radar-dot" style={{ opacity: 0.6, transform: 'scale(1)' }} />
+                  <span className="tx-radar-dot" style={{ opacity: 1, transform: 'scale(1.2)' }} />
+                  <span className="tx-radar-dot" style={{ opacity: 0.6, transform: 'scale(1)' }} />
+                  <span className="tx-radar-dot" style={{ opacity: 0.3, transform: 'scale(0.8)' }} />
+                </div>
+              </div>
+              <h3 className="tx-process-title">Detect Threats</h3>
+              <p className="tx-process-desc">
+                Deterministic MITRE-aligned rules evaluate every event point-by-point, detecting brute-force bursts, impossible travel, and privilege escalation.
+              </p>
+              <Link to="/detections" className="tx-process-link">
+                See all rules →
+              </Link>
+            </div>
+
+            {/* Card 03 - Reconstruct Attack */}
+            <div className="tx-process-card">
+              <div className="tx-process-card-num">03</div>
+              <div className="tx-process-graphic">
+                <div className="tx-node-line">
+                  <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#fff' }} />
+                  <div className="tx-dash-line" />
+                  <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#a3e635' }} />
+                  <div className="tx-dash-line" />
+                  <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#fff' }} />
+                </div>
+              </div>
+              <h3 className="tx-process-title">Reconstruct Attack</h3>
+              <p className="tx-process-desc">
+                Time-window correlation links disconnected events across IPs, users, and processes into a single unified intrusion graph.
+              </p>
+              <Link to="/soc" className="tx-process-link">
+                Explore causal chain →
+              </Link>
+            </div>
+
+            {/* Card 04 - Investigate & Respond */}
+            <div className="tx-process-card">
+              <div className="tx-process-card-num">04</div>
+              <div className="tx-process-graphic">
+                <div className="tx-seg-bars">
+                  <div className="tx-seg-bar" />
+                  <div className="tx-seg-bar" />
+                  <div className="tx-seg-bar" />
+                  <div className="tx-seg-bar" />
+                  <div className="tx-seg-bar" />
+                </div>
+              </div>
+              <h3 className="tx-process-title">Investigate & Respond</h3>
+              <p className="tx-process-desc">
+                Open the incident narrative with forensic precision, view chain evidence, inspect source telemetry, and export executive reports.
+              </p>
+              <Link to="/soc" className="tx-process-link">
+                Open SOC Workspace →
+              </Link>
+            </div>
+          </div>
+        </div>
       </section>
 
-      {/* Pricing Section with Monthly/Yearly Toggle */}
-      <section id="pricing">
-        <h2>
-          Pick the depth of{' '}
-          <span style={{ color: '#FF3E8F', textShadow: '0 0 20px rgba(255,62,143,0.5)' }}>
-            investigation.
-          </span>
-        </h2>
-        <p className="ld">
-          Every plan includes timelines, attack graphs and MITRE ATT&amp;CK mapping. Pro adds
-          autonomous investigations and evidence you can hand to an auditor. Prices are illustrative.
-        </p>
-        <div className="bt" role="group" aria-label="Billing period">
-          <button className="on" data-b="m">
-            Monthly
-          </button>
-          <button data-b="y">
-            Yearly<em>save 20%</em>
-          </button>
-        </div>
-        <div className="pg">
-          <div className="pc" style={{ ['--i' as any]: 0 }}>
-            <h3>Solo</h3>
-            <p className="ds">For individual analysts getting started with attack reconstruction.</p>
-            <div className="pr">
-              <sup>$</sup>
-              <b className="amt" data-m="29" data-y="23">
-                29
-              </b>
-              <span>/ month</span>
-            </div>
-            <div className="nt" data-m="Billed monthly" data-y="Billed annually">
-              Billed monthly
-            </div>
-            <button
-              type="button"
-              className="btn o"
-              style={{ width: '100%', cursor: 'pointer' }}
-              onClick={() => navigate('/soc')}
-            >
-              Start free trial
-            </button>
-            <ul>
-              <li>
-                <b>1</b> analyst seat
-              </li>
-              <li>5 GB/day log ingestion</li>
-              <li>30-day retention</li>
-              <li>Detections ranked by severity</li>
-              <li>Attack timeline and graph</li>
-              <li>MITRE ATT&amp;CK mapping</li>
-            </ul>
-          </div>
-          <div className="pc hot" style={{ ['--i' as any]: 1 }}>
-            <span className="pl">MOST POPULAR</span>
-            <h3>Pro</h3>
-            <p className="ds">
-              For security teams who need autonomous investigations and evidence they can defend.
+      {/* Section 3: "The 5 pillars of autonomous attack reconstruction." */}
+      <section className="tx-pillars-section">
+        <div className="tx-container">
+          <div className="tx-pillars-header">
+            <div className="tx-section-tag">DETERMINISTIC CAUSAL CORRELATION</div>
+            <h2 className="tx-section-title">
+              The 5 pillars of<br />
+              <span className="italic-lime">autonomous</span> attack<br />
+              reconstruction.
+            </h2>
+            <p className="tx-pillars-desc">
+              TraceX links events across time windows and entities, so analysts never have to stitch together logs manually.
             </p>
-            <div className="pr">
-              <sup>$</sup>
-              <b className="amt" data-m="99" data-y="79">
-                99
-              </b>
-              <span>/ analyst / month</span>
-            </div>
-            <div className="nt" data-m="Most teams choose this" data-y="Billed annually">
-              Most teams choose this
-            </div>
-            <button
-              type="button"
-              className="btn p"
-              style={{ width: '100%', cursor: 'pointer' }}
-              onClick={() => navigate('/soc')}
-            >
-              Join now
-            </button>
-            <ul>
-              <li>
-                <b>Up to 10</b> analyst seats
-              </li>
-              <li>100 GB/day log ingestion</li>
-              <li>90-day retention</li>
-              <li>Autonomous investigations</li>
-              <li>Cross-event correlation across all sources</li>
-              <li>Evidence chain and incident reports</li>
-              <li>API access and webhooks</li>
-              <li>Priority support, 4-hour response</li>
-            </ul>
           </div>
-          <div className="pc" style={{ ['--i' as any]: 2 }}>
-            <h3>Enterprise</h3>
-            <p className="ds">For SOCs with compliance, scale and deployment requirements.</p>
-            <div className="pr">
-              <sup>$</sup>
-              <b className="amt" data-m="499" data-y="399">
-                499
-              </b>
-              <span>/ month, starting at</span>
+
+          <div className="tx-pillars-grid">
+            {/* Pillar 01 */}
+            <div className="tx-pillar-card">
+              <div className="tx-pillar-num">01</div>
+              <h3 className="tx-pillar-title">Perimeter Reconnaissance</h3>
+              <p className="tx-pillar-desc">
+                External port sweeps and port inventory, SYN flood probes, and external firewall block patterns across perimeter firewalls.
+              </p>
+              <div className="tx-pillar-footer">
+                <span>412 PORT PROBES · 185.220.101.47</span>
+                <span>ETA: T+0m</span>
+              </div>
             </div>
-            <div className="nt" data-m="Annual contract available" data-y="Billed annually">
-              Annual contract available
+
+            {/* Pillar 02 */}
+            <div className="tx-pillar-card">
+              <div className="tx-pillar-num">02</div>
+              <h3 className="tx-pillar-title">Credential Probing & Access</h3>
+              <p className="tx-pillar-desc">
+                Calculates timing windows from brute force to token authentications to identify brute-force spray attacks and password spray.
+              </p>
+              <div className="tx-pillar-footer">
+                <span>AUTH SPRAY: 38 ACC</span>
+                <span>ETA: T+17m</span>
+              </div>
             </div>
-            <button
-              type="button"
-              className="btn o"
-              style={{ width: '100%', cursor: 'pointer' }}
-              onClick={() => navigate('/soc')}
-            >
-              Talk to sales
-            </button>
-            <ul>
-              <li>
-                <b>Unlimited</b> analyst seats
-              </li>
-              <li>1 TB/day log ingestion</li>
-              <li>1-year retention</li>
-              <li>SSO / SAML and role-based access</li>
-              <li>Full audit logs</li>
-              <li>VPC or on-premise deployment</li>
-              <li>Dedicated solutions engineer</li>
-              <li>99.9% uptime SLA</li>
-            </ul>
+
+            {/* Pillar 03 */}
+            <div className="tx-pillar-card">
+              <div className="tx-pillar-num">03</div>
+              <h3 className="tx-pillar-title">Compromise Verification</h3>
+              <p className="tx-pillar-desc">
+                Flags impossible travel and firewall bypassing, immediate post-failure logins confirming credential-backed intrusion.
+              </p>
+              <div className="tx-pillar-footer">
+                <span>GEO: NIGERIA → UK</span>
+                <span>ETA: T+21m</span>
+              </div>
+            </div>
+
+            {/* Pillar 04 */}
+            <div className="tx-pillar-card">
+              <div className="tx-pillar-num">04</div>
+              <h3 className="tx-pillar-title">Privilege Elevation & Sudo</h3>
+              <p className="tx-pillar-desc">
+                Correlates administrative escalation actions (sudo, setuid) proceeding into unauthorized access within 15 minutes.
+              </p>
+              <div className="tx-pillar-footer">
+                <span>RULE: PRIV_ESCALATION_SUDO</span>
+                <span>ETA: T+32m</span>
+              </div>
+            </div>
+
+            {/* Pillar 05 */}
+            <div className="tx-pillar-card">
+              <div className="tx-pillar-num">05</div>
+              <h3 className="tx-pillar-title">Sensitive Data Impact & Egress</h3>
+              <p className="tx-pillar-desc">
+                Identifies large compressed file transfers across the network boundary and outbound data egress to external C2 nodes.
+              </p>
+              <div className="tx-pillar-footer">
+                <span>4.2 GB ARCHIVE → 45.137.21.9</span>
+                <span>ETA: T+46m</span>
+              </div>
+            </div>
+
+            {/* Pillar 06: Featured Interactive Topology */}
+            <div className="tx-pillar-card tx-pillar-featured">
+              <div className="tx-topology-visual">
+                <svg width="100%" height="100%" viewBox="0 0 200 60" fill="none">
+                  <path d="M 15 35 Q 50 15 85 40 T 145 20 T 185 45" stroke="#a3e635" strokeWidth="2" strokeDasharray="3 3" />
+                  <circle cx="15" cy="35" r="4" fill="#a3e635" />
+                  <circle cx="50" cy="22" r="3" fill="#a3e635" opacity="0.6" />
+                  <circle cx="85" cy="40" r="5" fill="#a3e635" />
+                  <circle cx="145" cy="20" r="5" fill="#a3e635" />
+                  <circle cx="185" cy="45" r="6" fill="#a3e635" />
+                  <circle cx="185" cy="45" r="10" stroke="#a3e635" strokeWidth="1" opacity="0.4" />
+                </svg>
+              </div>
+              <h3 className="tx-pillar-title">Interactive Attack Topology</h3>
+              <p className="tx-pillar-desc">
+                Explore the full causal sequence on an interactive force graph with animated connection links and an inspector drawer.
+              </p>
+              <button
+                onClick={() => navigate('/soc')}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  padding: 0,
+                  color: 'var(--tx-lime)',
+                  fontFamily: 'Geist Mono, monospace',
+                  fontSize: '11px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  textAlign: 'left'
+                }}
+              >
+                Explore active topology →
+              </button>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Final Call to Action */}
-      <section id="end">
-        <h2>
-          Read the breach{' '}
-          <span style={{ color: '#FF3E8F', textShadow: '0 0 20px rgba(255,62,143,0.5)' }}>
-            back.
-          </span>
-        </h2>
-        <p>
-          See an attack rebuilt from scattered logs into one sequence you can verify. Start free, or
-          poke around the live demo first.
-        </p>
-        <div className="acts">
-          <button
-            type="button"
-            className="btn p"
-            style={{ cursor: 'pointer' }}
-            onClick={() => navigate('/soc')}
-          >
-            Launch Console
-          </button>
-          <button
-            type="button"
-            className="btn o"
-            style={{ cursor: 'pointer' }}
-            onClick={() => navigate('/ingestion')}
-          >
-            Ingest Logs
-          </button>
-          <a className="btn rr" href="#seq">
-            Try the live demo
-          </a>
+      {/* Section 4: "Every conclusion shows its work." Bento Grid */}
+      <section className="tx-bento-section">
+        <div className="tx-container">
+          <div className="tx-section-tag">CORE CAPABILITIES</div>
+          <h2 className="tx-section-title">
+            Every conclusion <span className="italic-lime">shows its<br />work.</span>
+          </h2>
+
+          <div className="tx-bento-grid">
+            {/* Card 1: Attack graph analysis */}
+            <div className="tx-bento-card">
+              <h3 className="tx-bento-title">Attack graph analysis</h3>
+              <p className="tx-bento-desc">
+                Source IPs, accounts, hosts, and destinations become correlated nodes connected by causal lines into the full path the attacker took.
+              </p>
+
+              <div className="tx-spline-container">
+                <svg width="100%" height="100%" viewBox="0 0 450 120" fill="none">
+                  {/* Glowing background path */}
+                  <path
+                    d="M 20 85 C 90 85, 120 40, 180 40 C 240 40, 270 80, 340 70 C 380 65, 400 45, 430 45"
+                    stroke="rgba(163, 230, 53, 0.2)"
+                    strokeWidth="10"
+                    strokeLinecap="round"
+                  />
+                  {/* Main path */}
+                  <path
+                    d="M 20 85 C 90 85, 120 40, 180 40 C 240 40, 270 80, 340 70 C 380 65, 400 45, 430 45"
+                    stroke="#a3e635"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                  />
+                  {/* 5 Circular Nodes */}
+                  <circle cx="20" cy="85" r="7" fill="#a3e635" />
+                  <circle cx="20" cy="85" r="12" stroke="#a3e635" strokeWidth="1.5" opacity="0.4" />
+
+                  <circle cx="180" cy="40" r="7" fill="#a3e635" />
+                  <circle cx="180" cy="40" r="12" stroke="#a3e635" strokeWidth="1.5" opacity="0.4" />
+
+                  <circle cx="260" cy="62" r="5" fill="#a3e635" />
+
+                  <circle cx="340" cy="70" r="7" fill="#a3e635" />
+                  <circle cx="340" cy="70" r="12" stroke="#a3e635" strokeWidth="1.5" opacity="0.4" />
+
+                  <circle cx="430" cy="45" r="7" fill="#a3e635" />
+                  <circle cx="430" cy="45" r="14" stroke="#a3e635" strokeWidth="1.5" opacity="0.5" />
+                </svg>
+              </div>
+            </div>
+
+            {/* Card 2: MITRE ATT&CK mapping */}
+            <div className="tx-bento-card">
+              <h3 className="tx-bento-title">MITRE ATT&CK mapping</h3>
+              <p className="tx-bento-desc">
+                Each detection carries a MITRE ATT&CK technique: T1078, T1059, T1003, T1068, T1048.
+              </p>
+
+              <div className="tx-mitre-badges">
+                <span className="tx-mitre-badge active-lime">T1078 Valid Accounts</span>
+                <span className="tx-mitre-badge active-lime">T1059 Command Exec</span>
+                <span className="tx-mitre-badge active-lime">T1003 Credential Access</span>
+                <span className="tx-mitre-badge dark-badge">T1068 Priv Escalation</span>
+                <span className="tx-mitre-badge dark-badge">T1048 Data Exfiltration</span>
+                <span className="tx-mitre-badge active-lime">T1046 Network Scan</span>
+              </div>
+            </div>
+
+            {/* Card 3: Evidence correlation */}
+            <div className="tx-bento-card">
+              <h3 className="tx-bento-title">Evidence correlation</h3>
+              <p className="tx-bento-desc">
+                Authentication, firewall, and server records are pinned by entity and time window, from initial scan to real event.
+              </p>
+
+              <div className="tx-evidence-pills">
+                <span className="tx-evidence-pill">AUTH LOGS</span>
+                <span className="tx-evidence-pill">FIREWALL</span>
+                <span className="tx-evidence-pill">SERVER SYSQUERY</span>
+                <span className="tx-evidence-pill">AUDIT TRAIL</span>
+              </div>
+            </div>
+
+            {/* Card 4: Forensic timelines */}
+            <div className="tx-bento-card">
+              <h3 className="tx-bento-title">Forensic timelines</h3>
+              <p className="tx-bento-desc">
+                An ordered sequence of what happened when, from first probe at 02:14 to egress at 02:52 in the sample case.
+              </p>
+
+              <div className="tx-timeline-bars">
+                {[15, 25, 20, 35, 30, 45, 90, 85, 40, 25, 30, 60, 100, 35, 20, 15].map((h, i) => (
+                  <div
+                    key={i}
+                    className={`tx-time-bar ${h >= 85 ? 'active' : ''}`}
+                    style={{ height: `${h}%` }}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Card 5: Explainable threat narratives (Full width) */}
+            <div className="tx-bento-card tx-bento-card-full">
+              <h3 className="tx-bento-title">Explainable threat narratives</h3>
+              <p className="tx-bento-desc">
+                Narratives are generated from deterministic rule evidence, not guessed. Each statement cites the events forming it, so analysts can verify instead of trust.
+              </p>
+
+              <div className="tx-narrative-box">
+                <div className="tx-narrative-tag">INCIDENT #4821 — CAUSAL CHAIN DETAIL</div>
+                <div className="tx-narrative-text">
+                  "185.220.101.47 scanned 10.20.6.11<span className="tx-narrative-ref">[1]</span>, brute-forced admin<span className="tx-narrative-ref">[2]</span>, logged in<span className="tx-narrative-ref">[3]</span>, escalated with sudo<span className="tx-narrative-ref">[4]</span>, and sent 4.2GB to 45.137.21.9<span className="tx-narrative-ref">[5]</span>."
+                </div>
+
+                <div className="tx-narrative-footnotes">
+                  <span>[1] FW-BLOCK-PORT-SCAN</span>
+                  <span>[2] AUTH_BRUTE_FORCE</span>
+                  <span>[3] IMPOSSIBLE_TRAVEL_LOGIN</span>
+                  <span>[4] SUDO_ELEVATION</span>
+                  <span>[5] EGRESS_DATA_IMPACT</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <span className="nt">14-day trial · No credit card · Demo data only</span>
+      </section>
+
+      {/* Final CTA Section */}
+      <section className="tx-cta-section">
+        <div className="tx-cta-glow" />
+        <div className="tx-container">
+          <h2 className="tx-cta-title">
+            Every intrusion is a<br />
+            story. <span className="italic-lime">Read it in minutes.</span>
+          </h2>
+
+          <div className="tx-cta-actions">
+            <button onClick={() => navigate('/soc')} className="tx-btn-lime" style={{ padding: '12px 26px', fontSize: '14px' }}>
+              Open SOC Workspace
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </button>
+            <button onClick={handleLoadScenario} className="tx-btn-dark" style={{ padding: '12px 24px', fontSize: '14px' }}>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="5 3 19 12 5 21 5 3" />
+              </svg>
+              Load Full Scenario
+            </button>
+          </div>
+        </div>
       </section>
 
       {/* Footer */}
-      <footer className="ft">
-        <div className="fg">
-          <div>
-            <b>
-              Trace<i>X</i>
-            </b>
-            <p>
-              Autonomous security investigation and attack reconstruction. Fragmented telemetry in,
-              defensible narrative out.
-            </p>
-            <span className="ok">
-              <i />
-              All systems operational
-            </span>
+      <footer className="tx-footer">
+        <div className="tx-footer-inner">
+          <div className="tx-footer-brand">
+            <Link to="/" className="tx-logo">
+              <span>Trace<span className="tx-logo-accent">X</span></span>
+            </Link>
+            <span>Autonomous Cybersecurity Investigation & Attack Reconstruction</span>
           </div>
-          <div>
-            <h4>Platform</h4>
-            <Link to="/ingestion">Log ingestion</Link>
-            <Link to="/detections">Threat detection</Link>
-            <Link to="/events">Correlation</Link>
-            <Link to="/incidents">Attack reconstruction</Link>
-            <Link to="/soc">SOC Overview</Link>
+
+          <div className="tx-footer-links">
+            <Link to="/soc">SOC Dashboard</Link>
+            <Link to="/incidents">Incidents</Link>
+            <Link to="/detections">Detections</Link>
+            <Link to="/events">Telemetry</Link>
+            <span>© 2026 TraceX</span>
           </div>
-          <div>
-            <h4>Resources</h4>
-            <a href="#seq">Live Sequence</a>
-            <a href="#caps">Capabilities</a>
-            <a href="#pricing">Pricing Plans</a>
-            <Link to="/events">Event Explorer</Link>
-            <Link to="/incidents">Incident Reports</Link>
-          </div>
-          <div>
-            <h4>Company</h4>
-            <a href="#end">About TraceX</a>
-            <a href="#end">Security &amp; Trust</a>
-            <a href="#end">Careers</a>
-            <a href="#end">Contact</a>
-            <a href="#pricing">Pricing</a>
-          </div>
-        </div>
-        <div className="fb">
-          <span>© 2026 TraceX. Autonomous Security Investigation &amp; Attack Reconstruction.</span>
-          <span>Privacy · Terms · Status · SOC 2 Compliant</span>
         </div>
       </footer>
     </div>
