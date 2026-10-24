@@ -23,14 +23,21 @@ export const AttackGraph: React.FC<AttackGraphProps> = ({ graphData, onSelectNod
   const getNodeIcon = (type: string) => {
     switch (type) {
       case 'attacker_ip':
+      case 'attacker':
         return <Network className="w-5 h-5 text-red-400" />;
       case 'compromised_user':
+      case 'target_user':
+      case 'user':
         return <User className="w-5 h-5 text-amber-400" />;
       case 'target_ip':
+      case 'target_asset':
+      case 'target':
         return <Server className="w-5 h-5 text-cyan-400" />;
       case 'detection_rule':
+      case 'detection':
         return <ShieldAlert className="w-5 h-5 text-indigo-400" />;
       case 'attack_stage':
+      case 'stage':
         return <Zap className="w-5 h-5 text-purple-400" />;
       default:
         return <ChevronRight className="w-5 h-5 text-slate-400" />;
@@ -41,14 +48,21 @@ export const AttackGraph: React.FC<AttackGraphProps> = ({ graphData, onSelectNod
     if (isSelected) return 'border-cyan-400 ring-2 ring-cyan-400/30 shadow-[0_0_20px_rgba(6,182,212,0.4)]';
     switch (type) {
       case 'attacker_ip':
+      case 'attacker':
         return 'border-red-500/50 hover:border-red-400 bg-red-950/20';
       case 'compromised_user':
+      case 'target_user':
+      case 'user':
         return 'border-amber-500/50 hover:border-amber-400 bg-amber-950/20';
       case 'target_ip':
+      case 'target_asset':
+      case 'target':
         return 'border-cyan-500/50 hover:border-cyan-400 bg-cyan-950/20';
       case 'detection_rule':
+      case 'detection':
         return 'border-indigo-500/50 hover:border-indigo-400 bg-indigo-950/20';
       case 'attack_stage':
+      case 'stage':
         return 'border-purple-500/50 hover:border-purple-400 bg-purple-950/20';
       default:
         return 'border-slate-800 hover:border-slate-700 bg-slate-900';
@@ -56,11 +70,11 @@ export const AttackGraph: React.FC<AttackGraphProps> = ({ graphData, onSelectNod
   };
 
   // Group nodes by type for clear topology visualization
-  const attackerNodes = graphData.nodes.filter((n) => n.type === 'attacker_ip');
-  const userNodes = graphData.nodes.filter((n) => n.type === 'compromised_user');
-  const detectionNodes = graphData.nodes.filter((n) => n.type === 'detection_rule');
-  const targetNodes = graphData.nodes.filter((n) => n.type === 'target_ip');
-  const stageNodes = graphData.nodes.filter((n) => n.type === 'attack_stage');
+  const attackerNodes = graphData.nodes.filter((n) => n.type === 'attacker_ip' || n.type === 'attacker');
+  const userNodes = graphData.nodes.filter((n) => n.type === 'compromised_user' || n.type === 'target_user' || n.type === 'user');
+  const detectionNodes = graphData.nodes.filter((n) => n.type === 'detection_rule' || n.type === 'detection');
+  const targetNodes = graphData.nodes.filter((n) => n.type === 'target_ip' || n.type === 'target_asset' || n.type === 'target');
+  const stageNodes = graphData.nodes.filter((n) => n.type === 'attack_stage' || n.type === 'stage');
 
   const handleNodeClick = (node: GraphNode) => {
     setSelectedNode(node);

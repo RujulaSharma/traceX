@@ -178,15 +178,24 @@ class CorrelationEngine:
                 f"Network reconnaissance detected with {len(port_scan_events)} probe events "
                 f"targeting internal assets."
             )
+            f_ids = [f.id for f in port_scan_findings if f.id is not None]
+            e_ids = [e.id for e in port_scan_events if e.id is not None]
             stages.append(
                 AttackStage(
                     stage_number=stage_num,
                     name="Reconnaissance",
+                    stage="Reconnaissance",
+                    title="Reconnaissance",
                     status="detected",
                     timestamp=ts,
+                    first_seen=ts,
+                    last_seen=ts,
                     description=desc,
-                    finding_ids=[f.id for f in port_scan_findings if f.id is not None],
-                    event_ids=[e.id for e in port_scan_events if e.id is not None],
+                    finding_ids=f_ids,
+                    findings_count=len(f_ids),
+                    event_ids=e_ids,
+                    event_count=len(e_ids),
+                    severities=list({f.severity for f in port_scan_findings}) or ["medium"],
                 )
             )
             stage_num += 1
@@ -197,15 +206,24 @@ class CorrelationEngine:
         if bf_findings or len(bf_events) >= 3:
             ts = bf_findings[0].timestamp if bf_findings else bf_events[0].timestamp
             desc = f"Repeated authentication failures ({len(bf_events)} attempts) targeting user account credentials."
+            f_ids = [f.id for f in bf_findings if f.id is not None]
+            e_ids = [e.id for e in bf_events if e.id is not None]
             stages.append(
                 AttackStage(
                     stage_number=stage_num,
                     name="Credential Access",
+                    stage="Credential Access",
+                    title="Credential Access",
                     status="detected",
                     timestamp=ts,
+                    first_seen=ts,
+                    last_seen=ts,
                     description=desc,
-                    finding_ids=[f.id for f in bf_findings if f.id is not None],
-                    event_ids=[e.id for e in bf_events if e.id is not None],
+                    finding_ids=f_ids,
+                    findings_count=len(f_ids),
+                    event_ids=e_ids,
+                    event_count=len(e_ids),
+                    severities=list({f.severity for f in bf_findings}) or ["high"],
                 )
             )
             stage_num += 1
@@ -219,15 +237,24 @@ class CorrelationEngine:
         if login_success_findings or (login_success_events and stage_num > 1):
             ts = login_success_findings[0].timestamp if login_success_findings else login_success_events[0].timestamp
             desc = "Successful authentication following reconnaissance and credential probing, achieving initial access."
+            f_ids = [f.id for f in login_success_findings if f.id is not None]
+            e_ids = [e.id for e in login_success_events if e.id is not None]
             stages.append(
                 AttackStage(
                     stage_number=stage_num,
                     name="Initial Access",
+                    stage="Initial Access",
+                    title="Initial Access",
                     status="detected",
                     timestamp=ts,
+                    first_seen=ts,
+                    last_seen=ts,
                     description=desc,
-                    finding_ids=[f.id for f in login_success_findings if f.id is not None],
-                    event_ids=[e.id for e in login_success_events if e.id is not None],
+                    finding_ids=f_ids,
+                    findings_count=len(f_ids),
+                    event_ids=e_ids,
+                    event_count=len(e_ids),
+                    severities=list({f.severity for f in login_success_findings}) or ["high"],
                 )
             )
             stage_num += 1
@@ -242,37 +269,56 @@ class CorrelationEngine:
         if priv_esc_findings or priv_esc_events:
             ts = priv_esc_findings[0].timestamp if priv_esc_findings else priv_esc_events[0].timestamp
             desc = "Administrative privilege escalation executed to gain elevated system privileges."
+            f_ids = [f.id for f in priv_esc_findings if f.id is not None]
+            e_ids = [e.id for e in priv_esc_events if e.id is not None]
             stages.append(
                 AttackStage(
                     stage_number=stage_num,
                     name="Privilege Escalation",
+                    stage="Privilege Escalation",
+                    title="Privilege Escalation",
                     status="detected",
                     timestamp=ts,
+                    first_seen=ts,
+                    last_seen=ts,
                     description=desc,
-                    finding_ids=[f.id for f in priv_esc_findings if f.id is not None],
-                    event_ids=[e.id for e in priv_esc_events if e.id is not None],
+                    finding_ids=f_ids,
+                    findings_count=len(f_ids),
+                    event_ids=e_ids,
+                    event_count=len(e_ids),
+                    severities=list({f.severity for f in priv_esc_findings}) or ["critical"],
                 )
             )
             stage_num += 1
 
         # Stage 5: Execution & Data Access
+        data_findings = [f for f in findings if f.rule_id in ("RULE_SUSPICIOUS_SUDO", "RULE_DATA_ACCESS", "RULE_EXFILTRATION")]
         data_events = [
             e for e in events
             if e.event_type.upper() in ("DATABASE_ACCESS", "FILE_ACCESS", "OUTBOUND_TRANSFER")
         ]
-        if data_events:
-            ts = data_events[0].timestamp
+        if data_events or data_findings:
+            ts = data_findings[0].timestamp if data_findings else data_events[0].timestamp
             actions_list = {e.event_type for e in data_events}
-            desc = f"Access to sensitive data assets and database resources ({', '.join(sorted(actions_list))})."
+            desc = f"Access to sensitive data assets and database resources ({', '.join(sorted(actions_list)) if actions_list else 'data access'})."
+            f_ids = [f.id for f in data_findings if f.id is not None]
+            e_ids = [e.id for e in data_events if e.id is not None]
             stages.append(
                 AttackStage(
                     stage_number=stage_num,
                     name="Data Access & Impact",
+                    stage="Data Access & Impact",
+                    title="Data Access & Impact",
                     status="detected",
                     timestamp=ts,
+                    first_seen=ts,
+                    last_seen=ts,
                     description=desc,
-                    finding_ids=[],
-                    event_ids=[e.id for e in data_events if e.id is not None],
+                    finding_ids=f_ids,
+                    findings_count=len(f_ids),
+                    event_ids=e_ids,
+                    event_count=len(e_ids),
+                    severities=list({f.severity for f in data_findings}) or ["critical"],
                 )
             )
 
@@ -654,92 +700,210 @@ class CorrelationEngine:
             timeline=timeline_items,
         )
 
-    def build_attack_graph(self, incident: Incident) -> AttackGraphResponse:
+    def build_attack_graph(
+        self,
+        incident: Incident,
+        findings: list[DetectionFinding] | None = None,
+        events: list[SecurityEvent] | None = None,
+    ) -> AttackGraphResponse:
         """Construct nodes and directed edges for the interactive attack reconstruction graph."""
         nodes: list[GraphNode] = []
         edges: list[GraphEdge] = []
 
+        # 1. Attacker Entrypoint Node
         attacker_ip = incident.primary_ip or "External-Threat-Actor"
         nodes.append(
             GraphNode(
                 id="attacker_node",
                 type="attacker_ip",
-                label=f"Threat Origin: {attacker_ip}",
-                subtitle="Source IP / Reconnaissance Probe",
+                label=attacker_ip,
+                subtitle="Threat Origin / Recon Probe",
                 severity="critical" if incident.severity == "critical" else "high",
                 data={"ip": attacker_ip, "country": "External Internet"},
             )
         )
 
-        prev_node_id = "attacker_node"
-
-        for idx, stage in enumerate(incident.stages):
-            stage_node_id = f"stage_node_{idx + 1}"
-            nodes.append(
-                GraphNode(
-                    id=stage_node_id,
-                    type="attack_stage",
-                    label=f"Stage {stage['stage_number']}: {stage['name']}",
-                    subtitle=stage["description"][:60] + "...",
-                    severity="high",
-                    data={
-                        "stage_number": stage["stage_number"],
-                        "name": stage["name"],
-                        "description": stage["description"],
-                        "timestamp": str(stage["timestamp"]),
-                    },
-                )
-            )
-
-            edges.append(
-                GraphEdge(
-                    id=f"edge_{prev_node_id}_{stage_node_id}",
-                    source=prev_node_id,
-                    target=stage_node_id,
-                    label=f"Progresses to {stage['name']}",
-                    animated=True,
-                )
-            )
-            prev_node_id = stage_node_id
-
+        # 2. Compromised Identity Node
         if incident.affected_user:
-            user_node_id = "user_node"
             nodes.append(
                 GraphNode(
-                    id=user_node_id,
-                    type="target_user",
-                    label=f"Compromised User: {incident.affected_user}",
-                    subtitle="Account Identity Credential",
+                    id="user_node",
+                    type="compromised_user",
+                    label=incident.affected_user,
+                    subtitle="Compromised Identity Account",
                     severity="critical",
                     data={"username": incident.affected_user},
                 )
             )
+
+        # 3. Detection Rule Nodes
+        finding_list = findings or []
+        finding_node_ids: list[str] = []
+        for f in finding_list:
+            node_id = f"finding_node_{f.id}"
+            finding_node_ids.append(node_id)
+            mitre_tactic = (f.metadata_ or {}).get("mitre_tactic") if isinstance(f.metadata_, dict) else None
+            if not mitre_tactic:
+                if "PORT_SCAN" in f.rule_id:
+                    mitre_tactic = "Reconnaissance"
+                elif "BRUTE_FORCE" in f.rule_id:
+                    mitre_tactic = "Credential Access"
+                elif "SUCCESS" in f.rule_id or "LOGIN" in f.rule_id:
+                    mitre_tactic = "Initial Access"
+                elif "PRIVILEGE" in f.rule_id:
+                    mitre_tactic = "Privilege Escalation"
+                else:
+                    mitre_tactic = "Impact"
+
+            nodes.append(
+                GraphNode(
+                    id=node_id,
+                    type="detection_rule",
+                    label=f.rule_name,
+                    subtitle=f.description[:65] + "..." if len(f.description) > 65 else f.description,
+                    severity=f.severity,
+                    stage=mitre_tactic,
+                    confidence=f.confidence,
+                    data={
+                        "finding_id": f.id,
+                        "rule_id": f.rule_id,
+                        "rule_name": f.rule_name,
+                        "confidence": f.confidence,
+                        "mitre_tactic": mitre_tactic,
+                    },
+                )
+            )
+
+            # Edge from Attacker to Detection
             edges.append(
                 GraphEdge(
-                    id=f"edge_{prev_node_id}_{user_node_id}",
-                    source=prev_node_id,
-                    target=user_node_id,
-                    label="Account Controlled",
+                    id=f"edge_attacker_to_{node_id}",
+                    source="attacker_node",
+                    target=node_id,
+                    label="Triggered Alert",
                     animated=True,
                 )
             )
 
-        asset_node_id = "asset_node"
+        # 4. Kill Chain Stage Nodes
+        stage_node_ids: list[str] = []
+        raw_stages = incident.stages or []
+        for idx, stage in enumerate(raw_stages):
+            s_name = stage.get("name") if isinstance(stage, dict) else getattr(stage, "name", None)
+            s_name = s_name or (stage.get("stage") if isinstance(stage, dict) else getattr(stage, "stage", f"Stage {idx + 1}"))
+            s_num = stage.get("stage_number") if isinstance(stage, dict) else getattr(stage, "stage_number", idx + 1)
+            s_desc = stage.get("description") if isinstance(stage, dict) else getattr(stage, "description", "")
+            s_finding_ids = stage.get("finding_ids", []) if isinstance(stage, dict) else getattr(stage, "finding_ids", [])
+            s_event_ids = stage.get("event_ids", []) if isinstance(stage, dict) else getattr(stage, "event_ids", [])
+
+            stage_node_id = f"stage_node_{s_num}"
+            stage_node_ids.append(stage_node_id)
+
+            nodes.append(
+                GraphNode(
+                    id=stage_node_id,
+                    type="attack_stage",
+                    label=f"Stage {s_num}: {s_name}",
+                    subtitle=s_desc[:65] + "..." if len(s_desc) > 65 else s_desc,
+                    severity="high",
+                    stage=s_name,
+                    data={
+                        "stage_number": s_num,
+                        "name": s_name,
+                        "description": s_desc,
+                        "finding_ids": s_finding_ids,
+                        "event_ids": s_event_ids,
+                    },
+                )
+            )
+
+            # Edges between findings and stages
+            for f in finding_list:
+                if f.id in s_finding_ids:
+                    edges.append(
+                        GraphEdge(
+                            id=f"edge_finding_{f.id}_to_{stage_node_id}",
+                            source=f"finding_node_{f.id}",
+                            target=stage_node_id,
+                            label="Supports Stage",
+                            animated=True,
+                        )
+                    )
+
+        # Sequential edges across stages
+        for i in range(len(stage_node_ids) - 1):
+            edges.append(
+                GraphEdge(
+                    id=f"edge_{stage_node_ids[i]}_to_{stage_node_ids[i+1]}",
+                    source=stage_node_ids[i],
+                    target=stage_node_ids[i+1],
+                    label="Progression",
+                    animated=True,
+                )
+            )
+
+        # If no findings were present, link attacker directly to stage 1
+        if not finding_list and stage_node_ids:
+            edges.append(
+                GraphEdge(
+                    id="edge_attacker_to_stage_1",
+                    source="attacker_node",
+                    target=stage_node_ids[0],
+                    label="Initiates Intrusion",
+                    animated=True,
+                )
+            )
+
+        # 5. Connect user node
+        if incident.affected_user and "user_node" in [n.id for n in nodes]:
+            # Connect stage 2 or 3 (Initial Access / Credential Access) to user
+            conn_stage = stage_node_ids[min(1, len(stage_node_ids) - 1)] if stage_node_ids else "attacker_node"
+            edges.append(
+                GraphEdge(
+                    id="edge_stage_to_user",
+                    source=conn_stage,
+                    target="user_node",
+                    label="Account Controlled",
+                    animated=True,
+                )
+            )
+            # Connect user to privilege escalation if present
+            if len(stage_node_ids) >= 4:
+                edges.append(
+                    GraphEdge(
+                        id="edge_user_to_priv_esc",
+                        source="user_node",
+                        target=stage_node_ids[3],
+                        label="Privilege Escalation",
+                        animated=True,
+                    )
+                )
+
+        # 6. Target Asset Node
+        target_ip = None
+        if events:
+            for ev in events:
+                if ev.destination_ip and ev.destination_ip != incident.primary_ip:
+                    target_ip = ev.destination_ip
+                    break
+        target_label = target_ip or "Core Server / Database"
         nodes.append(
             GraphNode(
-                id=asset_node_id,
-                type="target_asset",
-                label="Target Resource: Core Database / Host",
+                id="asset_node",
+                type="target_ip",
+                label=target_label,
                 subtitle="High-Value Internal Asset",
                 severity="high",
-                data={"asset_type": "Database / Linux Host"},
+                data={"asset_type": "Database / Linux Host", "ip": target_label},
             )
         )
+
+        last_stage_id = stage_node_ids[-1] if stage_node_ids else "attacker_node"
         edges.append(
             GraphEdge(
-                id=f"edge_{prev_node_id}_{asset_node_id}",
-                source=prev_node_id,
-                target=asset_node_id,
+                id="edge_stage_to_asset",
+                source=last_stage_id,
+                target="asset_node",
                 label="Impacted Resource",
                 animated=True,
             )

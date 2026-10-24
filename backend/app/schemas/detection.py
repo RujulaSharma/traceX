@@ -36,16 +36,22 @@ class DetectionFindingResponse(BaseModel):
     id: int
     rule_id: str
     rule_name: str
+    title: str | None = None
     detection_type: str
     severity: str
     confidence: float
     source_ip: str | None = None
     username: str | None = None
+    entity_type: str | None = None
+    entity_value: str | None = None
     timestamp: datetime
     first_seen: datetime
     last_seen: datetime
     description: str
     evidence_event_ids: list[int] = Field(default_factory=list)
+    event_count: int = 0
+    mitre_tactic: str | None = None
+    mitre_technique: str | None = None
     metadata: dict[str, Any] | None = None
     created_at: datetime
 

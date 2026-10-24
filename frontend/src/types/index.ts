@@ -45,14 +45,19 @@ export interface DetectionFinding {
 }
 
 export interface AttackStage {
-  stage: string;
-  title: string;
+  stage?: string;
+  name?: string;
+  title?: string;
+  stage_number?: number;
   description: string;
-  first_seen: string;
-  last_seen: string;
-  findings_count: number;
-  event_count: number;
-  severities: string[];
+  first_seen?: string;
+  last_seen?: string;
+  timestamp?: string;
+  findings_count?: number;
+  finding_ids?: number[];
+  event_count?: number;
+  event_ids?: number[];
+  severities?: string[];
 }
 
 export interface RiskFactor {
@@ -72,7 +77,8 @@ export interface IncidentExplanation {
 export interface GraphNode {
   id: string;
   label: string;
-  type: 'attacker_ip' | 'compromised_user' | 'target_ip' | 'detection_rule' | 'attack_stage' | 'action_event';
+  type: 'attacker_ip' | 'compromised_user' | 'target_user' | 'target_ip' | 'target_asset' | 'detection_rule' | 'attack_stage' | 'action_event' | string;
+  subtitle?: string;
   stage?: string;
   severity?: string;
   confidence?: number;

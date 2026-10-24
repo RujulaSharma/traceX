@@ -137,7 +137,33 @@ export const tracexApi = {
 
   getIncidentById: async (id: number): Promise<Incident> => {
     const res = await api.get(`/incidents/${id}`);
-    return res.data;
+    const data = res.data;
+    const rawStages: any[] = Array.isArray(data.stages) ? data.stages : [];
+    const stages = rawStages.map((s: any, idx: number) => ({
+      ...s,
+      stage: s.stage || s.name || `Stage ${idx + 1}`,
+      name: s.name || s.stage || `Stage ${idx + 1}`,
+      title: s.title || s.name || s.stage || `Stage ${idx + 1}`,
+      stage_number: s.stage_number ?? idx + 1,
+      description: s.description || '',
+      first_seen: s.first_seen || s.timestamp || '',
+      last_seen: s.last_seen || s.timestamp || '',
+      timestamp: s.timestamp || s.first_seen || '',
+      findings_count: s.findings_count ?? (Array.isArray(s.finding_ids) ? s.finding_ids.length : 0),
+      finding_ids: s.finding_ids || [],
+      event_count: s.event_count ?? (Array.isArray(s.event_ids) ? s.event_ids.length : 0),
+      event_ids: s.event_ids || [],
+      severities: Array.isArray(s.severities) && s.severities.length > 0 ? s.severities : ['high'],
+    }));
+
+    return {
+      ...data,
+      primary_attacker_ip: data.primary_attacker_ip || data.primary_ip || null,
+      compromised_username: data.compromised_username || data.affected_user || null,
+      findings_count: data.findings_count ?? (Array.isArray(data.finding_ids) ? data.finding_ids.length : 0),
+      events_count: data.events_count ?? (Array.isArray(data.event_ids) ? data.event_ids.length : 0),
+      stages,
+    };
   },
 
   getIncidentTimeline: async (id: number): Promise<{ incident_id: number; total_items: number; timeline: TimelineEvent[] }> => {
@@ -147,7 +173,23 @@ export const tracexApi = {
 
   getIncidentEvidence: async (id: number): Promise<{ incident_id: number; findings: DetectionFinding[]; events: SecurityEvent[] }> => {
     const res = await api.get(`/incidents/${id}/evidence`);
-    return res.data;
+    const data = res.data || {};
+    const rawFindings: any[] = Array.isArray(data.findings) ? data.findings : [];
+    const findings: DetectionFinding[] = rawFindings.map((f: any) => ({
+      ...f,
+      title: f.title || f.rule_name || 'Detection Finding',
+      rule_name: f.rule_name || f.title || 'Detection Finding',
+      entity_type: f.entity_type || (f.username ? 'user' : f.source_ip ? 'ip' : 'system'),
+      entity_value: f.entity_value || f.username || f.source_ip || 'system',
+      event_count: f.event_count ?? (Array.isArray(f.evidence_event_ids) ? f.evidence_event_ids.length : 0),
+      mitre_technique: f.mitre_technique || f.metadata?.mitre_technique || 'N/A',
+      mitre_tactic: f.mitre_tactic || f.metadata?.mitre_tactic || 'ATT&CK',
+    }));
+    return {
+      incident_id: data.incident_id || id,
+      findings,
+      events: Array.isArray(data.events) ? data.events : [],
+    };
   },
 
   getIncidentGraph: async (id: number): Promise<AttackGraphData> => {

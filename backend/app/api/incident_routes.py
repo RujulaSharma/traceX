@@ -55,6 +55,65 @@ def run_correlation(
     return engine.run_on_database(db=db, request=request)
 
 
+def _serialize_incident_response(inc: Incident) -> IncidentResponse:
+    """Helper to convert Incident ORM model into fully-populated IncidentResponse."""
+    stages: list[AttackStage] = []
+    for idx, s in enumerate(inc.stages or []):
+        s_dict = s if isinstance(s, dict) else s.model_dump()
+        stage_name = s_dict.get("name") or s_dict.get("stage") or f"Stage {idx + 1}"
+        finding_ids = s_dict.get("finding_ids") or []
+        event_ids = s_dict.get("event_ids") or []
+        severities = s_dict.get("severities") or ["high" if s_dict.get("stage_number", idx + 1) >= 4 else "medium"]
+        stages.append(
+            AttackStage(
+                stage_number=s_dict.get("stage_number", idx + 1),
+                name=stage_name,
+                stage=s_dict.get("stage") or stage_name,
+                title=s_dict.get("title") or stage_name,
+                status=s_dict.get("status", "detected"),
+                timestamp=s_dict.get("timestamp") or inc.first_seen,
+                first_seen=s_dict.get("first_seen") or s_dict.get("timestamp") or inc.first_seen,
+                last_seen=s_dict.get("last_seen") or s_dict.get("timestamp") or inc.last_seen,
+                description=s_dict.get("description", ""),
+                finding_ids=finding_ids,
+                findings_count=s_dict.get("findings_count", len(finding_ids)),
+                event_ids=event_ids,
+                event_count=s_dict.get("event_count", len(event_ids)),
+                severities=severities,
+            )
+        )
+
+    finding_ids = inc.finding_ids or []
+    event_ids = inc.event_ids or []
+
+    return IncidentResponse(
+        id=inc.id,
+        incident_number=inc.incident_number,
+        title=inc.title,
+        status=inc.status,
+        severity=inc.severity,
+        risk_score=inc.risk_score,
+        confidence=inc.confidence,
+        primary_ip=inc.primary_ip,
+        primary_attacker_ip=inc.primary_ip,
+        affected_user=inc.affected_user,
+        compromised_username=inc.affected_user,
+        first_seen=inc.first_seen,
+        last_seen=inc.last_seen,
+        summary=inc.summary,
+        attack_stage=inc.attack_stage,
+        risk_factors=[RiskFactor(**rf) if isinstance(rf, dict) else rf for rf in (inc.risk_factors or [])],
+        stages=stages,
+        explanation=inc.explanation or {},
+        finding_ids=finding_ids,
+        findings_count=len(finding_ids),
+        event_ids=event_ids,
+        events_count=len(event_ids),
+        created_at=inc.created_at,
+        updated_at=inc.updated_at,
+    )
+
+
 @router.get(
     "/incidents",
     response_model=list[IncidentResponse],
@@ -79,31 +138,7 @@ def list_incidents(
     query = query.order_by(Incident.risk_score.desc(), Incident.last_seen.desc()).offset(skip).limit(limit)
     incidents = db.execute(query).scalars().all()
 
-    return [
-        IncidentResponse(
-            id=inc.id,
-            incident_number=inc.incident_number,
-            title=inc.title,
-            status=inc.status,
-            severity=inc.severity,
-            risk_score=inc.risk_score,
-            confidence=inc.confidence,
-            primary_ip=inc.primary_ip,
-            affected_user=inc.affected_user,
-            first_seen=inc.first_seen,
-            last_seen=inc.last_seen,
-            summary=inc.summary,
-            attack_stage=inc.attack_stage,
-            risk_factors=[RiskFactor(**rf) for rf in inc.risk_factors],
-            stages=[AttackStage(**s) for s in inc.stages],
-            explanation=inc.explanation,
-            finding_ids=inc.finding_ids,
-            event_ids=inc.event_ids,
-            created_at=inc.created_at,
-            updated_at=inc.updated_at,
-        )
-        for inc in incidents
-    ]
+    return [_serialize_incident_response(inc) for inc in incidents]
 
 
 @router.get(
@@ -125,28 +160,7 @@ def get_incident_by_id(
             detail=f"Incident with ID {incident_id} not found.",
         )
 
-    return IncidentResponse(
-        id=inc.id,
-        incident_number=inc.incident_number,
-        title=inc.title,
-        status=inc.status,
-        severity=inc.severity,
-        risk_score=inc.risk_score,
-        confidence=inc.confidence,
-        primary_ip=inc.primary_ip,
-        affected_user=inc.affected_user,
-        first_seen=inc.first_seen,
-        last_seen=inc.last_seen,
-        summary=inc.summary,
-        attack_stage=inc.attack_stage,
-        risk_factors=[RiskFactor(**rf) for rf in inc.risk_factors],
-        stages=[AttackStage(**s) for s in inc.stages],
-        explanation=inc.explanation,
-        finding_ids=inc.finding_ids,
-        event_ids=inc.event_ids,
-        created_at=inc.created_at,
-        updated_at=inc.updated_at,
-    )
+    return _serialize_incident_response(inc)
 
 
 @router.get(
@@ -187,8 +201,19 @@ def get_incident_evidence(
     if not inc:
         raise HTTPException(status_code=404, detail=f"Incident {incident_id} not found.")
 
-    events = list(db.execute(select(SecurityEvent).where(SecurityEvent.id.in_(inc.event_ids))).scalars().all())
-    findings = list(db.execute(select(DetectionFinding).where(DetectionFinding.id.in_(inc.finding_ids))).scalars().all())
+    event_ids = inc.event_ids or []
+    finding_ids = inc.finding_ids or []
+
+    events = (
+        list(db.execute(select(SecurityEvent).where(SecurityEvent.id.in_(event_ids)).order_by(SecurityEvent.timestamp.asc())).scalars().all())
+        if event_ids
+        else []
+    )
+    findings = (
+        list(db.execute(select(DetectionFinding).where(DetectionFinding.id.in_(finding_ids)).order_by(DetectionFinding.timestamp.asc())).scalars().all())
+        if finding_ids
+        else []
+    )
 
     event_responses = [
         EventResponse(
@@ -212,16 +237,22 @@ def get_incident_evidence(
             id=f.id,
             rule_id=f.rule_id,
             rule_name=f.rule_name,
+            title=f.rule_name,
             detection_type=f.detection_type,
             severity=f.severity,
             confidence=f.confidence,
             source_ip=f.source_ip,
             username=f.username,
+            entity_type="user" if f.username else ("ip" if f.source_ip else "system"),
+            entity_value=f.username or f.source_ip or "system",
             timestamp=f.timestamp,
             first_seen=f.first_seen,
             last_seen=f.last_seen,
             description=f.description,
-            evidence_event_ids=f.evidence_event_ids,
+            evidence_event_ids=f.evidence_event_ids or [],
+            event_count=len(f.evidence_event_ids or []),
+            mitre_tactic=(f.metadata_ or {}).get("mitre_tactic") if isinstance(f.metadata_, dict) else None,
+            mitre_technique=(f.metadata_ or {}).get("mitre_technique") if isinstance(f.metadata_, dict) else None,
             metadata=f.metadata_,
             created_at=f.created_at,
         )
@@ -253,8 +284,22 @@ def get_incident_attack_graph(
     if not inc:
         raise HTTPException(status_code=404, detail=f"Incident {incident_id} not found.")
 
+    finding_ids = inc.finding_ids or []
+    event_ids = inc.event_ids or []
+
+    findings = (
+        list(db.execute(select(DetectionFinding).where(DetectionFinding.id.in_(finding_ids))).scalars().all())
+        if finding_ids
+        else []
+    )
+    events = (
+        list(db.execute(select(SecurityEvent).where(SecurityEvent.id.in_(event_ids))).scalars().all())
+        if event_ids
+        else []
+    )
+
     engine = get_correlation_engine()
-    return engine.build_attack_graph(incident=inc)
+    return engine.build_attack_graph(incident=inc, findings=findings, events=events)
 
 
 @router.patch(
@@ -281,4 +326,4 @@ def update_incident_status(
     db.commit()
     db.refresh(inc)
 
-    return get_incident_by_id(incident_id=incident_id, db=db)
+    return _serialize_incident_response(inc)

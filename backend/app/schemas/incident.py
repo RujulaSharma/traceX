@@ -25,11 +25,18 @@ class AttackStage(BaseModel):
 
     stage_number: int
     name: str  # e.g. Reconnaissance, Credential Access, Initial Access, Privilege Escalation, Exfiltration
-    status: str  # detected, inferred
+    stage: str | None = None  # Frontend compatibility alias for name
+    title: str | None = None  # Frontend compatibility alias
+    status: str = "detected"  # detected, inferred
     timestamp: datetime
+    first_seen: datetime | None = None
+    last_seen: datetime | None = None
     description: str
     finding_ids: list[int] = Field(default_factory=list)
+    findings_count: int = 0
     event_ids: list[int] = Field(default_factory=list)
+    event_count: int = 0
+    severities: list[str] = Field(default_factory=list)
 
 
 class IncidentExplanation(BaseModel):
@@ -53,7 +60,9 @@ class IncidentResponse(BaseModel):
     risk_score: float
     confidence: float
     primary_ip: str | None = None
+    primary_attacker_ip: str | None = None  # Frontend compatibility alias
     affected_user: str | None = None
+    compromised_username: str | None = None  # Frontend compatibility alias
     first_seen: datetime
     last_seen: datetime
     summary: str
@@ -62,7 +71,9 @@ class IncidentResponse(BaseModel):
     stages: list[AttackStage] = Field(default_factory=list)
     explanation: IncidentExplanation | dict[str, Any] = Field(default_factory=dict)
     finding_ids: list[int] = Field(default_factory=list)
+    findings_count: int = 0
     event_ids: list[int] = Field(default_factory=list)
+    events_count: int = 0
     created_at: datetime
     updated_at: datetime
 
@@ -112,10 +123,12 @@ class GraphNode(BaseModel):
     """Node in the attack reconstruction graph."""
 
     id: str
-    type: str  # "attacker_ip", "attack_stage", "target_user", "target_asset"
+    type: str  # "attacker_ip", "attack_stage", "target_user", "target_asset", "detection_rule", "compromised_user", "target_ip"
     label: str
     subtitle: str | None = None
     severity: str | None = None
+    stage: str | None = None
+    confidence: float | None = None
     data: dict[str, Any] = Field(default_factory=dict)
 
 
