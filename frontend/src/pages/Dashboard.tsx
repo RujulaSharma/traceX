@@ -28,7 +28,7 @@ import { DashboardStats } from '../types';
 import { MetricCard } from '../components/common/MetricCard';
 import { SeverityBadge } from '../components/common/SeverityBadge';
 
-const COLORS = ['#ef4444', '#f97316', '#f59e0b', '#06b6d4', '#64748b'];
+const COLORS = ['#ef4444', '#f97316', '#f59e0b', '#8b5cf6', '#a855f7'];
 
 export const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -86,15 +86,15 @@ export const Dashboard: React.FC = () => {
   return (
     <div className="p-8 space-y-8 max-w-7xl mx-auto">
       {/* Hero Welcome & Quick Pipeline Trigger */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-slate-900 to-indigo-950/40 border border-slate-800 p-6 flex flex-wrap items-center justify-between gap-4 shadow-xl">
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-purple-100 via-indigo-50 to-purple-50 border border-purple-200 p-6 flex flex-wrap items-center justify-between gap-4 shadow-sm">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse" />
-            <h2 className="text-xl font-black tracking-tight text-white">
+            <span className="w-2.5 h-2.5 rounded-full bg-purple-600 animate-pulse" />
+            <h2 className="text-xl font-black tracking-tight text-slate-900">
               Autonomous Security Operations Center
             </h2>
           </div>
-          <p className="text-xs text-slate-400 max-w-xl">
+          <p className="text-xs text-slate-600 max-w-xl">
             Real-time multi-log ingestion, deterministic rule detection, and MITRE-aligned causal
             attack chain reconstruction.
           </p>
@@ -103,14 +103,14 @@ export const Dashboard: React.FC = () => {
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate('/ingestion')}
-            className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition"
+            className="px-4 py-2.5 rounded-xl bg-white hover:bg-purple-50 text-slate-800 text-xs font-semibold border border-purple-200 shadow-sm transition"
           >
             Upload Logs
           </button>
           <button
             onClick={handleRunPipeline}
             disabled={!!runningAction}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-xs font-bold shadow-[0_0_20px_rgba(6,182,212,0.3)] transition active:scale-95 disabled:opacity-50"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold shadow-lg shadow-purple-500/20 transition active:scale-95 disabled:opacity-50"
           >
             <Play className={`w-4 h-4 fill-current ${runningAction ? 'animate-spin' : ''}`} />
             {runningAction ? 'Processing Pipeline...' : 'Run Autonomous Investigation'}
@@ -119,7 +119,7 @@ export const Dashboard: React.FC = () => {
       </div>
 
       {actionMessage && (
-        <div className="p-4 rounded-xl bg-cyan-950/80 border border-cyan-500/50 text-xs text-cyan-200 font-mono flex items-center justify-between animate-fadeIn">
+        <div className="p-4 rounded-xl bg-purple-50 border border-purple-300 text-xs text-purple-900 font-mono flex items-center justify-between animate-fadeIn shadow-sm">
           <span>{actionMessage}</span>
         </div>
       )}
@@ -163,15 +163,15 @@ export const Dashboard: React.FC = () => {
       {/* Charts & Graphs Row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Events by Type Bar Chart */}
-        <div className="lg:col-span-2 rounded-2xl bg-slate-900/80 border border-slate-800 p-6 space-y-4">
+        <div className="lg:col-span-2 rounded-2xl bg-white border border-purple-100 p-6 space-y-4 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-bold uppercase tracking-wider text-white">
+              <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900">
                 Log Event Distribution
               </h3>
-              <p className="text-xs text-slate-400">Events categorized by normalized event types</p>
+              <p className="text-xs text-slate-500">Events categorized by normalized event types</p>
             </div>
-            <TrendingUp className="w-4 h-4 text-cyan-400" />
+            <TrendingUp className="w-4 h-4 text-purple-600" />
           </div>
 
           <div className="h-64 w-full">
@@ -180,27 +180,29 @@ export const Dashboard: React.FC = () => {
                 <BarChart data={stats!.events_by_type}>
                   <XAxis
                     dataKey="event_type"
-                    stroke="#64748b"
+                    stroke="#94a3b8"
                     fontSize={10}
                     tickLine={false}
                     interval={0}
                     angle={-20}
                     textAnchor="end"
                   />
-                  <YAxis stroke="#64748b" fontSize={10} tickLine={false} />
+                  <YAxis stroke="#94a3b8" fontSize={10} tickLine={false} />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: '#0f172a',
-                      border: '1px solid #334155',
+                      backgroundColor: '#ffffff',
+                      border: '1px solid #e9e5f5',
                       borderRadius: '8px',
                       fontSize: '12px',
+                      color: '#1e1b4b',
+                      boxShadow: '0 4px 20px rgba(139, 92, 246, 0.1)',
                     }}
                   />
-                  <Bar dataKey="count" fill="#06b6d4" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="count" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             ) : (
-              <div className="h-full flex items-center justify-center text-xs text-slate-500">
+              <div className="h-full flex items-center justify-center text-xs text-slate-400">
                 No event data available. Ingest logs to view distribution.
               </div>
             )}
@@ -208,15 +210,15 @@ export const Dashboard: React.FC = () => {
         </div>
 
         {/* Severity Pie Chart */}
-        <div className="rounded-2xl bg-slate-900/80 border border-slate-800 p-6 space-y-4 flex flex-col justify-between">
+        <div className="rounded-2xl bg-white border border-purple-100 p-6 space-y-4 flex flex-col justify-between shadow-sm">
           <div>
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold uppercase tracking-wider text-white">
+              <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900">
                 Severity Ratio
               </h3>
-              <Zap className="w-4 h-4 text-amber-400" />
+              <Zap className="w-4 h-4 text-amber-500" />
             </div>
-            <p className="text-xs text-slate-400">Security event severity breakdown</p>
+            <p className="text-xs text-slate-500">Security event severity breakdown</p>
           </div>
 
           <div className="h-52 w-full flex items-center justify-center">
@@ -239,28 +241,30 @@ export const Dashboard: React.FC = () => {
                   </Pie>
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: '#0f172a',
-                      border: '1px solid #334155',
+                      backgroundColor: '#ffffff',
+                      border: '1px solid #e9e5f5',
                       borderRadius: '8px',
                       fontSize: '12px',
+                      color: '#1e1b4b',
+                      boxShadow: '0 4px 20px rgba(139, 92, 246, 0.1)',
                     }}
                   />
                 </PieChart>
               </ResponsiveContainer>
             ) : (
-              <div className="text-xs text-slate-500">No severity distribution</div>
+              <div className="text-xs text-slate-400">No severity distribution</div>
             )}
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-2 pt-2 border-t border-slate-800">
+          <div className="flex flex-wrap items-center justify-center gap-2 pt-2 border-t border-purple-100">
             {stats?.events_by_severity?.map((s, idx) => (
-              <div key={idx} className="flex items-center gap-1 text-[11px] text-slate-400">
+              <div key={idx} className="flex items-center gap-1 text-[11px] text-slate-600">
                 <span
                   className="w-2 h-2 rounded-full"
                   style={{ backgroundColor: COLORS[idx % COLORS.length] }}
                 />
                 <span className="capitalize">{s.severity}:</span>
-                <span className="font-bold text-white">{s.count}</span>
+                <span className="font-bold text-slate-900">{s.count}</span>
               </div>
             ))}
           </div>
@@ -270,17 +274,17 @@ export const Dashboard: React.FC = () => {
       {/* Threat Entities Drilldown Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Top Suspicious IPs */}
-        <div className="rounded-2xl bg-slate-900/80 border border-slate-800 p-6 space-y-4">
+        <div className="rounded-2xl bg-white border border-purple-100 p-6 space-y-4 shadow-sm">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Server className="w-4 h-4 text-red-400" />
-              <h3 className="text-sm font-bold uppercase tracking-wider text-white">
+              <Server className="w-4 h-4 text-red-500" />
+              <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900">
                 Top Suspicious IP Addresses
               </h3>
             </div>
             <button
               onClick={() => navigate('/events')}
-              className="text-xs text-cyan-400 hover:text-cyan-300 flex items-center gap-1 font-semibold"
+              className="text-xs text-purple-600 hover:text-purple-700 flex items-center gap-1 font-semibold"
             >
               Explore <ArrowRight className="w-3 h-3" />
             </button>
@@ -291,20 +295,20 @@ export const Dashboard: React.FC = () => {
               stats!.top_suspicious_ips.map((item, idx) => (
                 <div
                   key={idx}
-                  className="flex items-center justify-between p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 hover:border-slate-700 transition"
+                  className="flex items-center justify-between p-3 rounded-xl bg-purple-50/50 border border-purple-100 hover:border-purple-300 transition"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="text-xs font-mono text-slate-500">#{idx + 1}</span>
-                    <span className="font-mono text-sm font-bold text-cyan-400">{item.ip}</span>
+                    <span className="text-xs font-mono text-slate-400">#{idx + 1}</span>
+                    <span className="font-mono text-sm font-bold text-purple-700">{item.ip}</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className="text-xs text-slate-400">{item.count} events</span>
+                    <span className="text-xs text-slate-500">{item.count} events</span>
                     <SeverityBadge severity={item.max_severity} size="sm" />
                   </div>
                 </div>
               ))
             ) : (
-              <div className="p-4 text-center text-xs text-slate-500">
+              <div className="p-4 text-center text-xs text-slate-400">
                 No suspicious IP activity recorded.
               </div>
             )}
@@ -312,17 +316,17 @@ export const Dashboard: React.FC = () => {
         </div>
 
         {/* Top Targeted Users */}
-        <div className="rounded-2xl bg-slate-900/80 border border-slate-800 p-6 space-y-4">
+        <div className="rounded-2xl bg-white border border-purple-100 p-6 space-y-4 shadow-sm">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <User className="w-4 h-4 text-amber-400" />
-              <h3 className="text-sm font-bold uppercase tracking-wider text-white">
+              <User className="w-4 h-4 text-amber-500" />
+              <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900">
                 Top Targeted User Accounts
               </h3>
             </div>
             <button
               onClick={() => navigate('/events')}
-              className="text-xs text-cyan-400 hover:text-cyan-300 flex items-center gap-1 font-semibold"
+              className="text-xs text-purple-600 hover:text-purple-700 flex items-center gap-1 font-semibold"
             >
               Explore <ArrowRight className="w-3 h-3" />
             </button>
@@ -333,20 +337,20 @@ export const Dashboard: React.FC = () => {
               stats!.top_targeted_users.map((item, idx) => (
                 <div
                   key={idx}
-                  className="flex items-center justify-between p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 hover:border-slate-700 transition"
+                  className="flex items-center justify-between p-3 rounded-xl bg-purple-50/50 border border-purple-100 hover:border-purple-300 transition"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="text-xs font-mono text-slate-500">#{idx + 1}</span>
-                    <span className="font-mono text-sm font-bold text-amber-400">{item.username}</span>
+                    <span className="text-xs font-mono text-slate-400">#{idx + 1}</span>
+                    <span className="font-mono text-sm font-bold text-amber-600">{item.username}</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className="text-xs text-slate-400">{item.count} events</span>
+                    <span className="text-xs text-slate-500">{item.count} events</span>
                     <SeverityBadge severity={item.max_severity} size="sm" />
                   </div>
                 </div>
               ))
             ) : (
-              <div className="p-4 text-center text-xs text-slate-500">
+              <div className="p-4 text-center text-xs text-slate-400">
                 No targeted user activity recorded.
               </div>
             )}
