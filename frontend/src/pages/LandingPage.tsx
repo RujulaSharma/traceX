@@ -5,7 +5,7 @@ import '../styles/tracex-landing.css';
 export const LandingPage: React.FC = () => {
   const navigate = useNavigate();
   const [activeConsoleTab, setActiveConsoleTab] = useState<'events' | 'analysis' | 'graph'>('events');
-  const [activeStage, setActiveStage] = useState<number>(4); // Stage 05 (0-indexed: 4) active like mockup
+  const [activeStage, setActiveStage] = useState<number>(4); // Stage 05 (0-indexed: 4) active
 
   const handleLoadScenario = () => {
     // Navigate to SOC with APT scenario query
@@ -24,7 +24,7 @@ export const LandingPage: React.FC = () => {
         <div className="tx-nav-inner">
           <Link to="/" className="tx-logo">
             <span className="tx-logo-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a3e635" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                 <path d="M12 8v4" />
                 <path d="M12 16h.01" />
@@ -42,7 +42,7 @@ export const LandingPage: React.FC = () => {
             <Link to="/incidents" className="tx-nav-link">Reports</Link>
           </div>
 
-          <button onClick={() => navigate('/soc')} className="tx-btn-lime">
+          <button onClick={() => navigate('/soc')} className="tx-btn-lavender">
             Open Workspace
           </button>
         </div>
@@ -62,7 +62,7 @@ export const LandingPage: React.FC = () => {
               <h1 className="tx-hero-title">
                 Turn fragmented<br />
                 security logs<br />
-                into <span className="italic-lime">cohesive attack<br />stories.</span>
+                into <span className="italic-lavender">cohesive attack<br />stories.</span>
               </h1>
 
               <p className="tx-hero-desc">
@@ -70,14 +70,14 @@ export const LandingPage: React.FC = () => {
               </p>
 
               <div className="tx-hero-actions">
-                <button onClick={() => navigate('/soc')} className="tx-btn-lime">
+                <button onClick={() => navigate('/soc')} className="tx-btn-lavender">
                   Open SOC Workspace
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <polyline points="6 9 12 15 18 9" />
                   </svg>
                 </button>
-                <button onClick={handleLoadScenario} className="tx-btn-dark">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                <button onClick={handleLoadScenario} className="tx-btn-light">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="#8b5cf6">
                     <polygon points="5 3 19 12 5 21 5 3" />
                   </svg>
                   Load Full Scenario
@@ -148,31 +148,31 @@ export const LandingPage: React.FC = () => {
                 <div className="tx-mini-graph">
                   <svg width="100%" height="100%" viewBox="0 0 180 120" fill="none">
                     {/* Connection lines */}
-                    <path d="M 20 60 Q 55 25 80 50 T 130 35 T 165 75" stroke="#a3e635" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.8" />
-                    <line x1="20" y1="60" x2="60" y2="90" stroke="rgba(163, 230, 53, 0.4)" strokeWidth="1.5" />
-                    <line x1="60" y1="90" x2="110" y2="85" stroke="rgba(163, 230, 53, 0.4)" strokeWidth="1.5" />
-                    <line x1="110" y1="85" x2="165" y2="75" stroke="#a3e635" strokeWidth="1.5" />
+                    <path d="M 20 60 Q 55 25 80 50 T 130 35 T 165 75" stroke="#8b5cf6" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.8" />
+                    <line x1="20" y1="60" x2="60" y2="90" stroke="rgba(139, 92, 246, 0.4)" strokeWidth="1.5" />
+                    <line x1="60" y1="90" x2="110" y2="85" stroke="rgba(139, 92, 246, 0.4)" strokeWidth="1.5" />
+                    <line x1="110" y1="85" x2="165" y2="75" stroke="#8b5cf6" strokeWidth="1.5" />
                     
                     {/* Node 1 */}
-                    <circle cx="20" cy="60" r="5" fill="#a3e635" />
-                    <circle cx="20" cy="60" r="9" stroke="rgba(163, 230, 53, 0.3)" strokeWidth="1.5" />
+                    <circle cx="20" cy="60" r="5" fill="#8b5cf6" />
+                    <circle cx="20" cy="60" r="9" stroke="rgba(139, 92, 246, 0.3)" strokeWidth="1.5" />
                     
                     {/* Node 2 */}
-                    <circle cx="60" cy="90" r="4" fill="#a3e635" />
+                    <circle cx="60" cy="90" r="4" fill="#8b5cf6" />
                     
                     {/* Node 3 */}
-                    <circle cx="80" cy="50" r="5" fill="#a3e635" />
-                    <circle cx="80" cy="50" r="9" stroke="rgba(163, 230, 53, 0.3)" strokeWidth="1.5" />
+                    <circle cx="80" cy="50" r="5" fill="#8b5cf6" />
+                    <circle cx="80" cy="50" r="9" stroke="rgba(139, 92, 246, 0.3)" strokeWidth="1.5" />
                     
                     {/* Node 4 */}
-                    <circle cx="110" cy="85" r="4" fill="#a3e635" />
+                    <circle cx="110" cy="85" r="4" fill="#8b5cf6" />
                     
                     {/* Node 5 */}
-                    <circle cx="130" cy="35" r="5" fill="#a3e635" />
+                    <circle cx="130" cy="35" r="5" fill="#8b5cf6" />
 
                     {/* Node 6 (Target) */}
-                    <circle cx="165" cy="75" r="6" fill="#a3e635" />
-                    <circle cx="165" cy="75" r="11" stroke="#a3e635" strokeWidth="1.5" opacity="0.5" />
+                    <circle cx="165" cy="75" r="6" fill="#8b5cf6" />
+                    <circle cx="165" cy="75" r="11" stroke="#8b5cf6" strokeWidth="1.5" opacity="0.5" />
                   </svg>
                 </div>
               </div>
@@ -224,7 +224,7 @@ export const LandingPage: React.FC = () => {
                   Target IP: <span>185.220.101.47</span> · <span>5-stage causal chain</span>
                 </div>
               </div>
-              <button onClick={() => navigate('/soc')} className="tx-btn-dark">
+              <button onClick={() => navigate('/soc')} className="tx-btn-light">
                 Explore interactive progression ↗
               </button>
             </div>
@@ -301,7 +301,7 @@ export const LandingPage: React.FC = () => {
           <div className="tx-section-tag">HOW TRACEX WORKS</div>
           <h2 className="tx-section-title">
             From scattered logs to a<br />
-            <span className="italic-lime">readable</span> attack story.
+            <span className="italic-lavender">readable</span> attack story.
           </h2>
 
           <div className="tx-process-cards">
@@ -352,11 +352,11 @@ export const LandingPage: React.FC = () => {
               <div className="tx-process-card-num">03</div>
               <div className="tx-process-graphic">
                 <div className="tx-node-line">
-                  <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#fff' }} />
+                  <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#7c3aed' }} />
                   <div className="tx-dash-line" />
-                  <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#a3e635' }} />
+                  <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#8b5cf6' }} />
                   <div className="tx-dash-line" />
-                  <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#fff' }} />
+                  <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#7c3aed' }} />
                 </div>
               </div>
               <h3 className="tx-process-title">Reconstruct Attack</h3>
@@ -399,7 +399,7 @@ export const LandingPage: React.FC = () => {
             <div className="tx-section-tag">DETERMINISTIC CAUSAL CORRELATION</div>
             <h2 className="tx-section-title">
               The 5 pillars of<br />
-              <span className="italic-lime">autonomous</span> attack<br />
+              <span className="italic-lavender">autonomous</span> attack<br />
               reconstruction.
             </h2>
             <p className="tx-pillars-desc">
@@ -477,13 +477,13 @@ export const LandingPage: React.FC = () => {
             <div className="tx-pillar-card tx-pillar-featured">
               <div className="tx-topology-visual">
                 <svg width="100%" height="100%" viewBox="0 0 200 60" fill="none">
-                  <path d="M 15 35 Q 50 15 85 40 T 145 20 T 185 45" stroke="#a3e635" strokeWidth="2" strokeDasharray="3 3" />
-                  <circle cx="15" cy="35" r="4" fill="#a3e635" />
-                  <circle cx="50" cy="22" r="3" fill="#a3e635" opacity="0.6" />
-                  <circle cx="85" cy="40" r="5" fill="#a3e635" />
-                  <circle cx="145" cy="20" r="5" fill="#a3e635" />
-                  <circle cx="185" cy="45" r="6" fill="#a3e635" />
-                  <circle cx="185" cy="45" r="10" stroke="#a3e635" strokeWidth="1" opacity="0.4" />
+                  <path d="M 15 35 Q 50 15 85 40 T 145 20 T 185 45" stroke="#8b5cf6" strokeWidth="2" strokeDasharray="3 3" />
+                  <circle cx="15" cy="35" r="4" fill="#8b5cf6" />
+                  <circle cx="50" cy="22" r="3" fill="#8b5cf6" opacity="0.6" />
+                  <circle cx="85" cy="40" r="5" fill="#8b5cf6" />
+                  <circle cx="145" cy="20" r="5" fill="#8b5cf6" />
+                  <circle cx="185" cy="45" r="6" fill="#8b5cf6" />
+                  <circle cx="185" cy="45" r="10" stroke="#8b5cf6" strokeWidth="1" opacity="0.4" />
                 </svg>
               </div>
               <h3 className="tx-pillar-title">Interactive Attack Topology</h3>
@@ -496,7 +496,7 @@ export const LandingPage: React.FC = () => {
                   background: 'none',
                   border: 'none',
                   padding: 0,
-                  color: 'var(--tx-lime)',
+                  color: 'var(--tx-lavender-dark)',
                   fontFamily: 'Geist Mono, monospace',
                   fontSize: '11px',
                   fontWeight: 600,
@@ -516,7 +516,7 @@ export const LandingPage: React.FC = () => {
         <div className="tx-container">
           <div className="tx-section-tag">CORE CAPABILITIES</div>
           <h2 className="tx-section-title">
-            Every conclusion <span className="italic-lime">shows its<br />work.</span>
+            Every conclusion <span className="italic-lavender">shows its<br />work.</span>
           </h2>
 
           <div className="tx-bento-grid">
@@ -532,31 +532,31 @@ export const LandingPage: React.FC = () => {
                   {/* Glowing background path */}
                   <path
                     d="M 20 85 C 90 85, 120 40, 180 40 C 240 40, 270 80, 340 70 C 380 65, 400 45, 430 45"
-                    stroke="rgba(163, 230, 53, 0.2)"
+                    stroke="rgba(139, 92, 246, 0.15)"
                     strokeWidth="10"
                     strokeLinecap="round"
                   />
                   {/* Main path */}
                   <path
                     d="M 20 85 C 90 85, 120 40, 180 40 C 240 40, 270 80, 340 70 C 380 65, 400 45, 430 45"
-                    stroke="#a3e635"
+                    stroke="#8b5cf6"
                     strokeWidth="3"
                     strokeLinecap="round"
                   />
                   {/* 5 Circular Nodes */}
-                  <circle cx="20" cy="85" r="7" fill="#a3e635" />
-                  <circle cx="20" cy="85" r="12" stroke="#a3e635" strokeWidth="1.5" opacity="0.4" />
+                  <circle cx="20" cy="85" r="7" fill="#8b5cf6" />
+                  <circle cx="20" cy="85" r="12" stroke="#8b5cf6" strokeWidth="1.5" opacity="0.4" />
 
-                  <circle cx="180" cy="40" r="7" fill="#a3e635" />
-                  <circle cx="180" cy="40" r="12" stroke="#a3e635" strokeWidth="1.5" opacity="0.4" />
+                  <circle cx="180" cy="40" r="7" fill="#8b5cf6" />
+                  <circle cx="180" cy="40" r="12" stroke="#8b5cf6" strokeWidth="1.5" opacity="0.4" />
 
-                  <circle cx="260" cy="62" r="5" fill="#a3e635" />
+                  <circle cx="260" cy="62" r="5" fill="#8b5cf6" />
 
-                  <circle cx="340" cy="70" r="7" fill="#a3e635" />
-                  <circle cx="340" cy="70" r="12" stroke="#a3e635" strokeWidth="1.5" opacity="0.4" />
+                  <circle cx="340" cy="70" r="7" fill="#8b5cf6" />
+                  <circle cx="340" cy="70" r="12" stroke="#8b5cf6" strokeWidth="1.5" opacity="0.4" />
 
-                  <circle cx="430" cy="45" r="7" fill="#a3e635" />
-                  <circle cx="430" cy="45" r="14" stroke="#a3e635" strokeWidth="1.5" opacity="0.5" />
+                  <circle cx="430" cy="45" r="7" fill="#8b5cf6" />
+                  <circle cx="430" cy="45" r="14" stroke="#8b5cf6" strokeWidth="1.5" opacity="0.5" />
                 </svg>
               </div>
             </div>
@@ -569,12 +569,12 @@ export const LandingPage: React.FC = () => {
               </p>
 
               <div className="tx-mitre-badges">
-                <span className="tx-mitre-badge active-lime">T1078 Valid Accounts</span>
-                <span className="tx-mitre-badge active-lime">T1059 Command Exec</span>
-                <span className="tx-mitre-badge active-lime">T1003 Credential Access</span>
-                <span className="tx-mitre-badge dark-badge">T1068 Priv Escalation</span>
-                <span className="tx-mitre-badge dark-badge">T1048 Data Exfiltration</span>
-                <span className="tx-mitre-badge active-lime">T1046 Network Scan</span>
+                <span className="tx-mitre-badge active-lavender">T1078 Valid Accounts</span>
+                <span className="tx-mitre-badge active-lavender">T1059 Command Exec</span>
+                <span className="tx-mitre-badge active-lavender">T1003 Credential Access</span>
+                <span className="tx-mitre-badge light-badge">T1068 Priv Escalation</span>
+                <span className="tx-mitre-badge light-badge">T1048 Data Exfiltration</span>
+                <span className="tx-mitre-badge active-lavender">T1046 Network Scan</span>
               </div>
             </div>
 
@@ -643,18 +643,18 @@ export const LandingPage: React.FC = () => {
         <div className="tx-container">
           <h2 className="tx-cta-title">
             Every intrusion is a<br />
-            story. <span className="italic-lime">Read it in minutes.</span>
+            story. <span className="italic-lavender">Read it in minutes.</span>
           </h2>
 
           <div className="tx-cta-actions">
-            <button onClick={() => navigate('/soc')} className="tx-btn-lime" style={{ padding: '12px 26px', fontSize: '14px' }}>
+            <button onClick={() => navigate('/soc')} className="tx-btn-lavender" style={{ padding: '12px 26px', fontSize: '14px' }}>
               Open SOC Workspace
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="6 9 12 15 18 9" />
               </svg>
             </button>
-            <button onClick={handleLoadScenario} className="tx-btn-dark" style={{ padding: '12px 24px', fontSize: '14px' }}>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+            <button onClick={handleLoadScenario} className="tx-btn-light" style={{ padding: '12px 24px', fontSize: '14px' }}>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="#8b5cf6">
                 <polygon points="5 3 19 12 5 21 5 3" />
               </svg>
               Load Full Scenario
